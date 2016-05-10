@@ -1,0 +1,29 @@
+{
+  "name": "chai-date-string",
+  "version": "0.1.0",
+  "description": "Validates a string to have valid date format",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha"
+  },
+  "repository": "https://github.com/googoid/chai-date-string",
+  "keywords": [
+    "chai",
+    "chai-plugin"
+  ],
+  "author": "GooGo",
+  "license": "ISC",
+  "engines": {
+    "node": ">=4.2.0"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "json5": "^0.5.0",
+    "mocha": "^2.3.4",
+    "rewire": "^2.5.1"
+  },
+  "dependencies": {
+    "checkit": "^0.6.0",
+    "lodash": "^4.11.1"
+  }
+}
