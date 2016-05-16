@@ -41,7 +41,7 @@ var matchPatternTests = [
 ];
 
 
-describe('#matchPattern', function () {
+describe('matchPattern', function () {
   matchPatternTests.forEach(function(tst) {
     var desc = (tst[0] ? 'succeeds' : 'fails') + (" for " + (util.inspect(tst[1])));
 
@@ -50,14 +50,14 @@ describe('#matchPattern', function () {
       if (tst[0]) {
         return expect(matchResult).to.be.null
       } else {
-        return expect(matchResult).not.to.be.null
+        return expect(matchResult).to.be.a('string');
       }
     });
 
   });
 });
 
-describe('#fillSrcWithVoids', function () {
+describe('fillSrcWithVoids', function () {
   var fillSrcTests = [
     '{targ: {a: 2, b: 2}, src: {a: 1}, result: {a: 1, b: undefined}}',
     '{targ: {a: 2, b: 2}, src: {a: 1, c: 1}, result: {a: 1, c: 1, b: undefined}}',
@@ -73,7 +73,7 @@ describe('#fillSrcWithVoids', function () {
   });
 });
 
-describe('#fillTargWithVoids', function () {
+describe('fillTargWithVoids', function () {
   var fillTargTests = [
     '{targ: {a: 2, b: 2}, src: {a: 1}, result: {a: 2, b: 2}}',
     '{targ: {a: 2, b: 2}, src: {a: 1, c: 1}, result: {a: 2, c: undefined, b: 2}}',
@@ -85,6 +85,30 @@ describe('#fillTargWithVoids', function () {
 
     it(test, function () {
       expect(fillTargWithVoids(testData.targ, testData.src)).to.deep.equal(testData.result);
+    });
+  });
+
+  describe('With lodash extensions', function () {
+    beforeEach(function () {
+      var lodashExt = _.runInContext()
+      lodashExt.mixin({
+        isSmilie: function (s) {
+          return s === ':)';
+        }
+      });
+      this.matchPattern = matchPattern(lodashExt);
+      this.smilie = ':)';
+      this.winkie = ';)';
+    });
+
+    it('succeeds with matching test data', function () {
+      var matchResult = this.matchPattern(this.smilie, '_.isSmilie');
+      return expect(matchResult).to.be.null
+    });
+
+    it('fails with non-matching test data', function () {
+      var matchResult = this.matchPattern(this.winkie, '_.isSmilie');
+      return expect(matchResult).to.be.a('string');
     });
   });
 });
