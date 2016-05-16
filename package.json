@@ -1,20 +1,23 @@
 {
-  "name": "chai-date-string",
+  "name": "lodash-match-pattern",
   "version": "0.1.0",
-  "description": "Validates a string to have valid date format",
+  "description": "Validates a deep structured JSON pattern",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/_mocha"
+    "test": "./node_modules/.bin/mocha"
   },
-  "repository": "https://github.com/googoid/chai-date-string",
+  "directories": {
+    "test": "test"
+  },
+  "repository": "https://github.com/mjhm/lodash-match-pattern",
   "keywords": [
     "chai",
     "chai-plugin"
   ],
-  "author": "GooGo",
-  "license": "ISC",
-  "engines": {
-    "node": ">=4.2.0"
+  "author": "John McLaughlin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mjhm/lodash-match-pattern/issues"
   },
   "devDependencies": {
     "chai": "^3.4.1",
@@ -24,6 +27,6 @@
   },
   "dependencies": {
     "checkit": "^0.6.0",
-    "lodash": "^4.11.1"
+    "lodash-checkit": "git://github.com/mjhm/lodash-checkit.git"
   }
 }
