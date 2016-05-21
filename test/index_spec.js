@@ -88,7 +88,7 @@ describe('fillTargWithVoids', function () {
     });
   });
 
-  describe('With lodash extensions', function () {
+  describe('#use (custom lodash module)', function () {
     beforeEach(function () {
       var lodashExt = _.runInContext()
       lodashExt.mixin({
@@ -96,18 +96,22 @@ describe('fillTargWithVoids', function () {
           return s === ':)';
         }
       });
-      this.matchPattern = matchPattern(lodashExt);
+      matchPattern.use(lodashExt);
       this.smilie = ':)';
       this.winkie = ';)';
     });
 
+    afterEach(function () {
+      matchPattern.use(_);
+    });
+
     it('succeeds with matching test data', function () {
-      var matchResult = this.matchPattern(this.smilie, '_.isSmilie');
+      var matchResult = matchPattern(this.smilie, '_.isSmilie');
       return expect(matchResult).to.be.null
     });
 
     it('fails with non-matching test data', function () {
-      var matchResult = this.matchPattern(this.winkie, '_.isSmilie');
+      var matchResult = matchPattern(this.winkie, '_.isSmilie');
       return expect(matchResult).to.be.a('string');
     });
   });

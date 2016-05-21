@@ -20,88 +20,85 @@ var colonArgToParam = function (colonArg) {
   return isNaN(a) ? a : Number(a);
 }
 
+var lodashModule = _;  // lodash-checkit by default
 
-module.exports = function () {
-  var matchFail;
-  var lodashModule = _;  // lodash-checkit by default
+var matchFail;
 
-  var matcher = function (targVal, srcVal, key) {
-    if (_.isObject(targVal)) {
+var matcher = function (targVal, srcVal, key) {
+  if (_.isObject(targVal)) {
 
-      // Remap the srcVal if the sole key of 'targVal' is a lodash function.
-      // This is useful for sorting or filtering the 'srcVal'.
-      var targKeys = _.keys(targVal);
-      if (/_\.[^\:]+/.test(targKeys[0])) {
-        if (targKeys.length > 1) {
-          throw new Error('There can only be one key/value pair when mapping source values.\n' +
-            'targVal = ' + util.inspect(targVal) + '\n' +
-            'srcVal = ' + util.inspect(srcVal) + '\n'
-          )
-        }
-        var keyLodashMatch = targKeys[0].match(/^_\.([^\:]+)(\:[^\:]*)?(\:[^\:]*)?/) || [];
-        var keyLodashFn = lodashModule[keyLodashMatch[1]]
-        if (! keyLodashFn) {
-          throw new Error('The mapping function _.' + keyLodashMatch[1] + " doesn't exist");
-        }
-        var keyArgs = [ srcVal ];
-        if (keyLodashMatch[2] !== undefined) {
-          keyArgs.push(colonArgToParam(keyLodashMatch[2]));
-        }
-        if (keyLodashMatch[3] !== undefined) {
-          keyArgs.push(colonArgToParam(keyLodashMatch[3]));
-        }
-        try {
-          var newSrcVal = keyLodashFn.apply(lodashModule, keyArgs);
-        } catch (error) {
-          error.message = 'Error applying ' + key + ' to source values ' + util.inspect(srcVal) +
-            '\n' + error.message;
-          throw error;
-        }
-        return _.isMatchWith(targVal, newSrcVal);
+    // Remap the srcVal if the sole key of 'targVal' is a lodash function.
+    // This is useful for sorting or filtering the 'srcVal'.
+    var targKeys = _.keys(targVal);
+    if (/_\.[^\:]+/.test(targKeys[0])) {
+      if (targKeys.length > 1) {
+        throw new Error('There can only be one key/value pair when mapping source values.\n' +
+          'targVal = ' + util.inspect(targVal) + '\n' +
+          'srcVal = ' + util.inspect(srcVal) + '\n'
+        )
       }
-
-      // Descend into objects and recurse _.isMatchWith.
-      if (_.isObject(srcVal)) {
-        var newSrcObj = fillSrcWithVoids(targVal, srcVal);
-        var newTargObj = fillTargWithVoids(targVal, srcVal);
-        return _.isMatchWith(newTargObj, newSrcObj, matcher);
+      var keyLodashMatch = targKeys[0].match(/^_\.([^\:]+)(\:[^\:]*)?(\:[^\:]*)?/) || [];
+      var keyLodashFn = lodashModule[keyLodashMatch[1]]
+      if (! keyLodashFn) {
+        throw new Error('The mapping function _.' + keyLodashMatch[1] + " doesn't exist");
       }
-    }
-    // Extract strings that look like "_.isXxxx" into lodash matcher functions,
-    // then parse out arguments for the matcher functions. For example "_.isInRange:0:25"
-    var lodashMatch = (String(targVal).match(/^_\.(is[A-Z][^\:]*)(\:[^\:]*)?(\:[^\:]*)?/) || []);
-    var lodashMatchFn = lodashMatch[1] ? lodashModule[lodashMatch[1]] : null
-    var matcherArgs = [ srcVal ];
-    if (lodashMatch[2] !== undefined) {
-      matcherArgs.push(colonArgToParam(lodashMatch[2]));
-    }
-    if (lodashMatch[3] !== undefined) {
-      matcherArgs.push(colonArgToParam(lodashMatch[3]));
+      var keyArgs = [ srcVal ];
+      if (keyLodashMatch[2] !== undefined) {
+        keyArgs.push(colonArgToParam(keyLodashMatch[2]));
+      }
+      if (keyLodashMatch[3] !== undefined) {
+        keyArgs.push(colonArgToParam(keyLodashMatch[3]));
+      }
+      try {
+        var newSrcVal = keyLodashFn.apply(lodashModule, keyArgs);
+      } catch (error) {
+        error.message = 'Error applying ' + key + ' to source values ' + util.inspect(srcVal) +
+          '\n' + error.message;
+        throw error;
+      }
+      return _.isMatchWith(targVal, newSrcVal);
     }
 
-    // Here's where the item comparison happens.
-    var currentIsMatch = lodashMatchFn ? lodashMatchFn.apply(lodashModule, matcherArgs) : targVal === srcVal
-
-    // 'matchFail' is used for reporting the first encountered match failure from the pattern.
-    if (!currentIsMatch) {
-      matchFail = (key === '__testObj') ?
-        util.inspect(srcVal) + " didn't match " + util.inspect(targVal)  :
-        "{" + key + ": " + util.inspect(srcVal) + "} didn't match {" + key + ": " + util.inspect(targVal) + "}"
+    // Descend into objects and recurse _.isMatchWith.
+    if (_.isObject(srcVal)) {
+      var newSrcObj = fillSrcWithVoids(targVal, srcVal);
+      var newTargObj = fillTargWithVoids(targVal, srcVal);
+      return _.isMatchWith(newTargObj, newSrcObj, matcher);
     }
-    return currentIsMatch;
-  };
-
-  var matchPattern = function (sourceData, targetPattern) {
-    var isMatch;
-    matchFail = null;
-    _.isMatchWith({__testObj: targetPattern}, {__testObj: sourceData}, matcher);
-    return matchFail;
-  };
-
-  if (arguments.length === 1) {
-    lodashModule = arguments[0];
-    return matchPattern;
+  }
+  // Extract strings that look like "_.isXxxx" into lodash matcher functions,
+  // then parse out arguments for the matcher functions. For example "_.isInRange:0:25"
+  var lodashMatch = (String(targVal).match(/^_\.(is[A-Z][^\:]*)(\:[^\:]*)?(\:[^\:]*)?/) || []);
+  var lodashMatchFn = lodashMatch[1] ? lodashModule[lodashMatch[1]] : null
+  var matcherArgs = [ srcVal ];
+  if (lodashMatch[2] !== undefined) {
+    matcherArgs.push(colonArgToParam(lodashMatch[2]));
+  }
+  if (lodashMatch[3] !== undefined) {
+    matcherArgs.push(colonArgToParam(lodashMatch[3]));
   }
 
-  return matchPattern(arguments[0], arguments[1]);
+  // Here's where the item comparison happens.
+  var currentIsMatch = lodashMatchFn ? lodashMatchFn.apply(lodashModule, matcherArgs) : targVal === srcVal
+
+  // 'matchFail' is used for reporting the first encountered match failure from the pattern.
+  if (!currentIsMatch) {
+    matchFail = (key === '__testObj') ?
+      util.inspect(srcVal) + " didn't match " + util.inspect(targVal)  :
+      "{" + key + ": " + util.inspect(srcVal) + "} didn't match {" + key + ": " + util.inspect(targVal) + "}"
+  }
+  return currentIsMatch;
 };
+
+var matchPattern = function (sourceData, targetPattern) {
+  var isMatch;
+  matchFail = null;
+  _.isMatchWith({__testObj: targetPattern}, {__testObj: sourceData}, matcher);
+  return matchFail;
+};
+
+matchPattern.use = function (newLodashModule) {
+  lodashModule = newLodashModule;
+}
+
+module.exports = matchPattern;
