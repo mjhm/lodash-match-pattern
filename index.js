@@ -101,4 +101,8 @@ matchPattern.use = function (newLodashModule) {
   lodashModule = newLodashModule;
 }
 
+matchPattern.listIsFunctions = function () {
+  return _.filter(_.keys(lodashModule), function (m) { return /^is[A-Z]/.test(m); });
+}
+
 module.exports = matchPattern;

@@ -88,6 +88,16 @@ describe('fillTargWithVoids', function () {
     });
   });
 
+  describe('#listIsFunctions', function () {
+    it('returns "is" functions', function () {
+      var listIs = matchPattern.listIsFunctions();
+      expect(listIs.length).is.above(10);
+      listIs.forEach( function(fname) {
+        expect(fname).to.match(/^is/);
+      });
+    });
+  });
+
   describe('#use (custom lodash module)', function () {
     beforeEach(function () {
       var lodashExt = _.runInContext()
@@ -114,5 +124,11 @@ describe('fillTargWithVoids', function () {
       var matchResult = matchPattern(this.winkie, '_.isSmilie');
       return expect(matchResult).to.be.a('string');
     });
+
+    it('includes new function in listIsFunctions', function () {
+      var listIs = matchPattern.listIsFunctions();
+      expect(listIs).to.contain('isSmilie');
+    });
   });
+
 });
