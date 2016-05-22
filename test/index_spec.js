@@ -50,7 +50,10 @@ var matchPatternTests = [
   [true,  {targ: [1, 2, '...'], src: [3, 2, 1]}],
   [false, {targ: [1, 2, 4, '...'], src: [3, 2, 1]}],
   [true,  {targ: [1, 2, 3, '---'], src: [2, 1]}],
-  [false, {targ: [1, 2, '---'], src: [3, 2, 1]}]
+  [false, {targ: [1, 2, '---'], src: [3, 2, 1]}],
+  [true, {targ: '_.isSize:3', src: [3, 2, 1]}],
+  [true, {targ: '_.isSize:4', src: {a: 1, b: 2, c: 3, d: 4}}],
+  [true, {targ: '_.isSize:5', src: 'abcde'}]
 ];
 
 

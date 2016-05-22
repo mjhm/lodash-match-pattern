@@ -10,6 +10,10 @@ var _ = lodash.mixin( {
     if (!lodash.isString(s)) return false;
     var d = new Date(String(s));
     return !lodash.isNaN(d.getTime());
+  },
+
+  isSize: function (s, n) {
+    return _.size(s) === n;
   }
 });
 
