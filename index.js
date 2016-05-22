@@ -1,5 +1,17 @@
-var _ = require('lodash-checkit');
+var lodash = require('lodash-checkit');
 var util = require('util');
+
+var _ = lodash.mixin( {
+  arrayOfDups: function (s, n) {
+    return lodash.times(n, lodash.cloneDeep.bind(lodash, s));
+  },
+
+  isDateString: function (s) {
+    if (!lodash.isString(s)) return false;
+    var d = new Date(String(s));
+    return !lodash.isNaN(d.getTime());
+  }
+});
 
 // These helpers fill out the src or targ object with "undefined" for missing
 // keys, so that they can be appropriately compared.
@@ -25,7 +37,17 @@ var lodashModule = _;  // lodash-checkit by default
 var matchFail;
 
 var matcher = function (targVal, srcVal, key) {
+  var currentIsMatch;
   if (_.isObject(targVal)) {
+
+    // Check partial match case for an array.
+    if (_.isArray(targVal) && _.includes(targVal, '...')) {
+      currentIsMatch = (targVal.length - 1 === _.size(_.intersection(targVal, srcVal)))
+      if (! currentIsMatch) {
+        matchFail = "Array " + util.inspect(srcVal) + " didn't match Array " + util.inspect(targVal);
+      }
+      return currentIsMatch;
+    }
 
     // Remap the srcVal if the sole key of 'targVal' is a lodash function.
     // This is useful for sorting or filtering the 'srcVal'.
@@ -56,7 +78,8 @@ var matcher = function (targVal, srcVal, key) {
           '\n' + error.message;
         throw error;
       }
-      return _.isMatchWith(targVal, newSrcVal);
+      // rerun matcher with the function applied.
+      return matcher(targVal[targKeys[0]], newSrcVal, key);
     }
 
     // Descend into objects and recurse _.isMatchWith.
@@ -79,13 +102,17 @@ var matcher = function (targVal, srcVal, key) {
   }
 
   // Here's where the item comparison happens.
-  var currentIsMatch = lodashMatchFn ? lodashMatchFn.apply(lodashModule, matcherArgs) : targVal === srcVal
+  currentIsMatch = lodashMatchFn ? lodashMatchFn.apply(lodashModule, matcherArgs) : targVal === srcVal
 
   // 'matchFail' is used for reporting the first encountered match failure from the pattern.
   if (!currentIsMatch) {
-    matchFail = (key === '__testObj') ?
-      util.inspect(srcVal) + " didn't match " + util.inspect(targVal)  :
-      "{" + key + ": " + util.inspect(srcVal) + "} didn't match {" + key + ": " + util.inspect(targVal) + "}"
+    if (key === '__testObj') {
+      matchFail = util.inspect(srcVal) + " didn't match " + util.inspect(targVal)
+    } else if (/^\d+$/.test(key)) {
+      matchFail = "Array[" + key + "] = " + util.inspect(srcVal) + " didn't match Array[" + key + "] = " + util.inspect(targVal);
+    } else {
+      matchFail = "{" + key + ": " + util.inspect(srcVal) + "} didn't match {" + key + ": " + util.inspect(targVal) + "}"
+    }
   }
   return currentIsMatch;
 };

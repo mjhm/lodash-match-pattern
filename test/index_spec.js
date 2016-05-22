@@ -13,6 +13,8 @@ var matchPatternTests = [
   [false, {targ:{a: {b: 2}}, src: {a: {b: 3}}}],              // not OK deep compare fails
   [true,  {targ:{a: {b: '_.isNumber'}}, src: {a: {b: 3}}}],   // OK deep compare of type succeeds
   [false, {targ:{a: {b: '_.isNumber'}}, src: {a: {b: '3'}}}], // not OK deep compare of type fails
+  [true,  {targ: '_.isDateString', src: '2016-05-22T00:23:23.343Z'}],
+  [false, {targ: '_.isDateString', src: 0}],
   [false, {targ:{a: {b: '_.isNull'}}, src: {a: {b: 'not null'}}}],
   [true,  {targ:{a: {b: '_.isNull'}}, src: {a: {b: null}}}],
   [true,  {targ:{a: '_.isString'}, src: {a: 'a string'}}],
@@ -29,6 +31,8 @@ var matchPatternTests = [
   [false, {targ: '_.isUrl', src: 'hbbp://my.testurl.com'}],
   [true,  {targ:{a: 5, b: '_.isUndefined'}, src: {a: 5}}], // _.isUndefined matches an omitted entry
   [true,  {targ:{a: 5, b: undefined}, src: {a: 5}}],
+  [true,  {targ: [1, 2, 3], src: [1, 2, 3]}],
+  [false, {targ: [1, 2, 3], src: [1, 4, 3]}],
   [true,  {targ: '_.isInRange:0:10', src: 0}],
   [true,  {targ: '_.isInRange:3.1:7.7', src: 5}],
   [false, {targ: '_.isInRange:3.1:7.7', src: 2}],
@@ -37,13 +41,20 @@ var matchPatternTests = [
   [true,  {targ: '_.isContainerFor:abc', src: {abc: 1, def: 2}}],
   [true,  {targ: {a: {'_.sortBy': [1, 2, 3]}}, src: {a: [2, 3, 1]}}],
   [true,  {targ: {'_.sortBy:a': [{a: 1, b: 2}, {a: 2, b: 3}, {a: 3, b: 1}]},
-            src: [{a: 2, b: 3}, {a: 1, b: 2}, {a: 3, b: 1}]}]
+            src: [{a: 2, b: 3}, {a: 1, b: 2}, {a: 3, b: 1}]}],
+  [false, {targ: {a: {'_.sortBy': [3, 2, 1]}}, src: {a: [2, 3, 1]}}],
+  [true,  {targ: {a: {'_.keys': {'_.size': 3}}}, src: {a: {b: 2, c: 3, d: 4}}}],
+  [false, {targ: {a: {'_.keys': {'_.size': 2}}}, src: {a: {b: 2, c: 3, d: 4}}}],
+  [true,  {targ: {'_.arrayOfDups:2': [{'_.size': '_.isInRange:1:3'}, '_.isContainerFor:apple']},
+    src: ['apple', 'pair']}],
+  [true,  {targ: [1, 2, '...'], src: [3, 2, 1]}],
+  [false, {targ: [1, 2, 4, '...'], src: [3, 2, 1]}]
 ];
 
 
 describe('matchPattern', function () {
   matchPatternTests.forEach(function(tst) {
-    var desc = (tst[0] ? 'succeeds' : 'fails') + (" for " + (util.inspect(tst[1])));
+    var desc = (tst[0] ? 'succeeds' : 'fails') + (" for " + (util.inspect(tst[1], {depth: 3})));
 
     it(desc, function() {
       var matchResult = matchPattern(tst[1].src, tst[1].targ);
