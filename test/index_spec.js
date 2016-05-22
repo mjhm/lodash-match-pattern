@@ -48,7 +48,9 @@ var matchPatternTests = [
   [true,  {targ: {'_.arrayOfDups:2': [{'_.size': '_.isInRange:1:3'}, '_.isContainerFor:apple']},
     src: ['apple', 'pair']}],
   [true,  {targ: [1, 2, '...'], src: [3, 2, 1]}],
-  [false, {targ: [1, 2, 4, '...'], src: [3, 2, 1]}]
+  [false, {targ: [1, 2, 4, '...'], src: [3, 2, 1]}],
+  [true,  {targ: [1, 2, 3, '---'], src: [2, 1]}],
+  [false, {targ: [1, 2, '---'], src: [3, 2, 1]}]
 ];
 
 

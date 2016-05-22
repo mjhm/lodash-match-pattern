@@ -40,13 +40,22 @@ var matcher = function (targVal, srcVal, key) {
   var currentIsMatch;
   if (_.isObject(targVal)) {
 
-    // Check partial match case for an array.
-    if (_.isArray(targVal) && _.includes(targVal, '...')) {
-      currentIsMatch = (targVal.length - 1 === _.size(_.intersection(targVal, srcVal)))
-      if (! currentIsMatch) {
-        matchFail = "Array " + util.inspect(srcVal) + " didn't match Array " + util.inspect(targVal);
+    // Check partial match and superset casees for an array.
+    if (_.isArray(targVal)) {
+      if (_.includes(targVal, '...')) {
+        currentIsMatch = (targVal.length - 1 === _.size(_.intersection(targVal, srcVal)));
+        if (! currentIsMatch) {
+          matchFail = "Array " + util.inspect(srcVal) + " isn't a superset match of Array " + util.inspect(targVal);
+        }
+        return currentIsMatch;
       }
-      return currentIsMatch;
+      if (_.includes(targVal, '---')) {
+        currentIsMatch = (srcVal.length === _.size(_.intersection(targVal, srcVal)));
+        if (! currentIsMatch) {
+          matchFail = "Array " + util.inspect(srcVal) + " isn't a subset match of Array " + util.inspect(targVal);
+        }
+        return currentIsMatch;
+      }
     }
 
     // Remap the srcVal if the sole key of 'targVal' is a lodash function.
