@@ -14,7 +14,10 @@ var _ = lodash.mixin( {
 
   isSize: function (s, n) {
     return _.size(s) === n;
-  }
+  },
+
+  isOmitted: lodash.isUndefined.bind(lodash)
+
 });
 
 // These helpers fill out the src or targ object with "undefined" for missing

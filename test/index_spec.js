@@ -29,7 +29,7 @@ var matchPatternTests = [
   [false, {targ:{a: 5, b: 2}, src: {b: 2}}],
   [true,  {targ: '_.isUrl', src: 'https://my.testurl.com'}],
   [false, {targ: '_.isUrl', src: 'hbbp://my.testurl.com'}],
-  [true,  {targ:{a: 5, b: '_.isUndefined'}, src: {a: 5}}], // _.isUndefined matches an omitted entry
+  [true,  {targ:{a: 5, b: '_.isOmitted'}, src: {a: 5}}], // _.isUndefined matches an omitted entry
   [true,  {targ:{a: 5, b: undefined}, src: {a: 5}}],
   [true,  {targ: [1, 2, 3], src: [1, 2, 3]}],
   [false, {targ: [1, 2, 3], src: [1, 4, 3]}],
