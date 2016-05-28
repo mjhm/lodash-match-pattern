@@ -10,15 +10,18 @@ var parser = PEG.buildParser(fs.readFileSync('./parser/matchpattern.pegjs', 'utf
 
 var parserTests =[
   [ '{"a": 1}', {a: 1} ],
+  [ "{'a': 1}", {a: 1} ],
+  [ "{a: '1'}", {a: '1'} ],
   [ '{a : 1}',  {a: 1} ],
   [ '{a : 1, ...}', {a: 1, '__MP_subset': ''} ],
   [ '[1, 2, ...]',  [1, 2, '__MP_subset'] ],
   [ '[1, 2, ^^^]',  [1, 2, '__MP_superset'] ],
   [ '[1, 2, ===]',  [1, 2, '__MP_equalset'] ],
-  [ '{<= : {a : 1}}',  {'__MP_map': {a: 1}} ],
-  [ '{<- : {a : 1}}',  {'__MP_apply': {a: 1}} ],
-  [ '{<=.mapme : {a : 1}}',  {'__MP_map mapme': {a: 1}} ],
-  [ '{<-.applyme : {a : 1}}',  {'__MP_apply applyme': {a: 1}} ],
+  [ '{<= : {a : 1}}',  {'__MP_map0': {a: 1}} ],
+  [ '{<= : {a : 1}, <= : {b : 2}}',  {'__MP_map0': {a: 1}, '__MP_map1': {b: 2}} ],
+  [ '{<- : {a : 1}}',  {'__MP_apply0': {a: 1}} ],
+  [ '{<=.mapme : {a : 1}}',  {'__MP_map0 mapme': {a: 1}} ],
+  [ '{<-.applyme : {a : 1}}',  {'__MP_apply0 applyme': {a: 1}} ],
   [ '{a : _.isMatchMe}',  {a: "__MP_match isMatchMe"} ]
 ];
 

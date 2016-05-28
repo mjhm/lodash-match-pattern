@@ -16,6 +16,9 @@
  */
 
 /* ----- 2. JSON Grammar ----- */
+{
+  var mapApplyCount = 0;
+}
 
 JSON_text
   = ws value:value ws { return value; }
@@ -108,15 +111,28 @@ zero          = "0"
 
 /* ----- 7. Strings ----- */
 
-string "string"
-  = quotation_mark chars:char* quotation_mark { return chars.join(""); }
+string = dqstring / sqstring
 
-char
-  = unescaped
+dqstring "dqstring"
+  = dquotation_mark chars:dqchar* dquotation_mark { return chars.join(""); }
+
+sqstring
+  = squotation_mark chars:sqchar* squotation_mark { return chars.join(""); }
+
+dqchar
+  = dqunescaped
   / escape
-    sequence:(
-        '"'
-      / "\\"
+    sequence:('"' / no_quote_char)
+    { return sequence; }
+
+sqchar
+  = squnescaped
+  / escape
+    sequence:("'" / no_quote_char)
+    { return sequence; }
+
+no_quote_char =
+      "\\"
       / "/"
       / "b" { return "\b"; }
       / "f" { return "\f"; }
@@ -126,12 +142,12 @@ char
       / "u" digits:$(HEXDIG HEXDIG HEXDIG HEXDIG) {
           return String.fromCharCode(parseInt(digits, 16));
         }
-    )
-    { return sequence; }
 
 escape         = "\\"
-quotation_mark = '"'
-unescaped      = [^\0-\x1F\x22\x5C]
+dquotation_mark = '"'
+squotation_mark = "'"
+dqunescaped      = [^\0-\x1F\x22\x5C]
+squnescaped      = [^\0-\x1F\x27\x5C]
 
 
 /* ----- Core ABNF Rules ----- */
@@ -147,15 +163,15 @@ label = string / apply / map / soloApply / soloMap / identifier
 identifier = alpha alphaNum* { return  text() }
 
 apply = (applyPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*)
-	{return "__MP_apply " + alphaNum.concat(pipeArg).join("")}
+	{return "__MP_apply" + mapApplyCount++ + " " + alphaNum.concat(pipeArg).join("")}
 
-soloApply = applyPrefix { return '__MP_apply' }
+soloApply = applyPrefix { return '__MP_apply' + mapApplyCount++  }
 applyPrefix = "<-"
 
 map = (mapPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*)
-	{return "__MP_map " + alphaNum.concat(pipeArg).join("")}
+	{return "__MP_map" + mapApplyCount++ + " " + alphaNum.concat(pipeArg).join("")}
 
-soloMap = mapPrefix { return '__MP_map' }
+soloMap = mapPrefix { return '__MP_map' + mapApplyCount++ }
 mapPrefix = "<="
 dot = "."
 
