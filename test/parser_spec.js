@@ -22,7 +22,10 @@ var parserTests =[
   [ '{<- : {a : 1}}',  {'__MP_apply0': {a: 1}} ],
   [ '{<=.mapme : {a : 1}}',  {'__MP_map0 mapme': {a: 1}} ],
   [ '{<-.applyme : {a : 1}}',  {'__MP_apply0 applyme': {a: 1}} ],
-  [ '{a : _.isMatchMe}',  {a: "__MP_match isMatchMe"} ]
+  [ '{<-.applyme|abc : {a : 1}}',  {'__MP_apply0 applyme|abc': {a: 1}} ],
+  [ '{<-.applyme|abc: {a : 1}}',  {'__MP_apply0 applyme|abc': {a: 1}} ],
+  [ '{<-.applyme|abc|"-34.9": {a : 1}}',  {'__MP_apply0 applyme|abc|"-34.9"': {a: 1}} ],
+  [ '{a : _.isMatchMe}',  {a: "__MP_match isMatchMe"} ],
 ];
 
 describe('parser', function () {

@@ -2,16 +2,16 @@ var lodash = require('lodash-checkit');
 var util = require('util');
 var parser = require('./_parser');
 var helpers = require('./helpers');
+var normalize = require('./normalize');
 
 var fillSrcWithVoids = helpers.fillSrcWithVoids;
 var fillTargWithVoids = helpers.fillTargWithVoids;
 var checkSupersetMatch = helpers.checkSupersetMatch;
 var checkSubsetMatch = helpers.checkSubsetMatch;
 
+var debug = false;
+
 var _ = lodash.mixin( {
-  arrayOfDups: function (s, n) {
-    return lodash.times(n, lodash.cloneDeep.bind(lodash, s));
-  },
 
   isDateString: function (s) {
     if (!lodash.isString(s)) return false;
@@ -27,6 +27,7 @@ var _ = lodash.mixin( {
 
 });
 
+var lodashModule = _;  // lodash-checkit by default
 
 var curryFunctionSpec = function (fnSpec) {
   var fnParts = fnSpec.split('|');
@@ -35,77 +36,162 @@ var curryFunctionSpec = function (fnSpec) {
     throw new Error('The function _.' + fnParts[0] + " doesn't exist");
   }
   fnParts.slice(1).forEach(function (fnArg) {
-    fn = _.bind(fn, lodashModule, _, (isNaN(fnArg) ? fnArg : Number(fnArg)))
+    var dqmatch = fnArg.match(/^\"(.*)\"/);
+    var sqmatch = fnArg.match(/^\'(.*)\'/);
+    if (dqmatch) {
+      fnArg = dqmatch[1];
+    } else if (sqmatch) {
+      fnArg = sqmatch[1];
+    } else if (! isNaN(fnArg)) {
+      fnArg = Number(fnArg)
+    }
+    fn = _.bind(fn, lodashModule, _, fnArg)
   });
   return fn;
 };
 
+var echo = function (val) { return val; }
 
-var lodashModule = _;  // lodash-checkit by default
+var matchMembers = function (targVal, srcVal, matcher) {
+  if (debug) console.log('matchMembers', targVal, srcVal);
+  // if (_.isPlainObject(srcVal) && _.isPlainObject(targVal)) {
+  var newSrcObj = fillSrcWithVoids(targVal, srcVal);
+  var newTargObj = fillTargWithVoids(targVal, srcVal);
+  if (debug) console.log('matchMembers newSrcObj', newSrcObj, 'newTargObj', newTargObj);
+  return _.isMatchWith(newTargObj, newSrcObj, matcher);
+  // }
+  // return _.isMatchWith(targVal, srcVal, matcher);
+};
 
-var matcher = function (matchFailMsg, targVal, srcVal, key) {
-  if (_.isObject(targVal)) {
-
-    if (_.isArray(targVal)) {
-      if (_.includes(targVal, '...')) return checkSupersetMatch(matchFailMsg, targVal, srcVal);
-      if (_.includes(targVal, '---')) return checkSubsetMatch(matchFailMsg, targVal, srcVal);
-    }
-
-    // Remap the srcVal if the sole key of 'targVal' is a lodash function.
-    // This is useful for sorting or filtering the 'srcVal'.
-    var targKeys = _.keys(targVal);
-    if (/_\.[^\|]+/.test(targKeys[0])) {
-      if (targKeys.length > 1) {
-        throw new Error('There can only be one key/value pair when mapping source values.\n' +
-          'targVal = ' + util.inspect(targVal) + '\n' +
-          'srcVal = ' + util.inspect(srcVal) + '\n'
-        )
+var matcher = function (makeMsg, targVal, srcVal, key) {
+  if (debug) console.log('matcher', targVal, srcVal);
+  var isMatch;
+  if (_.isArray(targVal)) {
+    if (_.includes(targVal, '__MP_superset')) return checkSupersetMatch(makeMsg, targVal, srcVal);
+    if (_.includes(targVal, '__MP_subset')) return checkSubsetMatch(makeMsg, targVal, srcVal);
+    if (_.includes(targVal, '__MP_equalset')) {
+      isMatch = checkSubsetMatch(echo, targVal, srcVal) && checkSupersetMatch(echo, targVal, srcVal);
+      if (!isMatch) {
+        makeMsg(srcVal, targVal, '', "Array ${src} isn't an equalset match of Array ${tgt}");
       }
-      var mappingFn = curryFunctionSpec(targKeys[0].slice(2));
-
-      try {
-        var newSrcVal = mappingFn(srcVal);
-      } catch (error) {
-        error.message = 'Error applying ' + key + ' to source values ' + util.inspect(srcVal) +
-          '\n' + error.message;
-        throw error;
-      }
-      // rerun matcher with the results of the function applied.
-      return matcher(matchFailMsg, targVal[targKeys[0]], newSrcVal, key);
+      return isMatch;
     }
+    isMatch = _.isMatchWith(targVal, srcVal, matcher.bind(null, makeMsg));
+    if (!isMatch && !makeMsg().length) {
+      makeMsg(srcVal, targVal);
+    }
+    return isMatch;
+  }
 
-    // Descend into objects and recurse _.isMatchWith.
-    if (_.isObject(srcVal)) {
-      var newSrcObj = fillSrcWithVoids(targVal, srcVal);
-      var newTargObj = fillTargWithVoids(targVal, srcVal);
-      return _.isMatchWith(newTargObj, newSrcObj, matcher.bind(null, matchFailMsg));
+  if (_.isPlainObject(targVal)) {
+
+    var newTargObj = {};
+    var hasNonMapApplyKeys = false;
+    var mapApplyResults = [];
+    var applyKeys = [];
+
+    _.forEach(targVal, function (tv, k) {
+      var mapApplyMatch = k.match(/^__MP_(map|apply)\d+\s*(.*)/) || [];
+      if (debug) console.log('mapApplyMatch', k, mapApplyMatch);
+      var fn = mapApplyMatch[2] ? curryFunctionSpec(mapApplyMatch[2]) : echo;
+
+      if (mapApplyMatch[1] === 'map') {
+        if (_.isObject(srcVal)) {
+          _.forEach(srcVal, function (so) {
+            // mapApplyResults.push(matchMembers(tv, fn(so), matcher.bind(null, matchFailMsg)));
+            mapApplyResults.push(matcher(makeMsg, tv, fn(so), key));
+          });
+        } else {
+          // mapApplyResults.push(matchMembers(tv, fn(srcVal), matcher.bind(null, matchFailMsg)));
+          mapApplyResults.push(matcher(makeMsg, tv, fn(srcVal)));
+        }
+      } else if (mapApplyMatch[1] === 'apply') {
+        if (debug) console.log('apply result', fn(srcVal));
+        mapApplyResults.push(matcher(makeMsg, tv, fn(srcVal)));
+      } else {
+        hasNonMapApplyKeys = true;
+      }
+    });
+
+    if (mapApplyResults.length) {
+      if (hasNonMapApplyKeys) {
+        var targStr = util.inspect(targVal)
+          .replace(/__MP_apply\d+\s*/, '"<-."')
+          .replace(/__MP_map\d+\s*/, '"<-."');
+        throw new Error('target ' + targStr +
+          ' has both ordinary keys as well as keys for map(<=) and/or apply(<-)');
+      }
+      return _.every(mapApplyResults);
+    }
+    if (_.isPlainObject(srcVal)) {
+      return matchMembers(targVal, srcVal, matcher.bind(null, makeMsg));
     }
   }
-  // Extract strings that look like "_.isXxxx" into lodash matcher functions,
-  // then parse out arguments for the matcher functions. For example "_.isInRange:0:25"
 
-  var matchFn = /_\.is[A-Z]/.test(targVal) ? curryFunctionSpec(targVal.slice(2)) : null;
+  var matchFn =
+    /^__MP_match/.test(targVal) ?
+      curryFunctionSpec(targVal.replace(/^__MP_match\s*/, '')) :
+    _.isFunction(targVal) ? targVal : null;
 
-  // Here's where the item comparison happens.
+  // Here's where the leaf node item comparison happens.
   var currentIsMatch = matchFn ? matchFn(srcVal) : targVal === srcVal
 
-  // 'matchFailMsg' is used for reporting the first encountered match failure from the pattern.
   if (!currentIsMatch) {
+    var targValStr = util.inspect(targVal).replace(/^__MP_match\s*/, '_.');
+    var srcValStr = util.inspect(srcVal);
     if (key === '__testObj') {
-      matchFailMsg.push(util.inspect(srcVal) + " didn't match " + util.inspect(targVal))
+      makeMsg(srcVal, targVal);
     } else if (/^\d+$/.test(key)) {
-      matchFailMsg.push("Array[" + key + "] = " + util.inspect(srcVal) + " didn't match Array[" + key + "] = " + util.inspect(targVal));
+      makeMsg(srcVal, targVal, key, "Array[${key}] = ${src} didn't match target Array[${key}] = ${tgt}");
     } else {
-      matchFailMsg.push("{" + key + ": " + util.inspect(srcVal) + "} didn't match {" + key + ": " + util.inspect(targVal) + "}");
+      makeMsg(srcVal, targVal, key, "{${key}: ${src}} didn't match target {${key}: ${tgt}}");
     }
   }
   return currentIsMatch;
 };
 
+var makeMsg = function (matchFailMsg, srcVal, targVal, key, template) {
+  if (arguments.length  === 1) {
+    return matchFailMsg
+  }
+  if (!template) {
+    template = "${src} didn't match target ${tgt}"
+  }
+  if (_.isArray(targVal)) {
+    targVal = _.without(targVal, '__MP_superset', '__MP_subset', '__MP_equalset');
+  }
+  if (_.isFunction(targVal)) {
+    targVal = targVal.toString().split(/\n/)[0].replace(/\{.*/, '{...}');
+  }
+  var param = {
+    key: key,
+    src: util.inspect(srcVal),
+    tgt: util.inspect(targVal).replace(/__MP_match\s*/g, '_.')
+  };
+  matchFailMsg.push(_.template(template)(param));
+};
+
 var matchPattern = function (sourceData, targetPattern) {
-  var isMatch;
+  var targetObject = targetPattern;
+
+  if (_.isObject(targetPattern)) {
+    targetObject = normalize(targetPattern);
+  }
+  if (_.isString(targetPattern)) {
+    try {
+      targetObject = parser.parse(targetPattern);
+      if (debug) console.log('parsed', targetObject);
+    }
+    catch (error) {
+      throw new Error('In matchPattern: ' + error.message);
+    }
+  }
+  if (debug) console.log('parse/normalize targetObject', targetObject);
   var matchFailMsg = [];
-  _.isMatchWith({__testObj: targetPattern}, {__testObj: sourceData}, matcher.bind(null, matchFailMsg));
+  _.isMatchWith(
+    {__testObj: targetObject},
+    {__testObj: sourceData},
+    matcher.bind(null, makeMsg.bind(null, matchFailMsg)));
   return matchFailMsg.length ? matchFailMsg.join('\n') : null;
 };
 

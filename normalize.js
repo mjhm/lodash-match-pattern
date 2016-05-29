@@ -1,6 +1,7 @@
 var _ = require('lodash-checkit');
 
 var normalizeObject = function (obj) {
+  var mapApplyCount = 0;
   if (_.isArray(obj)) {
     return normalizeArray(obj);
   }
@@ -9,13 +10,13 @@ var normalizeObject = function (obj) {
   }
   if (_.isObject(obj)) {
     var normedKeys = _.mapKeys(obj, function (val, key) {
-      if (key === '<-') return '__MP_apply';
-      if (key === '<=') return '__MP_map';
+      if (key === '<-') return '__MP_apply' + mapApplyCount++;
+      if (key === '<=') return '__MP_map' + mapApplyCount++;
       if (key === '...') return '__MP_subset';
       var applyMatch = key.match(/\<\-\.(.+)$/);
-      if (applyMatch) return '__MP_apply ' + applyMatch[1];
+      if (applyMatch) return '__MP_apply' + mapApplyCount++ + ' ' + applyMatch[1];
       var mapMatch = key.match(/\<\=\.(.+)$/);
-      if (mapMatch) return '__MP_map ' + mapMatch[1];
+      if (mapMatch) return '__MP_map' + mapApplyCount++ + ' ' + mapMatch[1];
       return key;
     });
     return _.mapValues(normedKeys, function (val, key) {
@@ -24,6 +25,7 @@ var normalizeObject = function (obj) {
       return normalizeObject(val);
     })
   }
+  if (/^_\.is/.test(obj)) return '__MP_match ' + obj.slice(2);
   return obj;
 };
 

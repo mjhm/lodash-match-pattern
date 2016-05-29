@@ -111,12 +111,12 @@ zero          = "0"
 
 /* ----- 7. Strings ----- */
 
-string = dqstring / sqstring
+string "quoted string" = dqstring / sqstring
 
-dqstring "dqstring"
+dqstring "double quoted string"
   = dquotation_mark chars:dqchar* dquotation_mark { return chars.join(""); }
 
-sqstring
+sqstring "single quoted string"
   = squotation_mark chars:sqchar* squotation_mark { return chars.join(""); }
 
 dqchar
@@ -188,4 +188,4 @@ upper = [A-Z]
 alpha = [a-zA-Z]
 alphaNum = [_0-9a-zA-Z]
 pipe = "|"
-pipeArg = pipe [^|\n\r\t\ }\,]*
+pipeArg = pipe [^|\n\r\t \}\,\:]* { return text() }

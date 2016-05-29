@@ -13,6 +13,7 @@ var normalizeTests = [
   [ [{'<=': 1, '...': 'abc'}], [{'__MP_map': 1, '__MP_subset': ''}] ],
   [ {'<-.myapply': '_.isAtest|with|arg|1'}, {'__MP_apply myapply': '__MP_match isAtest|with|arg|1'}],
   [ {'<-.myapply|arg': 'abc'}, {'__MP_apply myapply|arg': 'abc'}],
+  [ ['_.isString'], ['__MP_match isString'] ],
   [ 5, 5 ],
   [ [ dummyFn ], [ dummyFn ] ],
   [ [ dummyFn, '==='], [ dummyFn, '__MP_equalset' ] ]
