@@ -140,13 +140,15 @@ describe('matchPattern', function () {
   });
 
   describe('Match Pattern format tests', function () {
-    describe('basic tests', function () {
+    describe.only('basic tests', function () {
       runTestList([
         [true,    {targ: '{a: _.isNumber}', src: {a: 6}}],
         [false,   {targ: '{a: _.isNumber}', src: {a: '6'}}],
+        [false,   {targ: '{a: "_.isNumber"}', src: {a: 6}}],
         [true,    {targ: '{ <-.without|10: [9, 11]}', src: [9, 10, 11] }],
         [false,   {targ: '{ <-.without|"10": [9, 11]}', src: [9, 10, 11] }],
         [true,    {targ: '{ <-.without|"10": ["9", "11"]}', src: ['9', '10', '11'] }],
+        [true,    {targ: '{ <-.without|"1 0": ["9", "11"]}', src: ['9', '1 0', '11'] }],
         ['throw', {targ: '{a: _.size}', src: {a: 6}}],
         [true,    {targ: function () {/*
           {

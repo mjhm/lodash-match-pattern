@@ -183,7 +183,7 @@ var matchPattern = function (sourceData, targetPattern) {
       if (debug) console.log('parsed', targetObject);
     }
     catch (error) {
-      throw new Error('In matchPattern: ' + error.message);
+      throw new Error('matchPattern: Error parsing pattern: ' + error.message);
     }
   }
   if (debug) console.log('parse/normalize targetObject', targetObject);

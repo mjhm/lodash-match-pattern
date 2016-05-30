@@ -6,6 +6,8 @@ var fs = require('fs');
 var PEG = require('pegjs');
 var expect = chai.expect;
 
+var only = 'only';
+
 var parser = PEG.buildParser(fs.readFileSync('./parser/matchpattern.pegjs', 'utf8'));
 
 var parserTests =[
@@ -25,16 +27,35 @@ var parserTests =[
   [ '{<-.applyme|abc : {a : 1}}',  {'__MP_apply0 applyme|abc': {a: 1}} ],
   [ '{<-.applyme|abc: {a : 1}}',  {'__MP_apply0 applyme|abc': {a: 1}} ],
   [ '{<-.applyme|abc|"-34.9": {a : 1}}',  {'__MP_apply0 applyme|abc|"-34.9"': {a: 1}} ],
+  [ '{<-.applyme|"a b": {a : 1}}',  {'__MP_apply0 applyme|"a b"': {a: 1}} ],
   [ '{a : _.isMatchMe}',  {a: "__MP_match isMatchMe"} ],
+  [ '{a : _.isMatchMe|"a b"}',  {a: '__MP_match isMatchMe|"a b"'} ],
 ];
 
-describe('parser', function () {
-  parserTests.forEach(function(tst) {
+
+var runTestList = function (testList) {
+  var onlyTests = [];
+  var noSkipTests = [];
+  testList.forEach(function (tst) {
+    if (tst[0] === 'only') {
+      onlyTests.push(tst.slice(1));
+    }
+    if (tst[0] !== 'skip') {
+      noSkipTests.push(tst);
+    }
+  });
+
+  (onlyTests.length ? onlyTests : noSkipTests).forEach(function(tst) {
     var desc = util.inspect(tst[0], {depth: 3}) + ' parses into \n' + JSON.stringify(tst[1], null, 2);
 
     it(desc, function() {
       expect(parser.parse(tst[0])).to.deep.equal(tst[1]);
     });
-
   });
+};
+
+
+
+describe('parser', function () {
+  runTestList(parserTests);
 });

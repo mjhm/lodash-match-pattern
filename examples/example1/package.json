@@ -1,0 +1,19 @@
+{
+  "name": "example1",
+  "version": "1.0.0",
+  "description": "Illustration of API testing using lodash-match-pattern",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/cucumberjs"
+  },
+  "author": "John McLaughlin",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "cucumber": "^0.10.3",
+    "lodash-checkit": "git://github.com/mjhm/lodash-checkit.git"
+  },
+  "dependencies": {
+    "lodash-match-pattern": "file:///Users/johnmclaughlin/git/lodash-match-pattern"
+  }
+}
