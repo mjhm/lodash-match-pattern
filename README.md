@@ -13,6 +13,7 @@ npm install lodash-match-pattern --save-dev
 In your test file insert
 ```
 var matchPattern = require('lodash-match-pattern');
+var _ = matchPattern.getLodashModule(); // Use our lodash extensions
 
 var testValue = {a: 1, b: 'abc'};
 
@@ -52,7 +53,7 @@ var joeUser = getJoeUser();
 
 describe('basic match', function () {
   it('matches joeUser', function () {
-    var result = matchPattern(joeUser,
+    var matchResult = matchPattern(joeUser,
 {
   id: 43,
   email: 'joe@matchapattern.org',
@@ -74,6 +75,9 @@ describe('basic match', function () {
     {id: 89, email: 'jerry@mp.co', active: false},
     {id: 14, email: 'dan@mp.co', active: true}
   ]
+};
+    if (matchResult) throw(new Error(matchResult));
+  });
 });
 </pre></td><td><pre>
   Given I have joeUser
@@ -102,12 +106,15 @@ describe('basic match', function () {
   ]
 });
     """
-
 </pre></td></tr>
 </table>
-Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only useful in small isolated feature tests and occasional unit tests. Just for example, trying to match the exact `createDate` of the above user from a database might require some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `chai-match-pattern` enables a rich and extensible facility for data type checking.
 
----
+##### Notes
+* In this case the JS Object and the Pattern Notation are visually identical. The only difference is the first is a JS object and the second is a string.
+* For all the following examples we'll leave out the surrounding test boiler plate.
+* For completeness example the cucumber step definitions could be:
+
+```
 // steps.js
 var matchPattern = require('lodash-match-pattern');
 module.exports = function () {
@@ -129,29 +136,52 @@ module.exports = function () {
     }
   );
 };
+```
+
+Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only useful in small isolated feature tests and occasional unit tests. Just for example, trying to match the exact `createDate` of the above user from a database might require some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `lodash-match-pattern` enables a rich and extensible facility for data type checking.
 
 
 ## Matching property types
 
-The pattern below may look a little odd at first, but main idea is that there a bucket full of `_.isXxxx` matchers available to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
-```
-    expect(joeUser).to.matchPattern(
-    {
-      "id": "_.isInteger",
-      "email": "_.isEmail",
-      "website": "_.isUrl",
-      "firstName": "_.isStartCase",
-      "lastName": "_.isString",
-      "createDate": "_.isDateString",
-      "tvshows": [
-        "_.isString",
-        "_.isString",
-        "_.isString"
-      ],
-      "mother": "_.isObject",
-      "friends": "_.isArray"
-    });
-```
+The pattern below may look a little odd at first, but main idea is that there a bucket full of `_.isXxxx` matchers available from to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  id: _.isInteger,
+  email: _.isEmail,
+  website: _.isUrl,
+  firstName: _.isStartCase,
+  lastName: _.isString,
+  createDate: _.isDateString,
+  tvshows: [
+    _.isString,
+    _.isString,
+    _.isString
+  ],
+  mother: _.isObject,
+  friends: _.isArray
+}
+</pre></td><td><pre>
+{
+  id: _.isInteger,
+  email: _.isEmail,
+  website: _.isUrl,
+  firstName: _.isStartCase,
+  lastName: _.isString,
+  createDate: _.isDateString,
+  tvshows: [
+    _.isString,
+    _.isString,
+    _.isString
+  ],
+  mother: _.isObject,
+  friends: _.isArray
+}
+</pre></td></tr>
+</table>
+
 The available matching functions are
 
 1. All `isXxxx` functions from `lodash`.
