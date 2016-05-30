@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha",
     "build_parser": "./node_modules/.bin/pegjs ./parser/matchpattern.pegjs _parser.js",
-    "postinstall": "npm run build_parser"
+    "prepublish": "npm run build_parser"
   },
   "directories": {
     "test": "test"

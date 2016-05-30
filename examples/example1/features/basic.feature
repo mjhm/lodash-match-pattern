@@ -37,7 +37,7 @@ Feature: Basic chai-match-pattern
       id: _.isInteger,
       email: _.isEmail,
       website: _.isUrl,
-      firstName: _.isStartCase,
+      firstName: /[A-Z][a-z]+/,
       lastName: _.isString,
       createDate: _.isDateString,
       tvshows: [

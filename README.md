@@ -2,7 +2,7 @@
 
 ![CircleCI badge](https://circleci.com/gh/mjhm/lodash-match-pattern.svg?style=shield&circle-token=:circle-token)
 
-This is a general purpose validation tool for JSON objects. It includes facilities for deep matching, partial matching, unordered lists, and includes a variety of validation functions from the `lodash-checkit` module (a `lodash` extension which adds validation functionality from the popular `checkit` module).
+This is a general purpose validation tool for JSON objects. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also includes a variety of validation functions from the `lodash-checkit` module (a [`lodash`](https://lodash.com/docs) extension mashup with [`checkit`](https://github.com/tgriesser/checkit)), and it allows for custom checking and mapping functions.
 
 The primary goal of this and the supporting modules is to enable the highly flexible, expressive, and resilient feature testing of JSON based APIs.
 
@@ -13,18 +13,22 @@ npm install lodash-match-pattern --save-dev
 In your test file insert
 ```
 var matchPattern = require('lodash-match-pattern');
-var _ = matchPattern.getLodashModule(); // Use our lodash extensions
+var _ = matchPattern.getLodashModule(); // Use our lodash extensions (recommended)
+
+// Example usage:
 
 var testValue = {a: 1, b: 'abc'};
 
-var successResult = matchPattern(testValue, {a: 1, b: '_.isString'});
-\\ returns null for a successful match.
+var successResult = matchPattern(testValue, {a: 1, b: _.isString});
+// returns null for a successful match.
 
-var failResult = matchPattern(testValue, {a: '_.isString', b: 'abc'});
-\\ returns "{a: 1} didn't match target {a: '_.isString'}"
+var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
+// returns "{a: 1} didn't match target {a: '_.isString'}"
 ```
 
-Here are the main features. You probably won't need all of them, but there's plenty of flexibility to allow you to adapt to the details of your specific use cases. All of the examples below are illustrated in the `examples/example1/features/basic.feature` as cucumber-js tests.
+#### Features Index
+
+Here are the main features. You probably won't need all of them, but there's plenty of flexibility to allow you to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/basic.feature`] as cucumber-js tests.
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -145,30 +149,14 @@ Unfortunately, deep matching of exact JSON patterns creates over-specified and b
 
 The pattern below may look a little odd at first, but main idea is that there's a bucket full of `_.isXxxx` matchers available to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
 <table><tr>
-<th>JavaScript Objects</th><th>JSON Pattern Notation</th>
+<th>JavaScript Objects and JSON Pattern Notation</th>
 </tr>
 <tr><td><pre>
 {
   id: _.isInteger,
   email: _.isEmail,
   website: _.isUrl,
-  firstName: _.isStartCase,
-  lastName: _.isString,
-  createDate: _.isDateString,
-  tvshows: [
-    _.isString,
-    _.isString,
-    _.isString
-  ],
-  mother: _.isObject,
-  friends: _.isArray
-}
-</pre></td><td><pre>
-{
-  id: _.isInteger,
-  email: _.isEmail,
-  website: _.isUrl,
-  firstName: _.isStartCase,
+  firstName: /[A-Z][a-z]+/,
   lastName: _.isString,
   createDate: _.isDateString,
   tvshows: [
@@ -189,6 +177,7 @@ The pattern below may look a little odd at first, but main idea is that there's 
   1. All `isXxxx` functions from `lodash`.
   1. All validation functions from `checkit` with `is` prepended.
   1. Case convention matchers constructed from lodash's `...Case` functions.
+  1. Any regular expression -- intepreted as `/<regex>/.test(<testval>)`.
   1. `isDateString`, `isSize`, `isOmitted`
   1. Any `isXxxx` function you insert as a lodash mixin through [customization](#customization).
 
@@ -203,50 +192,115 @@ console.log(
 ## Partial objects
 
 Most of the time feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billybob@duckduck.go" then we can simply match the pattern:
-```
-    expect(joeUser).to.matchPattern({
-      "id": "_.isInteger",
-      "email": "billybob@duckduck.go",
-      "...": ""
-    });
-```
-The `"..."` object key indicates that only specified keys are matched, and all others in `joeUser` are ignored.
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  id: _.isInteger,
+  email: "billybob@duckduck.go",
+  "...": ""
+}
+</pre></td><td><pre>
+{
+  id: _.isInteger,
+  email: "billybob@duckduck.go",
+  ...
+}
+</pre></td></tr></table>
+
+The `"..."` object key indicates that only the specified keys are matched, and all others in `joeUser` are ignored.
 
 _Note: from here on all the examples will use partial matching, and all will successfully match "joeUser"._
 
-## Partial and superset matches of arrays
+## Partial, superset, and equalset matches of arrays
 
 Similarly partial arrays can be matched with a couple caveats:
 
 1. The array entries must be numbers or strings, no nested objects or arrays.
-2. The partial arrays are matched with no order assumed.
+2. The partial arrays are matched as sets -- no order assumed.
 
-```
-    {
-      "tvshows": [
-        "House of Cards",
-        "Sopranos",
-        "..."
-      ],
-      "...": ""
-    }
-```
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  tvshows: [
+    "House of Cards",
+    "Sopranos",
+    "..."
+  ],
+  "...": ""
+}
+</pre></td><td><pre>
+{
+  tvshows: [
+    "House of Cards",
+    "Sopranos",
+    ...
+  ],
+  ...
+}
+</pre></td></tr></table>
+
 Note that the above specifies both a partial array (for `joeUser.tvshows`) and a partial object (for `joeUser`).
 
-Supersets are similarly specified by "---". This following says that `joeUser.tvshows` is a subset of the list in the pattern below:
-```
-    {
-      "tvshows": [
-        "House of Cards",
-        "Match Game",
-        "Sopranos",
-        "Grey's Anatomy",
-        "---"
-      ],
-      "...": ""
-    }
-```
-If you actually need to match `"..."` or `"---"` in an array see the [customization](#customization) section below.
+Supersets are similarly specified by "^^^". This following says that `joeUser.tvshows` is a subset of the list in the pattern below:
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  tvshows: [
+    "House of Cards",
+    "Match Game",
+    "Sopranos",
+    "Grey's Anatomy",
+    "^^^"
+  ],
+  "...": ""
+}
+</pre></td><td><pre>
+{
+  tvshows: [
+    "House of Cards",
+    "Match Game",
+    "Sopranos",
+    "Grey's Anatomy",
+    ^^^
+  ],
+  ...
+}
+</pre></td></tr></table>
+
+Or to compare equality of arrays as sets by unordered membership, use "===":
+
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  tvshows: [
+    "House of Cards",
+    "Match Game",
+    "Sopranos",
+    "==="
+  ],
+  "...": ""
+}
+</pre></td><td><pre>
+{
+  tvshows: [
+    "House of Cards",
+    "Match Game",
+    "Sopranos",
+    ...
+  ],
+  ...
+}
+</pre></td></tr></table>
+
+Note that the JS Object form adds the set matching symbols as extra array entries. If you actually need to literally match `"..."`, `"^^^"`, or `"^^^"` in an array see the [customization](#customization) example below.
 
 ## Omitted items
 
