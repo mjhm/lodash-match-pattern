@@ -5,7 +5,7 @@ var normalizeObject = function (obj) {
   if (_.isArray(obj)) {
     return normalizeArray(obj);
   }
-  if (_.isFunction(obj)) {
+  if (_.isFunction(obj) || _.isRegExp(obj)) {
     return obj;
   }
   if (_.isObject(obj)) {

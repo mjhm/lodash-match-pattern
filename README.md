@@ -138,12 +138,12 @@ module.exports = function () {
 };
 ```
 
-Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only useful in small isolated feature tests and occasional unit tests. Just for example, trying to match the exact `createDate` of the above user from a database might require some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `lodash-match-pattern` enables a rich and extensible facility for data type checking.
+Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only useful in small isolated feature tests and occasional unit tests. Just for example, suppose you wanted to match the exact `createDate` of the above user. Then you might need to do some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `lodash-match-pattern` enables a rich and extensible facility for data type checking.
 
 
 ## Matching property types
 
-The pattern below may look a little odd at first, but main idea is that there a bucket full of `_.isXxxx` matchers available from to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
+The pattern below may look a little odd at first, but main idea is that there's a bucket full of `_.isXxxx` matchers available to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
 <table><tr>
 <th>JavaScript Objects</th><th>JSON Pattern Notation</th>
 </tr>

@@ -128,10 +128,17 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
     }
   }
 
-  var matchFn =
-    /^__MP_match/.test(targVal) ?
-      curryFunctionSpec(targVal.replace(/^__MP_match\s*/, '')) :
-    _.isFunction(targVal) ? targVal : null;
+  var matchFn = null;
+  if ( /^__MP_match/.test(targVal)) {
+    matchFn = curryFunctionSpec(targVal.replace(/^__MP_match\s*/, ''));
+  } else if (_.isFunction(targVal)) {
+    matchFn = targVal;
+  } else if (/^__MP_regex/.test(targVal)) {
+    var re = new RegExp(targVal.replace(/^__MP_regex\s*/, ''))
+    matchFn = RegExp.prototype.test.bind(re);
+  } else if (_.isRegExp(targVal)) {
+    matchFn = RegExp.prototype.test.bind(targVal);
+  }
 
   // Here's where the leaf node item comparison happens.
   var currentIsMatch = matchFn ? matchFn(srcVal) : targVal === srcVal

@@ -9,7 +9,7 @@ var expect = chai.expect;
 var matchPattern = rewire('../');
 var only = 'only';
 
-var checkMessages = true;
+var checkMessages = false;
 
 Function.prototype.commentToString = function () {
   return this.toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1];
@@ -38,8 +38,15 @@ var runTestList = function (testList) {
 
     it(desc, function() {
       if (tst[0] === 'throw') {
-        expect(matchPattern.bind(null,tst[1].src, tst[1].targ))
-          .to.throw(checkMessages ? /^Testing Message$/ : Error)
+        if (checkMessages) {
+          try {
+            matchPattern(tst[1].src, tst[1].targ);
+          } catch (error) {
+            console.log('Exception Message:', error.message)
+            return;
+          }
+        }
+        expect(matchPattern.bind(null,tst[1].src, tst[1].targ)).to.throw()
         return;
       }
       var matchResult = matchPattern(tst[1].src, tst[1].targ);
@@ -137,14 +144,26 @@ describe('matchPattern', function () {
         [false, {targ: {a: _.isNumber}, src: {a: '6'}}],
       ]);
     });
+
+    describe('regexp', function () {
+      runTestList([
+        [true,  {targ: {a: /abc/}, src: {a: 'abc'}}],
+        [false,  {targ: {a: /abc/}, src: {a: 'Abc'}}],
+        [true,  {targ: /\:/, src: ':'}],
+        [true,  {targ: /\t\"\n/, src: '\t"\n'}],
+      ]);
+    });
   });
 
-  describe('Match Pattern format tests', function () {
-    describe.only('basic tests', function () {
+  describe('Pattern Notation', function () {
+    describe('basic tests', function () {
       runTestList([
         [true,    {targ: '{a: _.isNumber}', src: {a: 6}}],
         [false,   {targ: '{a: _.isNumber}', src: {a: '6'}}],
         [false,   {targ: '{a: "_.isNumber"}', src: {a: 6}}],
+        [true,    {targ: '{a: /abc/}', src: {a: 'abc'}}],
+        [true,    {targ: '/[0-9]+/', src: '123'}],
+        [false,   {targ: '/[A-Z]+/', src: '123'}],
         [true,    {targ: '{ <-.without|10: [9, 11]}', src: [9, 10, 11] }],
         [false,   {targ: '{ <-.without|"10": [9, 11]}', src: [9, 10, 11] }],
         [true,    {targ: '{ <-.without|"10": ["9", "11"]}', src: ['9', '10', '11'] }],

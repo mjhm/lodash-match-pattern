@@ -18,12 +18,13 @@ describe('helpers', function () {
     var fillSrcTests = [
       '{targ: {a: 2, b: 2}, src: {a: 1}, result: {a: 1, b: undefined}}',
       '{targ: {a: 2, b: 2}, src: {a: 1, c: 1}, result: {a: 1, c: 1, b: undefined}}',
-      '{targ: {a: 2, b: 2, "...": ""}, src: {a: 1, c: 1}, result: {a: 1, b: undefined}}'
+      '{targ: {a: 2, b: 2, "__MP_subset": ""}, src: {a: 1, c: 1}, result: {a: 1, b: undefined}}'
     ];
     fillSrcTests.forEach(function (test) {
       var testData = new Function('return ' + test)()
       it(test, function () {
-        expect(fillSrcWithVoids(testData.targ, testData.src)).to.deep.equal(testData.result);
+        var filled = fillSrcWithVoids(testData.targ, testData.src);
+        expect(filled).to.deep.equal(testData.result);
       });
     });
   });
@@ -32,13 +33,14 @@ describe('helpers', function () {
     var fillTargTests = [
       '{targ: {a: 2, b: 2}, src: {a: 1}, result: {a: 2, b: 2}}',
       '{targ: {a: 2, b: 2}, src: {a: 1, c: 1}, result: {a: 2, c: undefined, b: 2}}',
-      '{targ: {a: 2, b: 2, "...": ""}, src: {a: 1, c: 1}, result: {a: 2, b: 2, c: undefined}}'
+      '{targ: {a: 2, b: 2, "__MP_subset": ""}, src: {a: 1, c: 1}, result: {a: 2, b: 2, c: undefined}}'
     ];
     fillTargTests.forEach(function (test) {
       var testData = new Function('return ' + test)()
 
       it(test, function () {
-        expect(fillTargWithVoids(testData.targ, testData.src)).to.deep.equal(testData.result);
+        var filled = fillTargWithVoids(testData.targ, testData.src);
+        expect(filled).to.deep.equal(testData.result);
       });
     });
   });

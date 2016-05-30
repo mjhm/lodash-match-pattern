@@ -41,6 +41,7 @@ value
   / object
   / array
   / number
+  / regex
   / string
   / matcher
 
@@ -113,11 +114,16 @@ zero          = "0"
 
 string "quoted string" = dqstring / sqstring
 
+regex "regex" = rqstring { return "__MP_regex " + text().slice(1, -1) }
+
 dqstring "double quoted string"
   = dquotation_mark chars:dqchar* dquotation_mark { return chars.join(""); }
 
 sqstring "single quoted string"
   = squotation_mark chars:sqchar* squotation_mark { return chars.join(""); }
+
+rqstring "regex quoted string"
+  = rquotation_mark chars:rqchar* rquotation_mark { return chars.join(""); }
 
 dqchar
   = dqunescaped
@@ -129,6 +135,12 @@ sqchar
   = squnescaped
   / escape
     sequence:("'" / no_quote_char)
+    { return sequence; }
+
+rqchar
+  = rqunescaped
+  / escape
+    sequence:(no_quote_char)
     { return sequence; }
 
 no_quote_char =
@@ -146,8 +158,10 @@ no_quote_char =
 escape         = "\\"
 dquotation_mark = '"'
 squotation_mark = "'"
+rquotation_mark = "/"
 dqunescaped      = [^\0-\x1F\x22\x5C]
 squnescaped      = [^\0-\x1F\x27\x5C]
+rqunescaped      = [^\0-\x1F\x2F\x5C]
 
 
 /* ----- Core ABNF Rules ----- */
