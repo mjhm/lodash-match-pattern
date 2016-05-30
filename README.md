@@ -46,7 +46,6 @@ Just for starters, suppose we have a "joeUser" object and want to validate its e
 <table><tr>
 <th>JavaScript Objects</th><th>JSON Pattern Notations</th>
 </tr>
-<small>
 <tr><td><small><pre>
     expect(joeUser).to.matchPattern(
     {
@@ -66,12 +65,12 @@ Just for starters, suppose we have a "joeUser" object and want to validate its e
         email: "mom@aol.com"
       },
       friends: [
-        {id: 21, email: "bob@matchpattern.org", active: true},
-        {id: 89, email: "jerry@matchpattern.org", active: false},
-        {id: 14, email: "dan@matchpattern.org", active: true}
+        {id: 21, email: "bob@mp.co", active: true},
+        {id: 89, email: "jerry@mp.co", active: false},
+        {id: 14, email: "dan@mp.co", active: true}
       ]
     });
-</pre></small></td><td><small><pre>
+</pre></small></td><td><pre>
     expect(joeUser).to.matchPattern(
     {
       id: 43,
@@ -90,12 +89,12 @@ Just for starters, suppose we have a "joeUser" object and want to validate its e
         email: "mom@aol.com"
       },
       friends: [
-        {id: 21, email: "bob@matchpattern.org", active: true},
-        {id: 89, email: "jerry@matchpattern.org", active: false},
-        {id: 14, email: "dan@matchpattern.org", active: true}
+        {id: 21, email: "bob@mp.co", active: true},
+        {id: 89, email: "jerry@mp.co", active: false},
+        {id: 14, email: "dan@mp.co", active: true}
       ]
     });
-</pre></small></td></tr>
+</pre></td></tr>
 </table>
 Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only useful in small isolated feature tests and occasional unit tests. Just for example, trying to match the exact `createDate` of the above user from a database might require some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `chai-match-pattern` enables a rich and extensible facility for data type checking.
 
