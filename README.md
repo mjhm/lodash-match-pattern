@@ -112,7 +112,7 @@ describe('basic match', function () {
 ##### Notes
 * In this case the JS Object and the Pattern Notation are visually identical. The only difference is the first is a JS object and the second is a string.
 * For all the following examples we'll leave out the surrounding test boiler plate.
-* For completeness example the cucumber step definitions could be:
+* For completeness example the cucumber step definitions could be defined as:
 
 ```
 // steps.js
@@ -145,7 +145,7 @@ Unfortunately, deep matching of exact JSON patterns creates over-specified and b
 
 The pattern below may look a little odd at first, but main idea is that there a bucket full of `_.isXxxx` matchers available from to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects</th><th>JSON Pattern Notation</th>
 </tr>
 <tr><td><pre>
 {
@@ -182,13 +182,15 @@ The pattern below may look a little odd at first, but main idea is that there a 
 </pre></td></tr>
 </table>
 
-The available matching functions are
+##### Notes
+* Again the two forms are visually identical. However there's one significant difference. For the JS Objects the matching functions (e.g `_.isString`) can be any function in scope. In contrast the corresponding Pattern Notation functions are required to be members of our lodash extension module and are required to begin with "is".
 
-1. All `isXxxx` functions from `lodash`.
-1. All validation functions from `checkit` with `is` prepended.
-1. Case convention matchers constructed from lodash's `...Case` functions.
-1. `isDateString`, `isSize`, `isOmitted`
-1. Any `isXxxx` function you insert as a lodash mixin through [customization](#customization).
+* The available matching functions are
+  1. All `isXxxx` functions from `lodash`.
+  1. All validation functions from `checkit` with `is` prepended.
+  1. Case convention matchers constructed from lodash's `...Case` functions.
+  1. `isDateString`, `isSize`, `isOmitted`
+  1. Any `isXxxx` function you insert as a lodash mixin through [customization](#customization).
 
 To see the full list run this:
 ```
