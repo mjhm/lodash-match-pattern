@@ -44,56 +44,88 @@ There are two similar ways to specify patterns to match. JavaScript objects are 
 
 Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected.
 <table><tr>
-<th>JavaScript Objects</th><th>JSON Pattern Notations</th>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
 </tr>
-<tr><td><small><pre>
-expect(joeUser).to.matchPattern(
+<tr><td><pre>
+var matchPattern = require('lodash-match-pattern');
+var joeUser = getJoeUser();
+
+describe('basic match', function () {
+  it('matches joeUser', function () {
+    var result = matchPattern(joeUser,
 {
   id: 43,
-  email: "joe@matchapattern.org",
-  website: "http://matchapattern.org",
-  firstName: "Joe",
-  lastName: "Matcher",
-  createDate: "2016-05-22T00:23:23.343Z",
+  email: 'joe@matchapattern.org',
+  website: 'http://matchapattern.org',
+  firstName: 'Joe',
+  lastName: 'Matcher',
+  createDate: '2016-05-22T00:23:23.343Z',
   tvshows: [
-    "Match Game",
-    "Sopranos",
-    "House of Cards"
+    'Match Game',
+    'Sopranos',
+    'House of Cards'
   ],
   mother: {
     id: 23,
-    email: "mom@aol.com"
+    email: 'mom@aol.com'
   },
   friends: [
-    {id: 21, email: "bob@mp.co", active: true},
-    {id: 89, email: "jerry@mp.co", active: false},
-    {id: 14, email: "dan@mp.co", active: true}
+    {id: 21, email: 'bob@mp.co', active: true},
+    {id: 89, email: 'jerry@mp.co', active: false},
+    {id: 14, email: 'dan@mp.co', active: true}
   ]
 });
-</pre></small></td><td><pre>
-expect(joeUser).to.matchPattern(
+</pre></td><td><pre>
+  Given I have joeUser
+  Then joeUser matches the pattern
+    """
 {
   id: 43,
-  email: "joe@matchapattern.org",
-  website: "http://matchapattern.org",
-  firstName: "Joe",
-  lastName: "Matcher",
-  createDate: "2016-05-22T00:23:23.343Z",
+  email: 'joe@matchapattern.org',
+  website: 'http://matchapattern.org',
+  firstName: 'Joe',
+  lastName: 'Matcher',
+  createDate: '2016-05-22T00:23:23.343Z',
   tvshows: [
-    "Match Game",
-    "Sopranos",
-    "House of Cards"
+    'Match Game',
+    'Sopranos',
+    'House of Cards'
   ],
   mother: {
     id: 23,
-    email: "mom@aol.com"
+    email: 'mom@aol.com'
   },
   friends: [
-    {id: 21, email: "bob@mp.co", active: true},
-    {id: 89, email: "jerry@mp.co", active: false},
-    {id: 14, email: "dan@mp.co", active: true}
+    {id: 21, email: 'bob@mp.co', active: true},
+    {id: 89, email: 'jerry@mp.co', active: false},
+    {id: 14, email: 'dan@mp.co', active: true}
   ]
 });
+    """
+---
+// steps.js
+var matchPattern = require('lodash-match-pattern');
+module.exports = function () {
+  var self = this;
+
+  self.Given(/^I have joeUser$/, function () {
+    self.user = {
+      id: 43,
+      email: 'joe@matchapattern.org',
+      ...
+    }
+  });
+
+  self.Then(
+    /^joeUser matches the pattern$/,
+    function (targetPattern) {
+      var matchResult = matchPattern(self.user, targetPattern);
+      if (matchResult) throw matchResult;
+    }
+  );
+};
+
+
 </pre></td></tr>
 </table>
 Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only useful in small isolated feature tests and occasional unit tests. Just for example, trying to match the exact `createDate` of the above user from a database might require some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `chai-match-pattern` enables a rich and extensible facility for data type checking.
