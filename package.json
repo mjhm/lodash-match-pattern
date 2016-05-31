@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "description": "Validates a deep structured JSON pattern",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "normalize.js",
+    "helpers.js",
+    "_parser.js"
+  ],
   "scripts": {
     "test": "./node_modules/.bin/mocha",
     "build_parser": "./node_modules/.bin/pegjs ./parser/matchpattern.pegjs _parser.js",
@@ -11,16 +17,23 @@
   "directories": {
     "test": "test"
   },
-  "repository": "https://github.com/mjhm/lodash-match-pattern",
+  "repository": "https://github.com/originate/lodash-match-pattern",
   "keywords": [
     "chai",
-    "chai-plugin"
+    "chai-plugin",
+    "checkit",
+    "lodash",
+    "deep",
+    "JSON",
+    "pattern",
+    "matching"
   ],
   "author": "John McLaughlin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mjhm/lodash-match-pattern/issues"
+    "url": "https://github.com/originate/lodash-match-pattern/issues"
   },
+  "homepage": "https://github.com/originate/lodash-match-pattern#readme",
   "devDependencies": {
     "chai": "^3.4.1",
     "json5": "^0.5.0",
@@ -30,7 +43,6 @@
     "rewire": "^2.5.1"
   },
   "dependencies": {
-    "checkit": "^0.6.0",
-    "lodash-checkit": "git://github.com/mjhm/lodash-checkit.git"
+    "lodash-checkit": "^0.1.1"
   }
 }

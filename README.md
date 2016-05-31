@@ -118,7 +118,7 @@ describe('basic match', function () {
 ##### Notes
 * In this case the JS Object and the Pattern Notation are visually identical. The only difference is the first is a JS object and the second is a string.
 * For all the following examples we'll leave out the surrounding test boiler plate.
-* For completeness example the cucumber step definitions could be defined as:
+* For completeness the cucumber step definitions could be defined as:
 
 ```
 // steps.js
@@ -193,19 +193,19 @@ console.log(
 
 ## Partial objects
 
-Most of the time feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billybob@duckduck.go" then we can simply match the pattern:
+Most of the time ,feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change. In fact a principle of feature testing requires elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billybob@duckduck.go" then we can simply match the pattern:
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
-  id: _.isInteger,
+  id: 43,
   email: 'billybob@duckduck.go',
   '...': ''
 }
 </pre></td><td><pre>
 {
-  id: _.isInteger,
+  id: 43,
   email: 'billybob@duckduck.go',
   ...
 }
@@ -217,7 +217,7 @@ _Note: from here on all the examples will use partial matching, and all will suc
 
 ## Partial, Superset, and Unordered Arrays
 
-Similarly matching of partial arrays (as well as supersets and set equality) can be easily specified with a couple caveats:
+Similarly matching of partial arrays (as well as supersets and set equality) can be easily specified, but with a couple caveats:
 
 1. The array entries must be numbers or strings, no nested objects or arrays.
 2. The partial (and supersets) arrays are matched as sets -- no order assumed.
@@ -302,7 +302,7 @@ Or to compare equality of arrays as sets by unordered membership, use "===":
 }
 </pre></td></tr></table>
 
-Note that the JS Object form adds the set matching symbols as extra array entries. If you actually need to literally match `"..."`, `"^^^"`, or `"==="` in an array see the [customization](#customization) example below.
+Note that the JS Object specification adds the set matching symbols as extra array elements. If you actually need to literally match `"..."`, `"^^^"`, or `"==="` in an array see the [customization](#customization) example below.
 
 ## Omitted items
 
@@ -347,11 +347,11 @@ Some of the matching functions take parameters. These can be specified with "|" 
 
 ## Transforms
 
-Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed.
+Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed. Use transforms sparingly since they tend to make the patterns less readable, and they could be a code smell of excessively complex tests. In many cases separate tests or custom matcher will be clearer.
 
 #### Apply Transform Example
 
-As a simple motivation consider matching a compound object such at the joeUser's friends list. We may not be able to guarantee order of items returned in the list, and probably don't care anyway. So explicitly matching the friends in a specific order will probably be an unreliable test. (The above "===" array set specifier only applies to arrays of primitives.) To fix this `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested.
+As a simple motivation consider matching a compound object such at the joeUser's friends list. We may not be able to guarantee order of items returned in the list, and probably don't care anyway. So explicitly matching the friends in a specific order will probably be an unreliable test. (The above "===" array set specifier only applies to arrays of primitives.) To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested.
 
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
@@ -382,11 +382,11 @@ As a simple motivation consider matching a compound object such at the joeUser's
 
 Any function in `lodash-checkit` is available for use in transforms, along with any function you add via customization. The functions are applied with the `testValue` as the function's first argument, and additional `|` separated arguments can be specified after the function name.
 
-Important Note: The transform functions are applied to the test value NOT the corresponding test pattern. So in this example we are testing the `joeUser.friends` list. So this list is sorted by `email` and the resulting array is tested against the pattern specified in the above array pattern.
+Important Note: The transform functions are applied to the test value, NOT the corresponding test pattern. In this example we are testing the `joeUser.friends` list. So this list is sorted by `email` and the resulting array is tested against the pattern specified in the above array pattern.
 
 #### Map Pattern Transform Example
 
-Suppose you just wanted to check that all of of joeUser's friends have emails at `mp.co`.
+Suppose you just wanted to check that all of of joeUser's friends have emails `...@mp.co`.
 
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
@@ -412,7 +412,7 @@ The `<=` specifies that the pattern is applied to each of the entries of the `jo
 
 #### Map Values Transform Example
 
-Suppose you just wanted to check that joeUser's friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case.
+Suppose you wanted to check that joeUser's friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case. The following example expresses these requirements:
 
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
@@ -458,7 +458,7 @@ Map transforms can be applied to objects as well as arrays. For arrays `<=.lodas
 
 Transformations can be mixed and matched. Multiple transforms can also appear as keys in a single object. In that case they check the test value against all their respective pattern values. Notice, as suggested in the previous example, transform compositions are always applied to the test value from the outside to the inside where they result in the final pattern match.
 
-In the following example verifies that `joeUser` has "2" active friend, in 4 different ways.
+In the following artificial example verifies that `joeUser` has "2" active friends, in 4 different ways.
 
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
@@ -519,7 +519,6 @@ _.mixin({
     return activeSize === size;
   }
 });
-chaiMatchPattern.use(_);
 ```
 Then we have yet another (but simpler) method for counting joeUser's active friends.
 ```
@@ -529,7 +528,7 @@ Then we have yet another (but simpler) method for counting joeUser's active frie
 }
 ```
 
-The custom `literalSetToken` transform can be used to enable literal pattern matching of "..." and "---" in arrays. So for example if for some reason `joeUser` had this as his `tvshows`:
+The custom `literalSetToken` transform can be used to enable literal pattern matching of "..." and "---" in arrays. So for example, suppose for some reason `joeUser` had this as his actual `tvshows` list:
 ```
   [
     "===",

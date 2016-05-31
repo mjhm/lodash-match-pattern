@@ -1,4 +1,14 @@
 /*
+ * Pattern Notation
+ * ================
+ *
+ * This file was shamelessly adapted from
+ * https://github.com/pegjs/pegjs/blob/master/examples/json.pegjs
+ *
+ * Most of the code, comments, and credit belong to David Majda https://github.com/dmajda
+ *
+ * ================
+ *
  * JSON Grammar
  * ============
  *

@@ -121,7 +121,7 @@ describe('matchPattern', function () {
         [true,  {targ: '_.isSize|5', src: 'abcde'}]
       ]);
     });
-    describe.only('map and apply', function () {
+    describe('map and apply', function () {
       runTestList([
         ['throw',  {targ: { a: 1, '<-': 2}, src: 5}],
         [true,  {targ: {a: {'<-.sortBy': [1, 2, 3]}}, src: {a: [2, 3, 1]}}],
@@ -135,7 +135,7 @@ describe('matchPattern', function () {
         [true,  {targ: { "<=" : _.isNumber}, src: [1, 2]}],
         [false,  {targ: { "<=" : _.isNumber}, src: [1, '2']}],
         [true,  {targ: { "<=.toString" : ['1', '2']}, src: [1, '2']}],
-        [only, true,  {targ: { "<=.toString" : {a: '1', b: '2'}}, src: {a: 1, b: '2'}}],
+        [true,  {targ: { "<=.toString" : {a: '1', b: '2'}}, src: {a: 1, b: '2'}}],
       ]);
     });
 
