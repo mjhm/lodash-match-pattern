@@ -93,19 +93,28 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
     _.forEach(targVal, function (tv, k) {
       var mapApplyMatch = k.match(/^__MP_(map|apply)\d+\s*(.*)/) || [];
       if (debug) console.log('mapApplyMatch', k, mapApplyMatch);
-      var fn = mapApplyMatch[2] ? curryFunctionSpec(mapApplyMatch[2]) : echo;
+      var mapApply = mapApplyMatch[1];
+      var mapApplyFname = mapApplyMatch[2];
+      var fn = mapApplyFname ? curryFunctionSpec(mapApplyFname) : echo;
 
-      if (mapApplyMatch[1] === 'map') {
+      if (mapApply === 'map') {
         if (_.isObject(srcVal)) {
-          _.forEach(srcVal, function (so) {
-            // mapApplyResults.push(matchMembers(tv, fn(so), matcher.bind(null, matchFailMsg)));
-            mapApplyResults.push(matcher(makeMsg, tv, fn(so), key));
-          });
+          if (mapApplyFname) {
+            if (_.isArray(srcVal)) {
+              mapApplyResults.push(matcher(makeMsg, tv, _.map(srcVal, fn), key));
+            } else {
+              mapApplyResults.push(matcher(makeMsg, tv, _.mapValues(srcVal, fn), key));
+            }
+          } else {
+            _.forEach(srcVal, function (so) {
+              mapApplyResults.push(matcher(makeMsg, tv, so, key));
+            });
+          }
         } else {
           // mapApplyResults.push(matchMembers(tv, fn(srcVal), matcher.bind(null, matchFailMsg)));
           mapApplyResults.push(matcher(makeMsg, tv, fn(srcVal)));
         }
-      } else if (mapApplyMatch[1] === 'apply') {
+      } else if (mapApply === 'apply') {
         if (debug) console.log('apply result', fn(srcVal));
         mapApplyResults.push(matcher(makeMsg, tv, fn(srcVal)));
       } else {

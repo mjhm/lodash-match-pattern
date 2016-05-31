@@ -28,7 +28,7 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Features Index
 
-Here are the main features. You probably won't need all of them, but there's plenty of flexibility to allow you to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/basic.feature`] as cucumber-js tests.
+You probably won't need all of these features, but there's plenty of flexibility to allow you to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/basic.feature`] as cucumber-js tests.
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -36,14 +36,13 @@ Here are the main features. You probably won't need all of them, but there's ple
 1. [Partial and superset matches of arrays](#partial-and-superset-matches-of-arrays)
 1. [Omitted items](#omitted-items)
 1. [Parametrized matchers](#parametrized-matchers)
-1. [Unsorted arrays](#unsorted-arrays)
 1. [Transforms](#transforms)
 1. [Multiple matchers](#multiple-matchers)
 1. [Customization](#customization)
 
-## JavaScript Objects vs "JSON Pattern Notation"
+#### Specification with JavaScript Objects or "JSON Pattern Notation"
 
-There are two similar ways to specify patterns to match. JavaScript objects are more convenient for `mocha` and JavaScript test runners that aren't multiline string friendly. "JSON Pattern Notation" is more readable in `cucumber` tests and other environments that support multiline strings. Almost all patterns can be expressed in either form. In most cases below the examples will be shown in both forms.
+There are two similar ways to specify patterns to match. JavaScript objects are more convenient for `mocha` and JavaScript test runners that aren't multiline string friendly. "JSON Pattern Notation" is more readable in `cucumber` tests and other environments that support multiline strings. Almost all patterns can be expressed in either form. In most cases below examples will be shown in both forms.
 
 ## Deep JSON matching
 
@@ -149,7 +148,7 @@ Unfortunately, deep matching of exact JSON patterns creates over-specified and b
 
 The pattern below may look a little odd at first, but main idea is that there's a bucket full of `_.isXxxx` matchers available to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
 <table><tr>
-<th>JavaScript Objects and JSON Pattern Notation</th>
+<th>JavaScript Objects and JSON Pattern Notation are identical</th>
 </tr>
 <tr><td><pre>
 {
@@ -198,27 +197,27 @@ Most of the time feature tests are interested in how objects change, and we don'
 <tr><td><pre>
 {
   id: _.isInteger,
-  email: "billybob@duckduck.go",
-  "...": ""
+  email: 'billybob@duckduck.go',
+  '...': ''
 }
 </pre></td><td><pre>
 {
   id: _.isInteger,
-  email: "billybob@duckduck.go",
+  email: 'billybob@duckduck.go',
   ...
 }
 </pre></td></tr></table>
 
-The `"..."` object key indicates that only the specified keys are matched, and all others in `joeUser` are ignored.
+The `'...'` object key indicates that only the specified keys are matched, and all others in `joeUser` are ignored.
 
 _Note: from here on all the examples will use partial matching, and all will successfully match "joeUser"._
 
-## Partial, superset, and equalset matches of arrays
+## Partial, Superset, and Unordered Arrays
 
-Similarly partial arrays can be matched with a couple caveats:
+Similarly matching of partial arrays (as well as supersets and set equality) can be easily specified with a couple caveats:
 
 1. The array entries must be numbers or strings, no nested objects or arrays.
-2. The partial arrays are matched as sets -- no order assumed.
+2. The partial (and supersets) arrays are matched as sets -- no order assumed.
 
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
@@ -226,17 +225,17 @@ Similarly partial arrays can be matched with a couple caveats:
 <tr><td><pre>
 {
   tvshows: [
-    "House of Cards",
-    "Sopranos",
-    "..."
+    'House of Cards',
+    'Sopranos',
+    '...'
   ],
-  "...": ""
+  '...': ''
 }
 </pre></td><td><pre>
 {
   tvshows: [
-    "House of Cards",
-    "Sopranos",
+    'House of Cards',
+    'Sopranos',
     ...
   ],
   ...
@@ -245,28 +244,28 @@ Similarly partial arrays can be matched with a couple caveats:
 
 Note that the above specifies both a partial array (for `joeUser.tvshows`) and a partial object (for `joeUser`).
 
-Supersets are similarly specified by "^^^". This following says that `joeUser.tvshows` is a subset of the list in the pattern below:
+Supersets are similarly specified by '^^^'. This following says that `joeUser.tvshows` is a subset of the list in the pattern below:
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
   tvshows: [
-    "House of Cards",
-    "Match Game",
-    "Sopranos",
-    "Grey's Anatomy",
-    "^^^"
+    'House of Cards',
+    'Match Game',
+    'Sopranos',
+    'Grey's Anatomy',
+    '^^^'
   ],
-  "...": ""
+  '...': ''
 }
 </pre></td><td><pre>
 {
   tvshows: [
-    "House of Cards",
-    "Match Game",
-    "Sopranos",
-    "Grey's Anatomy",
+    'House of Cards',
+    'Match Game',
+    'Sopranos',
+    'Grey's Anatomy',
     ^^^
   ],
   ...
@@ -281,92 +280,227 @@ Or to compare equality of arrays as sets by unordered membership, use "===":
 <tr><td><pre>
 {
   tvshows: [
-    "House of Cards",
-    "Match Game",
-    "Sopranos",
-    "==="
+    'House of Cards',
+    'Match Game',
+    'Sopranos',
+    '==='
   ],
-  "...": ""
+  '...': ''
 }
 </pre></td><td><pre>
 {
   tvshows: [
-    "House of Cards",
-    "Match Game",
-    "Sopranos",
-    ...
+    'House of Cards',
+    'Match Game',
+    'Sopranos',
+    ===
   ],
   ...
 }
 </pre></td></tr></table>
 
-Note that the JS Object form adds the set matching symbols as extra array entries. If you actually need to literally match `"..."`, `"^^^"`, or `"^^^"` in an array see the [customization](#customization) example below.
+Note that the JS Object form adds the set matching symbols as extra array entries. If you actually need to literally match `"..."`, `"^^^"`, or `"==="` in an array see the [customization](#customization) example below.
 
 ## Omitted items
 
 Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check (an alias of `_.isUndefined`). Note that it works properly with partial objects.
-```
-    {
-      "id": 43,
-      "password": "_.isOmitted",
-      "...": ""
-    }
-```
+
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  id: 43,
+  password: _.isOmitted,
+  '...': ''
+}
+</pre></td><td><pre>
+{
+  id: 43,
+  password: _.isOmitted,
+  ...
+}
+</pre></td></tr></table>
 
 ## Parametrized matchers
 
-Some of the matching functions take one or two parameters. These can be specified with ":" separators at the end of the matching function.
-```
-    {
-      "id": "_.isBetween:42.9:43.1",
-      "tvshows": "_.isContainerFor:House of Cards",
-      "...": ""
-    }
-```
-
-## Unsorted arrays
-Often database rows are returned with no guaranteed order, this is problematic for matching specific array elements. For simple arrays with number and string entries, it's sufficient to just specify the partial array ordering ellipsis `"..."`, since it is defined to be an unsorted array match.  However for more complex arrays a `_.sortBy` transform function needs to be applied to the array values to put them in a predictable order.
-```
-    {
-      "tvshows": [
-        "Sopranos",
-        "House of Cards",
-        "Match Game",
-        "..."
-      ],
-      "friends": {
-        "_.sortBy:email": [
-          {"id": 21, "email": "bob@matchpattern.org", "active": true},
-          {"id": 14, "email": "dan@matchpattern.org", "active": true},
-          {"id": 89, "email": "jerry@matchpattern.org", "active": false}
-        ]
-      },
-      "...": ""
-    }
-```
-
+Some of the matching functions take parameters. These can be specified with "|" separators at the end of the matching function.
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  id: _.isBetween|42.9|43.1,
+  tvshows: '_.isContainerFor|'House of Cards'',
+  '...': ''
+}
+</pre></td><td><pre>
+{
+  id: _.isBetween|42.9|43.1,
+  tvshows: _.isContainerFor|'House of Cards',
+  ...
+}
+</pre></td></tr></table>
 
 ## Transforms
 
-Hopefully you will need complex transform functions only occasionally because they reduce the clarity of test patterns. However they are nevertheless useful and ultimately quite powerful.
+Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed.
 
-Transforms such as `_.sortBy:email` above are inserted as a sole key value that wraps the target pattern. It's a little unintuitive but the transform functions are applied to the values under test, not to the pattern.
+#### Apply Transform Example
 
-Just to illustrate another transform function, a different approach for checking the contents of the friends list is to use the `_.map` function to pull the "email" values, then compare the result with the ellipsis to indicate and unsorted array check.
+As a simple motivation consider matching a compound object such at the joeUser's friends list. We may not be able to guarantee order of items returned in the list, and probably don't care anyway. So explicitly matching the friends in a specific order will probably be an unreliable test. (The above "===" array set specifier only applies to arrays of primitives.) To fix this `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested.
 
-```
-    {
-      "friends": {
-        "_.map:email": [
-          "bob@matchpattern.org",
-          "dan@matchpattern.org",
-          "jerry@matchpattern.org",
-          "..."
-        ]
-      },
-      "...": ""
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  friends: {
+    '<-.sortBy|email': [
+      {id: 21, email: 'bob@mp.co', active: true},
+      {id: 14, email: 'dan@mp.co', active: true},
+      {id: 89, email: 'jerry@mp.co', active: false}
+    ]
+  },
+  '...': ''
+}
+</pre></td><td><pre>
+{
+  friends: {
+    <-.sortBy|email: [
+      {id: 21, email: 'bob@mp.co', active: true},
+      {id: 14, email: 'dan@mp.co', active: true},
+      {id: 89, email: 'jerry@mp.co', active: false}
+    ]
+  },
+  ...
+}
+</pre></td></tr></table>
+
+Any function in `lodash-checkit` is available for use in transforms, along with any function you add via customization. The functions are applied with the `testValue` as the function's first argument, and additional `|` separated arguments can be specified after the function name.
+
+Important Note: The transform functions are applied to the test value NOT the corresponding test pattern. So in this example we are testing the `joeUser.friends` list. So this list is sorted by `email` and the resulting array is tested against the pattern specified in the above array pattern.
+
+#### Map Pattern Transform Example
+
+Suppose you just wanted to check that all of of joeUser's friends have emails at `mp.co`.
+
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  friends: {
+    '<=': { email: /@mp.co$/, '...': ''}
+  },
+  '...': ''
+}
+</pre></td><td><pre>
+{
+  friends: {
+    <=: { email: /@mp.co$/, ...}
+  },
+  ...
+}
+</pre></td></tr></table>
+
+The `<=` specifies that the pattern is applied to each of the entries of the `joeUser.friends` array. This is in contrast to the `<-` operator would specify that the pattern is matched against the array as a whole.
+
+
+#### Map Values Transform Example
+
+Suppose you just wanted to check that joeUser's friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case.
+
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  friends: {
+    '<=.get|email': {
+      '<=.toLower': [
+        'bob@mp.co',
+        'jerry@mp.co',
+        'dan@mp.co',
+        'paul@mp.co',
+        '^^^': ''
+      ]
     }
-```
+  },
+  '...': ''
+}
+</pre></td><td><pre>
+{
+  friends: {
+    <=.get|email: {
+      <=.toLower: [
+        'bob@mp.co',
+        'jerry@mp.co',
+        'dan@mp.co',
+        'paul@mp.co',
+        ^^^
+      ]
+    }
+  },
+  ...
+}
+</pre></td></tr></table>
+
+Here `<=.get|email` specifies that the `_.get(..., 'email')` is applied to each of the entries of the `joeUser.friends` array and creates a new array.  In turn `<=.toLower` creates a mapped array with all emails in lower case. The result is then compared to the given whitelist.
+
+
+## Composition and Multiple Transforms
+
+Transformations can be mixed and matched. Multiple transforms can also appear as keys in a single object. In that case they check the test value against all their respective pattern values. Notice, as suggested in the previous example, transform compositions are always applied to the test value from the outside to the inside where they result in the final pattern match.
+
+In the following example verifies that `joeUser` has "2" active friend, in 5 different ways.
+
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  friends: {
+    '<-.filter|active': {
+      '<-.size': 2,
+      '<-': _.isSize|2,
+      '<-.isSize|2': true
+    },
+    '<=.get|active': {
+      '<=.toNumber': {
+        '<-.sum': 2
+      }
+    }
+  },
+  ...
+}
+
+</pre></td><td><pre>
+{
+  friends: {
+    <-.filter|active: {
+      <-.size: 2,
+      <-: _.isSize|2,
+      <-.isSize|2: true
+    },
+    <=.get|active: {
+      <=.toNumber: {
+        <-.sum: 2
+      }
+    }
+  },
+  ...
+}
+
+</pre></td></tr></table>
+
+This example applies six separate checks to `joeUser.friends`.
+* In the first, the lodash `_.filter` function is applied to `joeUser.friends`, this extracts a sublist where `active === true`.  The resulting two items are handed to the lodash `_.size` function which returns "2" and this is successfully matched against the target "2"
+* The next just repeats the check of the previous example.
+* The remaining 4 checks are all different ways of checking that the `joeUser.friends` has three items.
+
+Note: For the JS Objects, extra spaces are added to the `<=` key values so that JavaScript interprets them as being distinct properties.
+
 
 `_.size` is an simple transform function which can be used to match the size of an array. (Alhough the `_.isSize` matching function is even more convenient.)
 

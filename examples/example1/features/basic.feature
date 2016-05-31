@@ -8,24 +8,24 @@ Feature: Basic chai-match-pattern
     """
     {
       id: 43,
-      email: "joe@matchapattern.org",
-      website: "http://matchapattern.org",
-      firstName: "Joe",
-      lastName: "Matcher",
-      createDate: "2016-05-22T00:23:23.343Z",
+      email: 'joe@matchapattern.org',
+      website: 'http://matchapattern.org',
+      firstName: 'Joe',
+      lastName: 'Matcher',
+      createDate: '2016-05-22T00:23:23.343Z',
       tvshows: [
-        "Match Game",
-        "Sopranos",
-        "House of Cards"
+        'Match Game',
+        'Sopranos',
+        'House of Cards'
       ],
       mother: {
         id: 23,
-        email: "mom@aol.com"
+        email: 'mom@aol.com'
       },
       friends: [
-        {id: 21, email: "bob@matchpattern.org", active: true},
-        {id: 89, email: "jerry@matchpattern.org", active: false},
-        {id: 14, email: "dan@matchpattern.org", active: true}
+        {id: 21, email: 'bob@mp.co', active: true},
+        {id: 89, email: 'jerry@mp.co', active: false},
+        {id: 14, email: 'dan@mp.co', active: true}
       ]
     }
     """
@@ -56,7 +56,7 @@ Feature: Basic chai-match-pattern
     """
     {
       id: _.isInteger,
-      email: "billybob@duckduck.go",
+      email: 'billybob@duckduck.go',
       ...
     }
     """
@@ -66,8 +66,8 @@ Feature: Basic chai-match-pattern
     """
     {
       tvshows: [
-        "House of Cards",
-        "Sopranos",
+        'House of Cards',
+        'Sopranos',
         ...
       ],
       ...
@@ -79,9 +79,9 @@ Feature: Basic chai-match-pattern
     """
     {
       tvshows: [
-        "House of Cards",
-        "Match Game",
-        "Sopranos",
+        'House of Cards',
+        'Match Game',
+        'Sopranos',
         "Grey's Anatomy",
         ^^^
       ],
@@ -104,7 +104,7 @@ Feature: Basic chai-match-pattern
     """
     {
       id: _.isBetween|42.9|43.1,
-      tvshows: _.isContainerFor|"House of Cards",
+      tvshows: _.isContainerFor|'House of Cards',
       ...
     }
     """
@@ -113,40 +113,66 @@ Feature: Basic chai-match-pattern
     Then the user matches the pattern
     """
     {
-      tvshows: [
-        "Sopranos",
-        "House of Cards",
-        "Match Game",
-        ===
-      ],
       friends: {
         <-.sortBy|email: [
-          {id: 21, email: "bob@matchpattern.org", active: true},
-          {id: 14, email: "dan@matchpattern.org", active: true},
-          {id: 89, email: "jerry@matchpattern.org", active: false}
+          {id: 21, email: 'bob@mp.co', active: true},
+          {id: 14, email: 'dan@mp.co', active: true},
+          {id: 89, email: 'jerry@mp.co', active: false}
         ]
       },
       ...
     }
     """
 
-Scenario: Unsorted array variation with "<-.map" transform
+Scenario: Map transform checks the email addresses of the friends list
   Then the user matches the pattern
-  """
+    """
     {
       friends: {
-        <-.map|email: [
-          "bob@matchpattern.org",
-          "dan@matchpattern.org",
-          "jerry@matchpattern.org",
-          ===
-        ]
+        <=: { email: /@mp.co$/, ...}
       },
       ...
     }
-  """
+    """
 
+Scenario: Email addresses of the friends list contained in a whitelist
+  Then the user matches the pattern
+    """
+    {
+      friends: {
+        <=.get|email: {
+          <=.toLower: [
+            'bob@mp.co',
+            'jerry@mp.co',
+            'dan@mp.co',
+            'paul@mp.co',
+            ^^^
+          ]
+        }
+      },
+      ...
+    }
+    """
 
+Scenario: Composition
+  Then the user matches the pattern
+    """
+    {
+      friends: {
+        <-.filter|active: {
+          <-.size: 2,
+          <-: _.isSize|2,
+          <-.isSize|2: true
+        },
+        <=.get|active: {
+          <=.toNumber: {
+            <-.sum: 2
+          }
+        }
+      },
+      ...
+    }
+    """
 
   Scenario: Check the size of arrays with the "_.size" transform.
     Then the user matches the pattern

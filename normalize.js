@@ -10,13 +10,13 @@ var normalizeObject = function (obj) {
   }
   if (_.isObject(obj)) {
     var normedKeys = _.mapKeys(obj, function (val, key) {
-      if (key === '<-') return '__MP_apply' + mapApplyCount++;
-      if (key === '<=') return '__MP_map' + mapApplyCount++;
+      if (/^\<\-\s*$/.test(key)) return '__MP_apply' + mapApplyCount++;
+      if (/^\<\=\s*$/.test(key)) return '__MP_map' + mapApplyCount++;
       if (key === '...') return '__MP_subset';
       var applyMatch = key.match(/\<\-\.(.+)$/);
-      if (applyMatch) return '__MP_apply' + mapApplyCount++ + ' ' + applyMatch[1];
+      if (applyMatch) return '__MP_apply' + mapApplyCount++ + ' ' + applyMatch[1].trim();
       var mapMatch = key.match(/\<\=\.(.+)$/);
-      if (mapMatch) return '__MP_map' + mapApplyCount++ + ' ' + mapMatch[1];
+      if (mapMatch) return '__MP_map' + mapApplyCount++ + ' ' + mapMatch[1].trim();
       return key;
     });
     return _.mapValues(normedKeys, function (val, key) {

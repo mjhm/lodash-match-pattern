@@ -40,9 +40,9 @@ module.exports = function () {
         "email": "mom@aol.com"
       },
       "friends": [
-        {"id": 21, "email": "bob@matchpattern.org", "active": true},
-        {"id": 89, "email": "jerry@matchpattern.org", "active": false},
-        {"id": 14, "email": "dan@matchpattern.org", "active": true},
+        {"id": 21, "email": "bob@mp.co", "active": true},
+        {"id": 89, "email": "jerry@mp.co", "active": false},
+        {"id": 14, "email": "dan@mp.co", "active": true},
       ]
     }
   });
