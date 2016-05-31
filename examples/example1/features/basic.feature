@@ -174,48 +174,39 @@ Scenario: Composition
     }
     """
 
-  Scenario: Check the size of arrays with the "_.size" transform.
+  Scenario: Use custom isActiveSize function
     Then the user matches the pattern
     """
       {
-        friends: {
-          <-.size: 3
-        },
+        friends: _.isActiveSize|2,
         ...
       }
     """
 
 
-  Scenario: Transforms may be composed
+  Scenario: Allow literal set tokens in test values
+    Given I change tvshows to
+      """
+      [
+        "===",
+        "Mannix",
+        "Game of Thrones",
+        "...",
+        "^^^"
+      ]
+      """
     Then the user matches the pattern
-    """
-      {
-        friends: {
-          <-.filter|active: {
-            <-.size: 2
-          }
-        },
-        ...
-      }
-    """
-
-  Scenario: Multiple tests can be performed using multiple map or apply functions
-    Then the user matches the pattern
-    """
+      """
       {
         tvshows: {
-          <- : _.isSize|3,
-          <- : _.isContainerFor|Sopranos
+          <=.literalSetToken: [
+            'LITERAL===',
+            'Mannix',
+            'Game of Thrones',
+            'LITERAL...',
+            'LITERAL^^^'
+          ]
         },
         ...
       }
-    """
-
-  Scenario: Use custom matcher to do the same check as above
-    Then the user matches the pattern
-    """
-      {
-        tvshows: _.isSizeAndIncludes|3|Sopranos,
-        ...
-      }
-    """
+      """

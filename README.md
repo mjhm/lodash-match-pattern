@@ -28,27 +28,30 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Features Index
 
-You probably won't need all of these features, but there's plenty of flexibility to allow you to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/basic.feature`] as cucumber-js tests.
+You probably won't need all of these features, but there's plenty of flexibility to to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/basic.feature`] as cucumber-js tests.
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
 1. [Partial objects](#partial-objects)
-1. [Partial and superset matches of arrays](#partial-and-superset-matches-of-arrays)
+1. [Partial, superset, and unordered arrays](#partial-superset-and-unordered-arrays)
 1. [Omitted items](#omitted-items)
 1. [Parametrized matchers](#parametrized-matchers)
 1. [Transforms](#transforms)
-1. [Multiple matchers](#multiple-matchers)
+  1. [Apply transform example](#apply-transform-example)
+  1. [Map pattern transform example](#map-pattern-transform-example)
+  1. [Map values transform example](#map-values-transform-example)
+  1. [Composition and multiple transforms](#composition-and-multiple-transforms)
 1. [Customization](#customization)
 
-#### Specification with JavaScript Objects or "JSON Pattern Notation"
+#### Specification with JavaScript Objects or "Pattern Notation"
 
-There are two similar ways to specify patterns to match. JavaScript objects are more convenient for `mocha` and JavaScript test runners that aren't multiline string friendly. "JSON Pattern Notation" is more readable in `cucumber` tests and other environments that support multiline strings. Almost all patterns can be expressed in either form. In most cases below examples will be shown in both forms.
+There are two similar ways to specify patterns to match. JavaScript objects are more convenient for `mocha` and JavaScript test runners that aren't multiline string friendly. "Pattern Notation" is more readable in `cucumber` tests and other environments that support multiline strings. Almost all patterns can be expressed in either form. In most cases below examples will be shown in both forms.
 
 ## Deep JSON matching
 
 Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected.
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 var matchPattern = require('lodash-match-pattern');
@@ -148,7 +151,7 @@ Unfortunately, deep matching of exact JSON patterns creates over-specified and b
 
 The pattern below may look a little odd at first, but main idea is that there's a bucket full of `_.isXxxx` matchers available to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
 <table><tr>
-<th>JavaScript Objects and JSON Pattern Notation are identical</th>
+<th>JavaScript Objects and Pattern Notation are identical</th>
 </tr>
 <tr><td><pre>
 {
@@ -192,7 +195,7 @@ console.log(
 
 Most of the time feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billybob@duckduck.go" then we can simply match the pattern:
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -220,7 +223,7 @@ Similarly matching of partial arrays (as well as supersets and set equality) can
 2. The partial (and supersets) arrays are matched as sets -- no order assumed.
 
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -246,7 +249,7 @@ Note that the above specifies both a partial array (for `joeUser.tvshows`) and a
 
 Supersets are similarly specified by '^^^'. This following says that `joeUser.tvshows` is a subset of the list in the pattern below:
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -275,7 +278,7 @@ Supersets are similarly specified by '^^^'. This following says that `joeUser.tv
 Or to compare equality of arrays as sets by unordered membership, use "===":
 
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -306,7 +309,7 @@ Note that the JS Object form adds the set matching symbols as extra array entrie
 Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check (an alias of `_.isUndefined`). Note that it works properly with partial objects.
 
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -326,7 +329,7 @@ Sometimes an important API requirement specifies fields that should not be prese
 
 Some of the matching functions take parameters. These can be specified with "|" separators at the end of the matching function.
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -351,7 +354,7 @@ Transforms modify the test data in some way before applying a match pattern. Tra
 As a simple motivation consider matching a compound object such at the joeUser's friends list. We may not be able to guarantee order of items returned in the list, and probably don't care anyway. So explicitly matching the friends in a specific order will probably be an unreliable test. (The above "===" array set specifier only applies to arrays of primitives.) To fix this `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested.
 
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -386,7 +389,7 @@ Important Note: The transform functions are applied to the test value NOT the co
 Suppose you just wanted to check that all of of joeUser's friends have emails at `mp.co`.
 
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -412,7 +415,7 @@ The `<=` specifies that the pattern is applied to each of the entries of the `jo
 Suppose you just wanted to check that joeUser's friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case.
 
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -448,15 +451,17 @@ Suppose you just wanted to check that joeUser's friends are in a "whitelist" of 
 
 Here `<=.get|email` specifies that the `_.get(..., 'email')` is applied to each of the entries of the `joeUser.friends` array and creates a new array.  In turn `<=.toLower` creates a mapped array with all emails in lower case. The result is then compared to the given whitelist.
 
+Map transforms can be applied to objects as well as arrays. For arrays `<=.lodashFunction` uses `_.map` to apply `_.lodashFunction` to each array element. For objects `_.mapValues` is used instead.
 
-## Composition and Multiple Transforms
+
+#### Composition and Multiple Transforms
 
 Transformations can be mixed and matched. Multiple transforms can also appear as keys in a single object. In that case they check the test value against all their respective pattern values. Notice, as suggested in the previous example, transform compositions are always applied to the test value from the outside to the inside where they result in the final pattern match.
 
-In the following example verifies that `joeUser` has "2" active friend, in 5 different ways.
+In the following example verifies that `joeUser` has "2" active friend, in 4 different ways.
 
 <table><tr>
-<th>JavaScript Objects (mocha)</th><th>JSON Pattern Notation (cucumber)</th>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
@@ -472,9 +477,8 @@ In the following example verifies that `joeUser` has "2" active friend, in 5 dif
       }
     }
   },
-  ...
+  '...': ''
 }
-
 </pre></td><td><pre>
 {
   friends: {
@@ -494,106 +498,76 @@ In the following example verifies that `joeUser` has "2" active friend, in 5 dif
 
 </pre></td></tr></table>
 
-This example applies six separate checks to `joeUser.friends`.
-* In the first, the lodash `_.filter` function is applied to `joeUser.friends`, this extracts a sublist where `active === true`.  The resulting two items are handed to the lodash `_.size` function which returns "2" and this is successfully matched against the target "2"
-* The next just repeats the check of the previous example.
-* The remaining 4 checks are all different ways of checking that the `joeUser.friends` has three items.
-
-Note: For the JS Objects, extra spaces are added to the `<=` key values so that JavaScript interprets them as being distinct properties.
-
-
-`_.size` is an simple transform function which can be used to match the size of an array. (Alhough the `_.isSize` matching function is even more convenient.)
-
-```
-    {
-      "friends": {
-        "_.size": 3
-      },
-      "...": ""
-    }
-```
-
-
-Transforms may be composed. However note that they are applied to the values under test in reverse order to how they are specified on the pattern.
-```
-    {
-      "friends": {
-        "_.filter:active": {
-          "_.size": 2
-        }
-      },
-      "...": ""
-    }
-```
-Here `_.filter(..., 'active')` is first applied to the test `friends` list, resulting in an array of the two active friends. Then `_.size` is applied to the result, and is compared successfully to the specified target value "2".
-
-## Multiple matchers
-
-Occasionally it may be convenient to apply multiple matching assertions in the same pattern. This can be accomplished with the `_.arrayOfDups` transform.
-```
-    {
-      "tvshows": {
-        "_.arrayOfDups:2": [
-          "_.isSize:3",
-          "_.isContainerFor:Sopranos"
-        ]
-      },
-      "...": ""
-    }
-```
-In this example `_.arrayOfDups:2` creates two copies of the "tvshows" array. The first copy is matched against `_.isSize:3` and the second copy is checked against by `_.isContainerFor:Sopranos`.
-
 ## Customization
 
-In many cases application of transforms will create unintuitive and hard to understand pattern specifications. Fortunately creating custom matchers and custom transforms is easily accomplished via lodash mixins. For our examples we've added two lodash mixins in our example code:
+In many cases, application of transforms will create unintuitive and hard to understand pattern specifications. Fortunately creating custom matchers and custom transforms is easily accomplished via lodash mixins. For our examples we've added two lodash mixins in our example code:
 ```
-var _ = require('lodash-checkit');
+var matchPattern = require('lodash-match-pattern');
+var _ = matchPattern.getLodashModule();
+
 _.mixin({
-  literalEllipsis: function (array) {
-    return array.map(function (elem) {
-      if (elem === '...') return 'LITERAL...';
-      if (elem === '---') return 'LITERAL---';
-      return elem;
-    });
+  literalSetToken: function (elem) {
+    if (elem === '...') return 'LITERAL...';
+    if (elem === '^^^') return 'LITERAL^^^';
+    if (elem === '===') return 'LITERAL===';
+    return elem;
   },
 
-  isSizeAndIncludes: function (array, size, includes) {
+  isActiveSize: function (array, size) {
     if (! _.isArray(array)) return false;
-    if (_.size(array) !== size) return false;
-    return _.includes(array, includes);
+    var activeSize = _.size(_.filter(array, 'active'));
+    return activeSize === size;
   }
 });
 chaiMatchPattern.use(_);
 ```
-
-We can then use `isSizeAndIncludes` to simplify the previous transform example into:
+Then we have yet another (but simpler) method for counting joeUser's active friends.
 ```
-  {
-    "tvshows": "_.isSizeAndIncludes:3:Sopranos",
-    "...": ""
-  }
+{
+  friends: _.isActiveSize|2,
+  ...
+}
 ```
 
-The custom `literalEllipsis` transform can be used to enable literal pattern matching of "..." and "---" in arrays. So for example if for some reason `joeUser` had this as his `tvshows`:
+The custom `literalSetToken` transform can be used to enable literal pattern matching of "..." and "---" in arrays. So for example if for some reason `joeUser` had this as his `tvshows`:
 ```
   [
+    "===",
     "Mannix",
     "Game of Thrones",
     "...",
-    "---"
+    "^^^"
   ]
 ```
 Then the following now has a successful pattern match:
-```
-    {
-      "tvshows": {
-        "_.literalEllipsis": [
-          "Mannix",
-          "Game of Thrones",
-          "LITERAL...",
-          "LITERAL---"
-        ]
-      },
-      "...": ""
-    }
-```
+
+<table><tr>
+<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
+</tr>
+<tr><td><pre>
+{
+  tvshows: {
+    '<=.literalSetToken': [
+      'LITERAL===',
+      'Mannix',
+      'Game of Thrones',
+      'LITERAL...',
+      'LITERAL^^^'
+    ]
+  },
+  '...': ''
+}
+</pre></td><td><pre>
+{
+  tvshows: {
+    <=.literalSetToken: [
+      'LITERAL===',
+      'Mannix',
+      'Game of Thrones',
+      'LITERAL...',
+      'LITERAL^^^'
+    ]
+  },
+  ...
+}
+</pre></td></tr></table>
