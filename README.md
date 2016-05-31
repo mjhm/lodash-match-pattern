@@ -28,7 +28,7 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Features Index
 
-You probably won't need all of these features, but there's plenty of flexibility to to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/basic.feature`] as cucumber-js tests.
+You probably won't need all of these features, but there's plenty of flexibility to to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/basic.feature`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/basic.feature) as cucumber-js tests.
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
