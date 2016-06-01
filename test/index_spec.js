@@ -66,10 +66,10 @@ describe('matchPattern', function () {
 
     describe('basic tests', function () {
       runTestList([
-        [true,  {targ:{a: {b: 2}}, src: {a: {b: 2}}}],              // OK returns null
-        [false, {targ:{a: {b: 2}}, src: {a: {b: 3}}}],              // not OK deep compare fails
-        [false,  {targ: {}, src: 5}],
-        [false,  {targ: {a: 1}, src: 5}],
+        [true,  {targ:{a: {b: 2}}, src: {a: {b: 2}}}],
+        [false, {targ:{a: {b: 2}}, src: {a: {b: 3}}}],
+        [false, {targ: {}, src: 5}],
+        [false, {targ: {a: 1}, src: 5}],
         [true,  {targ:{a: {b: '_.isNumber'}}, src: {a: {b: 3}}}],   // OK deep compare of type succeeds
         [false, {targ:{a: {b: '_.isNumber'}}, src: {a: {b: '3'}}}], // not OK deep compare of type fails
         [true,  {targ: '_.isDateString', src: '2016-05-22T00:23:23.343Z'}],
@@ -155,6 +155,20 @@ describe('matchPattern', function () {
         [false,  {targ: {a: /abc/}, src: {a: 'Abc'}}],
         [true,  {targ: /\:/, src: ':'}],
         [true,  {targ: /\t\"\n/, src: '\t"\n'}],
+      ]);
+    });
+
+    describe('object like entities', function () {
+      var afunction = function () {};
+      afunction.a = 2;
+      var newfunction = new afunction();
+      newfunction.a = 2;
+      var objectLikeArray = {}
+      objectLikeArray[0] = 2;
+      runTestList([
+        [true,  {targ: {a: 2}, src: afunction}],
+        [true,  {targ: {a: 2}, src: newfunction}],
+        [false, {targ: [2], src: objectLikeArray}],
       ]);
     });
   });

@@ -67,6 +67,10 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
   if (debug) console.log('matcher', targVal, srcVal);
   var isMatch;
   if (_.isArray(targVal)) {
+    if (!_.isArrayLike(srcVal)) {
+      makeMsg(srcVal, targVal);
+      return false;
+    }
     if (_.includes(targVal, '__MP_superset')) return checkSupersetMatch(makeMsg, targVal, srcVal);
     if (_.includes(targVal, '__MP_subset')) return checkSubsetMatch(makeMsg, targVal, srcVal);
     if (_.includes(targVal, '__MP_equalset')) {
@@ -132,7 +136,8 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
       }
       return _.every(mapApplyResults);
     }
-    if (_.isPlainObject(srcVal)) {
+    
+    if (!_.isArrayLike(srcVal) && !_.isNumber(srcVal) && !_.isString(srcVal) && !_.isNil(srcVal)) {
       return matchMembers(targVal, srcVal, matcher.bind(null, makeMsg));
     }
   }
