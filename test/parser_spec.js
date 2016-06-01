@@ -90,4 +90,12 @@ describe('parser', function () {
       [ '/[A-Z].*/', '__MP_regex [A-Z].*'],
     ]);
   });
+  describe.only('recursive filterPattern', function () {
+    runTestList([
+      [ '{<-.filterPattern|"{b: 2}": 1}',  {'__MP_apply0 filterPattern|"{b: 2}"': 1} ],
+      [ '{<-.filterPattern|"{b: \'2\'}": 1}',  {'__MP_apply0 filterPattern|"{b: \'2\'}"': 1} ],
+      [ '{<-.filterPattern|"{b: \'2\', ...}": 1}',  {'__MP_apply0 filterPattern|"{b: \'2\', ...}"': 1} ],
+      // [ '{<-.filterPattern|"{b: _.isInRange\|2\|4}": 1}',  {'__MP_apply0 filterPattern|"{b: _.isInRange\|2\|4}"': 1} ],
+    ]);
+  });
 });

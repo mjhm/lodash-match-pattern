@@ -23,7 +23,19 @@ var _ = lodash.mixin( {
     return _.size(s) === n;
   },
 
-  isOmitted: lodash.isUndefined.bind(lodash)
+  isOmitted: lodash.isUndefined.bind(lodash),
+
+  isPrinted: function (s, label) {
+    label = label || ''
+    console.log(label, s)
+    return true;
+  },
+
+  filterPattern: function (s, pattern) {
+    return _.filter(s, function (v, k) {
+      return !matchPattern(v, pattern);
+    });
+  }
 
 });
 
@@ -136,7 +148,7 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
       }
       return _.every(mapApplyResults);
     }
-    
+
     if (!_.isArrayLike(srcVal) && !_.isNumber(srcVal) && !_.isString(srcVal) && !_.isNil(srcVal)) {
       return matchMembers(targVal, srcVal, matcher.bind(null, makeMsg));
     }

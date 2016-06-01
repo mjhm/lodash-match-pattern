@@ -139,13 +139,16 @@ describe('matchPattern', function () {
       ]);
     });
 
-    describe('function matchers', function () {
+    describe.only('function matchers', function () {
       var match5 = function (val) { return val === 5; };
       runTestList([
         [true,  {targ: match5, src: 5}],
         [false, {targ: match5, src: 6}],
         [true,  {targ: {a: _.isNumber}, src: {a: 6}}],
         [false, {targ: {a: _.isNumber}, src: {a: '6'}}],
+        [true,  {targ: _.isPrinted, src: {test_that_isPrinted: 'printed_this'}}],
+        [true,  {targ: {'<-.filterPattern|"{a: 1}"': [{a: 1, b: 2}]},
+          src: [{a: 1, b: 2}, {a: 2, b: 3}]}],
       ]);
     });
 
