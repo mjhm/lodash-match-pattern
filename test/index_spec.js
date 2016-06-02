@@ -84,12 +84,14 @@ describe('matchPattern', function () {
         [true,  {targ:{a: null}, src: {a: null}}],
         [false, {targ:{a: 5}, src: {a: 5, b: 2}}],
         [false, {targ:{a: 5, b: 2}, src: {b: 2}}],
-        [true,  {targ: '_.isUrl', src: 'https://my.testurl.com'}],
-        [false, {targ: '_.isUrl', src: 'hbbp://my.testurl.com'}],
         [true,  {targ:{a: 5, b: '_.isOmitted'}, src: {a: 5}}],
         [true,  {targ:{a: 5, b: undefined}, src: {a: 5}}],
         [true,  {targ: [1, 2, 3], src: [1, 2, 3]}],
         [false, {targ: [1, 2, 3], src: [1, 4, 3]}],
+        [true,  {targ: '_.isUrl', src: 'https://my.testurl.com'}],
+        [false, {targ: '_.isUrl', src: 'hbbp://my.testurl.com'}],
+        [false, {targ: '_.isNotUrl', src: 'https://my.testurl.com'}],
+        [true,  {targ: '_.isNotUrl', src: 'hbbp://my.testurl.com'}],
       ]);
     });
 
@@ -113,12 +115,13 @@ describe('matchPattern', function () {
         [true,  {targ: '_.isInRange|0|10', src: 0}],
         [true,  {targ: '_.isInRange|3.1|7.7', src: 5}],
         [false, {targ: '_.isInRange|3.1|7.7', src: 2}],
+        [true,  {targ: '_.isNotInRange|3.1|7.7', src: 2}],
         [true,  {targ: '_.isContainerFor|king', src: 'rocking chair'}],
         [true,  {targ: '_.isContainerFor|4', src: [2, 3, 4, 5]}],
         [true,  {targ: '_.isContainerFor|abc', src: {abc: 1, def: 2}}],
         [true,  {targ: '_.isSize|3', src: [3, 2, 1]}],
         [true,  {targ: '_.isSize|4', src: {a: 1, b: 2, c: 3, d: 4}}],
-        [true,  {targ: '_.isSize|5', src: 'abcde'}]
+        [true,  {targ: '_.isSize|5', src: 'abcde'}],
       ]);
     });
     describe('map and apply', function () {
@@ -139,7 +142,7 @@ describe('matchPattern', function () {
       ]);
     });
 
-    describe.only('function matchers', function () {
+    describe('function matchers', function () {
       var match5 = function (val) { return val === 5; };
       runTestList([
         [true,  {targ: match5, src: 5}],
@@ -160,6 +163,17 @@ describe('matchPattern', function () {
         [true,  {targ: /\t\"\n/, src: '\t"\n'}],
       ]);
     });
+
+    describe('memos', function () {
+      runTestList([
+        [true,   {targ: '{ <-.memo|myMemo: 243 }', src: 243}],
+        [true,   {targ: '_.isEqualToMemo|myMemo', src: 243}],
+        [false,  {targ: '_.isNotEqualToMemo|myMemo', src: 243}],
+        [true,   {targ: '{ <-.clearMemos: "whatevs" }', src: 'whatevs'}],
+        [false,  {targ: '_.isEqualToMemo|myMemo', src: 243}],
+      ]);
+    });
+
 
     describe('object like entities', function () {
       var afunction = function () {};

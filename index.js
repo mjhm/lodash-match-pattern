@@ -11,6 +11,8 @@ var checkSubsetMatch = helpers.checkSubsetMatch;
 
 var debug = false;
 
+var memoHash = {};
+
 var _ = lodash.mixin( {
 
   isDateString: function (s) {
@@ -35,6 +37,20 @@ var _ = lodash.mixin( {
     return _.filter(s, function (v, k) {
       return !matchPattern(v, pattern);
     });
+  },
+
+  memo: function (s, key) {
+    memoHash[key] = s;
+    return s;
+  },
+
+  isEqualToMemo: function (s, key) {
+    return _.isEqual(s, memoHash[key]);
+  },
+
+  clearMemos: function (s) {
+    memoHash = {};
+    return s;
   }
 
 });
@@ -43,9 +59,19 @@ var lodashModule = _;  // lodash-checkit by default
 
 var curryFunctionSpec = function (fnSpec) {
   var fnParts = fnSpec.split('|');
-  var fn = lodashModule[fnParts[0]];
-  if (! fn) {
-    throw new Error('The function _.' + fnParts[0] + " doesn't exist");
+  var fnName = fnParts[0];
+  var notFn = /^isNot/.test(fnName);
+  var fn;
+  if (notFn) {
+    fnName = fnName.replace(/^isNot/, 'is');
+    fn = function () {
+      return !lodashModule[fnName].apply(_, arguments);
+    }
+  } else {
+    fn = lodashModule[fnName];
+  }
+  if (! lodashModule[fnName]) {
+    throw new Error('The function _.' + fnName + " doesn't exist");
   }
   fnParts.slice(1).forEach(function (fnArg) {
     var dqmatch = fnArg.match(/^\"(.*)\"/);
