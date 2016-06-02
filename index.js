@@ -39,9 +39,13 @@ var _ = lodash.mixin( {
     });
   },
 
-  memo: function (s, key) {
+  setMemo: function (s, key) {
     memoHash[key] = s;
     return s;
+  },
+
+  getMemoHash: function (s) {
+    return memoHash;
   },
 
   isEqualToMemo: function (s, key) {

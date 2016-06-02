@@ -164,11 +164,12 @@ describe('matchPattern', function () {
       ]);
     });
 
-    describe('memos', function () {
+    describe.only('memos', function () {
       runTestList([
-        [true,   {targ: '{ <-.memo|myMemo: 243 }', src: 243}],
+        [true,   {targ: '{ <-.setMemo|myMemo: 243 }', src: 243}],
         [true,   {targ: '_.isEqualToMemo|myMemo', src: 243}],
         [false,  {targ: '_.isNotEqualToMemo|myMemo', src: 243}],
+        [true,   {targ: '{ <-.getMemoHash: { myMemo: 243 } }', src: 243}],
         [true,   {targ: '{ <-.clearMemos: "whatevs" }', src: 'whatevs'}],
         [false,  {targ: '_.isEqualToMemo|myMemo', src: 243}],
       ]);
