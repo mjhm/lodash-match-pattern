@@ -52,6 +52,10 @@ var _ = lodash.mixin( {
     return _.isEqual(s, memoHash[key]);
   },
 
+  isNotEqualToMemo: function (s, key) {
+    return !_.isEqual(s, memoHash[key]);
+  },
+
   clearMemos: function (s) {
     memoHash = {};
     return s;
@@ -64,16 +68,7 @@ var lodashModule = _;  // lodash-checkit by default
 var curryFunctionSpec = function (fnSpec) {
   var fnParts = fnSpec.split('|');
   var fnName = fnParts[0];
-  var notFn = /^isNot/.test(fnName);
-  var fn;
-  if (notFn) {
-    fnName = fnName.replace(/^isNot/, 'is');
-    fn = function () {
-      return !lodashModule[fnName].apply(_, arguments);
-    }
-  } else {
-    fn = lodashModule[fnName];
-  }
+  var fn = lodashModule[fnName];
   if (! lodashModule[fnName]) {
     throw new Error('The function _.' + fnName + " doesn't exist");
   }

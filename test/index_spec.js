@@ -90,8 +90,6 @@ describe('matchPattern', function () {
         [false, {targ: [1, 2, 3], src: [1, 4, 3]}],
         [true,  {targ: '_.isUrl', src: 'https://my.testurl.com'}],
         [false, {targ: '_.isUrl', src: 'hbbp://my.testurl.com'}],
-        [false, {targ: '_.isNotUrl', src: 'https://my.testurl.com'}],
-        [true,  {targ: '_.isNotUrl', src: 'hbbp://my.testurl.com'}],
       ]);
     });
 
@@ -164,7 +162,7 @@ describe('matchPattern', function () {
       ]);
     });
 
-    describe.only('memos', function () {
+    describe('memos', function () {
       runTestList([
         [true,   {targ: '{ <-.setMemo|myMemo: 243 }', src: 243}],
         [true,   {targ: '_.isEqualToMemo|myMemo', src: 243}],

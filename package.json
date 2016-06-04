@@ -46,6 +46,6 @@
     "rewire": "^2.5.1"
   },
   "dependencies": {
-    "lodash-checkit": "^0.1.1"
+    "lodash-checkit": "^0.1.2"
   }
 }
