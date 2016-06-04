@@ -1,8 +1,8 @@
 var lodash = require('lodash-checkit');
 var util = require('util');
 var parser = require('./_parser');
-var helpers = require('./helpers');
-var normalize = require('./normalize');
+var helpers = require('./lib/helpers');
+var normalize = require('./lib/normalize');
 
 var fillSrcWithVoids = helpers.fillSrcWithVoids;
 var fillTargWithVoids = helpers.fillTargWithVoids;

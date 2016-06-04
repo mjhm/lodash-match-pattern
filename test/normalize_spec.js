@@ -3,7 +3,7 @@
 var chai = require('chai');
 var util = require('util');
 var expect = chai.expect;
-var normalize = require('../normalize');
+var normalize = require('../lib/normalize');
 
 var dummyFn = function () {};
 var dummyRegExp = /abc/

@@ -6,7 +6,7 @@ var util = require('util');
 var _ = require('lodash-checkit');
 var expect = chai.expect;
 
-var helpers = require('../helpers');
+var helpers = require('../lib/helpers');
 
 var fillSrcWithVoids = helpers.fillSrcWithVoids;
 var fillTargWithVoids = helpers.fillTargWithVoids;
