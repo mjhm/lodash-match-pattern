@@ -70,7 +70,9 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
       }
       return isMatch;
     }
-    isMatch = _.isMatchWith(targVal, srcVal, matcher.bind(null, makeMsg));
+
+    isMatch = (targVal.length === srcVal.length) &&
+      _.isMatchWith(targVal, srcVal, matcher.bind(null, makeMsg));
     if (!isMatch && !makeMsg().length) {
       makeMsg(srcVal, targVal);
     }

@@ -148,7 +148,9 @@ describe('matchPattern', function () {
         [true,  {targ: {a: _.isNumber}, src: {a: 6}}],
         [false, {targ: {a: _.isNumber}, src: {a: '6'}}],
         [true,  {targ: _.isPrinted, src: {test_that_isPrinted: 'printed_this'}}],
-        [true,  {targ: {'<-.filterPattern|"{a: 1}"': [{a: 1, b: 2}]},
+        [true,  {targ: {'<-.filterPattern|"{a: 1, ...}"': [{a: 1, b: 2}]},
+          src: [{a: 1, b: 2}, {a: 2, b: 3}]}],
+        [false,  {targ: {'<-.filterPattern|"{a: 7, ...}"': [{a: 1, b: 2}]},
           src: [{a: 1, b: 2}, {a: 2, b: 3}]}],
       ]);
     });
