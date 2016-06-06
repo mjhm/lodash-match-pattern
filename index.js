@@ -3,6 +3,7 @@ var util = require('util');
 var parser = require('./_parser');
 var helpers = require('./lib/helpers');
 var normalize = require('./lib/normalize');
+var mixins = require('./lib/mixins');
 
 var fillSrcWithVoids = helpers.fillSrcWithVoids;
 var fillTargWithVoids = helpers.fillTargWithVoids;
@@ -13,57 +14,9 @@ var debug = false;
 
 var memoHash = {};
 
-var _ = lodash.mixin( {
+var _ = lodash.mixin(mixins);
 
-  isDateString: function (s) {
-    if (!lodash.isString(s)) return false;
-    var d = new Date(String(s));
-    return !lodash.isNaN(d.getTime());
-  },
-
-  isSize: function (s, n) {
-    return _.size(s) === n;
-  },
-
-  isOmitted: lodash.isUndefined.bind(lodash),
-
-  isPrinted: function (s, label) {
-    label = label || ''
-    console.log(label, s)
-    return true;
-  },
-
-  filterPattern: function (s, pattern) {
-    return _.filter(s, function (v, k) {
-      return !matchPattern(v, pattern);
-    });
-  },
-
-  setMemo: function (s, key) {
-    memoHash[key] = s;
-    return s;
-  },
-
-  getMemoHash: function (s) {
-    return memoHash;
-  },
-
-  isEqualToMemo: function (s, key) {
-    return _.isEqual(s, memoHash[key]);
-  },
-
-  isNotEqualToMemo: function (s, key) {
-    return !_.isEqual(s, memoHash[key]);
-  },
-
-  clearMemos: function (s) {
-    memoHash = {};
-    return s;
-  }
-
-});
-
-var lodashModule = _;  // lodash-checkit by default
+var lodashModule = _;  // lodash-checkit by default, but can be overriden by customization
 
 var curryFunctionSpec = function (fnSpec) {
   var fnParts = fnSpec.split('|');
@@ -117,7 +70,9 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
       }
       return isMatch;
     }
-    isMatch = _.isMatchWith(targVal, srcVal, matcher.bind(null, makeMsg));
+
+    isMatch = (targVal.length === srcVal.length) &&
+      _.isMatchWith(targVal, srcVal, matcher.bind(null, makeMsg));
     if (!isMatch && !makeMsg().length) {
       makeMsg(srcVal, targVal);
     }

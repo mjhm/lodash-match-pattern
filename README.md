@@ -41,7 +41,9 @@ You probably won't need all of these features, but there's plenty of flexibility
   1. [Map pattern transform example](#map-pattern-transform-example)
   1. [Map values transform example](#map-values-transform-example)
   1. [Composition and multiple transforms](#composition-and-multiple-transforms)
+1. [Memoization of test values](#memoizaton-of-test-values)
 1. [Customization](#customization)
+1. [Extras](#extras)
 
 #### Specification with JavaScript Objects or "Pattern Notation"
 
@@ -498,6 +500,10 @@ In the following artificial example verifies that `joeUser` has "2" active frien
 
 </pre></td></tr></table>
 
+## Memoization of test values
+
+(Document "memo" functionality with `_.setMemo`, `_.isEqualToMemo`, `_.isEqualToMemo`,`_.clearMemos`, and `_.getMemoHash`)
+
 ## Customization
 
 In many cases, application of transforms will create unintuitive and hard to understand pattern specifications. Fortunately creating custom matchers and custom transforms is easily accomplished via lodash mixins. For our examples we've added two lodash mixins in our example code:
@@ -570,3 +576,7 @@ Then the following now has a successful pattern match:
   ...
 }
 </pre></td></tr></table>
+
+## Extras
+
+(document `isSize`, `isOmitted`, `isPrinted`, `filterPattern`)
