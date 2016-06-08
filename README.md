@@ -502,6 +502,9 @@ In the following artificial example verifies that `joeUser` has "2" active frien
 
 ## Memoization of test values
 
+Sometimes we're interested in comparing values from two sources. In particular in this example we are want to check that duplicating a user copies some fields and updates others. So we memoize the fields we're interested in and compare them to the dup.
+
+
 (Document "memo" functionality with `_.setMemo`, `_.isEqualToMemo`, `_.isEqualToMemo`,`_.clearMemos`, and `_.getMemoHash`)
 
 ## Customization

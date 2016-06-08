@@ -53,6 +53,12 @@ module.exports = function () {
     if (matchResult) throw matchResult;
   });
 
+  self.Then(/^the duplicate user matches the pattern$/, function (targetPattern) {
+    var matchResult = matchPattern(self.dup, targetPattern);
+    if (matchResult) throw matchResult;
+  });
+
+
   self.Given(/^I change tvshows to$/, function (tvshows) {
     try {
       var tvshowsJson = JSON.parse(tvshows);
@@ -61,6 +67,12 @@ module.exports = function () {
       throw new Error("JSON.parse: Can't parse " + tvshows + ' ' + err.message);
     }
     self.user.tvshows = tvshowsJson;
+  });
+
+  self.Given(/^the user is duplicated$/, function () {
+    self.dup = _.cloneDeep(self.user);
+    self.dup.id = self.user.id + 1;
+    self.dup.createDate = new Date().toISOString();
   });
 
 };

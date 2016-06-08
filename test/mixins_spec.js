@@ -92,7 +92,14 @@ describe('mixins', function () {
     describe('#setMemo', function () {
       it('sets', function () {
         this.memo.hash.someKey = 'someValue'
-        mixins.setMemo(57, 'abc');
+        expect(mixins.setMemo(57, 'abc')).to.equal(57);
+        return expect(this.memo.hash.abc).to.equal(57);
+      });
+    });
+    describe('#isSetAsMemo', function () {
+      it('sets', function () {
+        this.memo.hash.someKey = 'someValue'
+        expect(mixins.isSetAsMemo(57, 'abc')).to.equal(true);
         return expect(this.memo.hash.abc).to.equal(57);
       });
     });
