@@ -41,7 +41,7 @@ You probably won't need all of these features, but there's plenty of flexibility
   1. [Map pattern transform example](#map-pattern-transform-example)
   1. [Map values transform example](#map-values-transform-example)
   1. [Composition and multiple transforms](#composition-and-multiple-transforms)
-1. [Memoization of test values](#memoizaton-of-test-values)
+1. [Memoization of test values](#memoization-of-test-values)
 1. [Customization](#customization)
 1. [Extras](#extras)
 
@@ -528,8 +528,9 @@ Sometimes we're interested in comparing values from two sources. In particular i
       """
 ```
 Notes:
-1. The above demonstrates both the transform `_.setMemo`, and the matcher `_.isSetAsMemo`. As lodash functions the only difference is that `_.setMemo` passes the source value through as its return value so that it can be matched as needed.  In contrast `_.isSetAsMemo` always returns true and hence is appropriate when you are only interested saving the source value as a memo.
-2. Obviously memoizing is more valuable for cucumber tests, for mocha tests you can just use native JavaScript variables.
+
+1. The above demonstrates both the transform `_.setMemo`, and the matcher `_.isSetAsMemo`. As lodash functions the only difference is that `_.setMemo` passes the source value through as its return value so that it can be matched as needed.  In contrast `_.isSetAsMemo` always returns true so it's cleaner when you're just interested saving the source value as a memo.
+2. Obviously memoizing is more valuable for cucumber feature tests, since you can just use native JavaScript variables in mocha unit tests.
 3. In addition to the above there is also a `_.clearMemos` function that should be executed in the `Before` or `After` routine for each test to ensure a clean slate of memos.
 
 ## Customization
@@ -607,9 +608,10 @@ Then the following now has a successful pattern match:
 
 ## Extras
 
-Miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
+Here are some miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
 
-* `_.filterPattern` -- a transform function that takes a pattern as an argument. This is most useful for filtering rows from a database whose column values match certain characteristics. For example `<-.filterPattern|'{age: _.isInRange|0|18, ...}'` will filter leaving only the rows where `age` is in the range `[0, 18]`.  Notice that this is taking advantage of partial pattern matching with the `...`
+* `_.filterPattern` -- a transform function that takes a pattern as an argument. This is most useful for filtering rows from a database whose column values match certain characteristics.
+  * For example `<-.filterPattern|"{age: _.isInRange|0|18, ...}"` will filter leaving only the rows where `age` is in the range `[0, 18]`.  Notice that this is taking advantage of partial pattern matching with the `...`
 * `_.isPrinted` -- a matcher that always matches, but prints the source values that it is matching against. This is most useful for seeing the results of transforms.
-* `_.isOmitted` -- an alias for `_.isUndefined`, as shown in an example above this is more semantically meaningful for matching intentionally omitted properties of an object.
+* `_.isOmitted` -- an alias for `_.isUndefined`. As shown in an example above this is more semantically meaningful for matching intentionally omitted properties of an object.
 * `_.isSize` -- the matcher corresponding to the standard lodash `_.size`. It checks it's argument against the `_.size` of the source object.
