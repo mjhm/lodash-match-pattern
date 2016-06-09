@@ -503,9 +503,34 @@ In the following artificial example verifies that `joeUser` has "2" active frien
 ## Memoization of test values
 
 Sometimes we're interested in comparing values from two sources. In particular in this example we are want to check that duplicating a user copies some fields and updates others. So we memoize the fields we're interested in and compare them to the dup.
-
-
-(Document "memo" functionality with `_.setMemo`, `_.isEqualToMemo`, `_.isEqualToMemo`,`_.clearMemos`, and `_.getMemoHash`)
+```cucumber
+  Scenario: Dupicating a user updates id and createDate but copies email and tvshows
+    When the user matches the pattern
+      """
+      {
+        id: {<-.setMemo|id: _.isInteger},
+        email: _.isSetAsMemo|email,
+        createDate: _.isSetAsMemo|createDate,
+        tvshows: _.isSetAsMemo|tvshows,
+        ...
+      }
+      """
+    And the user is duplicated
+    Then the duplicate user matches the pattern
+      """
+      {
+        id: _.isNotEqualToMemo|id,
+        email: _.isEqualToMemo|email,
+        createDate: _.isNotEqualToMemo|createDate,
+        tvshows: _.isEqualToMemo|tvshows,
+        ...
+      }
+      """
+```
+Notes:
+1. The above demonstrates both the transform `_.setMemo`, and the matcher `_.isSetAsMemo`. As lodash functions the only difference is that `_.setMemo` passes the source value through as its return value so that it can be matched as needed.  In contrast `_.isSetAsMemo` always returns true and hence is appropriate when you are only interested saving the source value as a memo.
+2. Obviously memoizing is more valuable for cucumber tests, for mocha tests you can just use native JavaScript variables.
+3. In addition to the above there is also a `_.clearMemos` function that should be executed in the `Before` or `After` routine for each test to ensure a clean slate of memos.
 
 ## Customization
 
@@ -582,4 +607,9 @@ Then the following now has a successful pattern match:
 
 ## Extras
 
-(document `isSize`, `isOmitted`, `isPrinted`, `filterPattern`)
+Miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
+
+* `_.filterPattern` -- a transform function that takes a pattern as an argument. This is most useful for filtering rows from a database whose column values match certain characteristics. For example `<-.filterPattern|'{age: _.isInRange|0|18, ...}'` will filter leaving only the rows where `age` is in the range `[0, 18]`.  Notice that this is taking advantage of partial pattern matching with the `...`
+* `_.isPrinted` -- a matcher that always matches, but prints the source values that it is matching against. This is most useful for seeing the results of transforms.
+* `_.isOmitted` -- an alias for `_.isUndefined`, as shown in an example above this is more semantically meaningful for matching intentionally omitted properties of an object.
+* `_.isSize` -- the matcher corresponding to the standard lodash `_.size`. It checks it's argument against the `_.size` of the source object.
