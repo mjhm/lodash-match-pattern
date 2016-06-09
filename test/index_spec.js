@@ -152,6 +152,8 @@ describe('matchPattern', function () {
           src: [{a: 1, b: 2}, {a: 2, b: 3}]}],
         [false,  {targ: {'<-.filterPattern|"{a: 7, ...}"': [{a: 1, b: 2}]},
           src: [{a: 1, b: 2}, {a: 2, b: 3}]}],
+        [true,  {targ: {'<-.filterPattern|"{a: _.isInRange|0|18, ...}"': [{a: 1, b: 2}]},
+          src: [{a: 1, b: 2}, {a: 20, b: 3}]}],
       ]);
     });
 

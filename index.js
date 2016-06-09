@@ -19,24 +19,31 @@ var _ = lodash.mixin(mixins);
 var lodashModule = _;  // lodash-checkit by default, but can be overriden by customization
 
 var curryFunctionSpec = function (fnSpec) {
-  var fnParts = fnSpec.split('|');
-  var fnName = fnParts[0];
+  var fnSplit = ( /^([^\|]+)(.*)/.exec(fnSpec) || ['dummy']).slice(1);
+  var fnName = fnSplit.shift();
+  var fnRest = fnSplit.shift();
+
   var fn = lodashModule[fnName];
   if (! lodashModule[fnName]) {
     throw new Error('The function _.' + fnName + " doesn't exist");
   }
-  fnParts.slice(1).forEach(function (fnArg) {
-    var dqmatch = fnArg.match(/^\"(.*)\"/);
-    var sqmatch = fnArg.match(/^\'(.*)\'/);
-    if (dqmatch) {
-      fnArg = dqmatch[1];
-    } else if (sqmatch) {
-      fnArg = sqmatch[1];
-    } else if (! isNaN(fnArg)) {
-      fnArg = Number(fnArg)
+  while (fnRest) {
+    fnSplit = (
+      /^\|\"([^\"]*)\"(.*)/.exec(fnRest) ||
+      /^\|\'([^\']*)\'(.*)/.exec(fnRest) || ['dummy']
+    ).slice(1);
+    var fnArg = fnSplit.shift();
+    if (!fnArg) {
+      fnSplit = (/^\|([^\|]*)(.*)/.exec(fnRest) || ['dummy']).slice(1);
+      fnArg = fnSplit.shift();
+      if (! isNaN(fnArg)) {
+        fnArg = Number(fnArg)
+      }
     }
+    fnRest = fnSplit.shift();
+    if (debug) console.log('fnName', fnName, 'fnArg', fnArg, 'fnRest', fnRest);
     fn = _.bind(fn, lodashModule, _, fnArg)
-  });
+  }
   return fn;
 };
 

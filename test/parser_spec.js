@@ -95,7 +95,8 @@ describe('parser', function () {
       [ '{<-.filterPattern|"{b: 2}": 1}',  {'__MP_apply0 filterPattern|"{b: 2}"': 1} ],
       [ '{<-.filterPattern|"{b: \'2\'}": 1}',  {'__MP_apply0 filterPattern|"{b: \'2\'}"': 1} ],
       [ '{<-.filterPattern|"{b: \'2\', ...}": 1}',  {'__MP_apply0 filterPattern|"{b: \'2\', ...}"': 1} ],
-      // [ '{<-.filterPattern|"{b: _.isInRange\|2\|4}": 1}',  {'__MP_apply0 filterPattern|"{b: _.isInRange\|2\|4}"': 1} ],
+      [ '{<-.filterPattern|"{b: _.isInRange|2|4}": 1}',  {'__MP_apply0 filterPattern|"{b: _.isInRange|2|4}"': 1} ],
+      [ '{<-.filterPattern|"{b: _.isInRange|0|18, ...}": 1}',  {'__MP_apply0 filterPattern|"{b: _.isInRange|0|18, ...}"': 1} ],
     ]);
   });
 });

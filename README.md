@@ -41,7 +41,7 @@ You probably won't need all of these features, but there's plenty of flexibility
   1. [Map pattern transform example](#map-pattern-transform-example)
   1. [Map values transform example](#map-values-transform-example)
   1. [Composition and multiple transforms](#composition-and-multiple-transforms)
-1. [Memoization of test values](#memoizaton-of-test-values)
+1. [Memoization of test values](#memoization-of-test-values)
 1. [Customization](#customization)
 1. [Extras](#extras)
 
@@ -503,9 +503,35 @@ In the following artificial example verifies that `joeUser` has "2" active frien
 ## Memoization of test values
 
 Sometimes we're interested in comparing values from two sources. In particular in this example we are want to check that duplicating a user copies some fields and updates others. So we memoize the fields we're interested in and compare them to the dup.
+```cucumber
+  Scenario: Dupicating a user updates id and createDate but copies email and tvshows
+    When the user matches the pattern
+      """
+      {
+        id: {<-.setMemo|id: _.isInteger},
+        email: _.isSetAsMemo|email,
+        createDate: _.isSetAsMemo|createDate,
+        tvshows: _.isSetAsMemo|tvshows,
+        ...
+      }
+      """
+    And the user is duplicated
+    Then the duplicate user matches the pattern
+      """
+      {
+        id: _.isNotEqualToMemo|id,
+        email: _.isEqualToMemo|email,
+        createDate: _.isNotEqualToMemo|createDate,
+        tvshows: _.isEqualToMemo|tvshows,
+        ...
+      }
+      """
+```
+Notes:
 
-
-(Document "memo" functionality with `_.setMemo`, `_.isEqualToMemo`, `_.isEqualToMemo`,`_.clearMemos`, and `_.getMemoHash`)
+1. The above demonstrates both the transform `_.setMemo`, and the matcher `_.isSetAsMemo`. As lodash functions the only difference is that `_.setMemo` passes the source value through as its return value so that it can be matched as needed.  In contrast `_.isSetAsMemo` always returns true so it's cleaner when you're just interested saving the source value as a memo.
+2. Obviously memoizing is more valuable for cucumber feature tests, since you can just use native JavaScript variables in mocha unit tests.
+3. In addition to the above there is also a `_.clearMemos` function that should be executed in the `Before` or `After` routine for each test to ensure a clean slate of memos.
 
 ## Customization
 
@@ -582,4 +608,10 @@ Then the following now has a successful pattern match:
 
 ## Extras
 
-(document `isSize`, `isOmitted`, `isPrinted`, `filterPattern`)
+Here are some miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
+
+* `_.filterPattern` -- a transform function that takes a pattern as an argument. This is most useful for filtering rows from a database whose column values match certain characteristics.
+  * For example `<-.filterPattern|"{age: _.isInRange|0|18, ...}"` will filter leaving only the rows where `age` is in the range `[0, 18]`.  Notice that this is taking advantage of partial pattern matching with the `...`
+* `_.isPrinted` -- a matcher that always matches, but prints the source values that it is matching against. This is most useful for seeing the results of transforms.
+* `_.isOmitted` -- an alias for `_.isUndefined`. As shown in an example above this is more semantically meaningful for matching intentionally omitted properties of an object.
+* `_.isSize` -- the matcher corresponding to the standard lodash `_.size`. It checks it's argument against the `_.size` of the source object.
