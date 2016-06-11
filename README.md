@@ -11,7 +11,7 @@ The primary goal of this and the supporting modules is to enable the highly flex
 npm install lodash-match-pattern --save-dev
 ```
 In your test file insert
-```
+```javascript
 var matchPattern = require('lodash-match-pattern');
 var _ = matchPattern.getLodashModule(); // Use our lodash extensions (recommended)
 
@@ -122,7 +122,7 @@ describe('basic match', function () {
 * For all the following examples we'll leave out the surrounding test boiler plate.
 * For completeness the cucumber step definitions could be defined as:
 
-```
+```javascript
 // steps.js
 var matchPattern = require('lodash-match-pattern');
 module.exports = function () {
