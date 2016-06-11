@@ -1,11 +1,15 @@
 # Match Pattern
 
 ![CircleCI](https://circleci.com/gh/Originate/lodash-match-pattern.svg?style=shield&circle-token=:circle-token)
-[![David Dependencies](https://david-dm.org/Originate/lodash-match-pattern.svg)]((https://david-dm.org/Originate/lodash-match-pattern
+[![David Dependencies](https://david-dm.org/Originate/lodash-match-pattern.svg)](https://david-dm.org/Originate/lodash-match-pattern)
 [![David devDependencies](https://david-dm.org/Originate/lodash-match-pattern/dev-status.svg)](https://david-dm.org/Originate/lodash-match-pattern#info=devDependencies)
 [![NPM Version](https://img.shields.io/npm/v/lodash-match-pattern.svg)](https://www.npmjs.com/package/lodash-match-pattern)
 
-This is a general purpose validation tool for JSON objects. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also includes a variety of validation functions from the `lodash-checkit` module (a [`lodash`](https://lodash.com/docs) extension mashup with [`checkit`](https://github.com/tgriesser/checkit)), and it allows for custom checking and mapping functions.
+Related Modules:
+[![lodash-checkit](https://img.shields.io/npm/v/chai-match-pattern.svg)](https://www.npmjs.com/package/chai-match-pattern)
+[![lodash-checkit](https://img.shields.io/npm/v/lodash-checkit.svg)](https://www.npmjs.com/package/lodash-checkit)
+
+This is a general purpose validation tool for JSON objects. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also includes a variety of validation functions from the [`lodash-checkit`](https://github.com/originate/lodash-checkit) module (a [`lodash`](https://lodash.com/docs) extension mashup with [`checkit`](https://github.com/tgriesser/checkit)), and it allows for custom checking and mapping functions.
 
 The primary goal of this and the supporting modules is to enable the highly flexible, expressive, and resilient feature testing of JSON based APIs.
 
