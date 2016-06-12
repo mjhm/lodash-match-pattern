@@ -23,9 +23,9 @@ Feature: Basic Features for lodash-match-pattern
         email: 'mom@aol.com'
       },
       friends: [
-        {id: 21, email: 'bob@mp.co', active: true},
-        {id: 89, email: 'jerry@mp.co', active: false},
-        {id: 14, email: 'dan@mp.co', active: true}
+        {id: 21, email: 'pat@mp.co', active: true},
+        {id: 89, email: 'gerri@mp.co', active: false},
+        {id: 14, email: 'kim@mp.co', active: true}
       ]
     }
     """
@@ -51,12 +51,12 @@ Feature: Basic Features for lodash-match-pattern
     """
 
   Scenario: Partial match example -- change the user email
-    Given I change the email to "billybob@duckduck.go"
+    Given I change the email to "billyjoe@duckduck.go"
     Then the user matches the pattern
     """
     {
       id: _.isInteger,
-      email: 'billybob@duckduck.go',
+      email: 'billyjoe@duckduck.go',
       ...
     }
     """
@@ -99,7 +99,7 @@ Feature: Basic Features for lodash-match-pattern
     }
     """
 
-  Scenario: Parameterized matchers example
+  Scenario: Use parameters in a matcher
     Then the user matches the pattern
     """
     {

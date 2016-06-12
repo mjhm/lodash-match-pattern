@@ -6,7 +6,7 @@
 [![David devDependencies](https://david-dm.org/Originate/lodash-match-pattern/dev-status.svg)](https://david-dm.org/Originate/lodash-match-pattern#info=devDependencies)
 
 Related Modules:
-[![lodash-checkit](https://img.shields.io/npm/v/chai-match-pattern.svg?label=chai-match-pattern)](https://www.npmjs.com/package/chai-match-pattern)
+[![chai-match-pattern](https://img.shields.io/npm/v/chai-match-pattern.svg?label=chai-match-pattern)](https://www.npmjs.com/package/chai-match-pattern)
 [![lodash-checkit](https://img.shields.io/npm/v/lodash-checkit.svg?label=lodash-checkit)](https://www.npmjs.com/package/lodash-checkit)
 
 This is a general purpose validation tool for JSON objects. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also includes a variety of validation functions from the [`lodash-checkit`](https://github.com/originate/lodash-checkit) module (a [`lodash`](https://lodash.com/docs) extension mashup with [`checkit`](https://github.com/tgriesser/checkit)), and it allows for custom checking and mapping functions.
@@ -86,9 +86,9 @@ describe('basic match', function () {
     email: 'mom@aol.com'
   },
   friends: [
-    {id: 21, email: 'bob@mp.co', active: true},
-    {id: 89, email: 'jerry@mp.co', active: false},
-    {id: 14, email: 'dan@mp.co', active: true}
+    {id: 21, email: 'pat@mp.co', active: true},
+    {id: 89, email: 'gerri@mp.co', active: false},
+    {id: 14, email: 'kim@mp.co', active: true}
   ]
 };
     if (matchResult) throw(new Error(matchResult));
@@ -115,9 +115,9 @@ describe('basic match', function () {
     email: 'mom@aol.com'
   },
   friends: [
-    {id: 21, email: 'bob@mp.co', active: true},
-    {id: 89, email: 'jerry@mp.co', active: false},
-    {id: 14, email: 'dan@mp.co', active: true}
+    {id: 21, email: 'pat@mp.co', active: true},
+    {id: 89, email: 'gerri@mp.co', active: false},
+    {id: 14, email: 'kim@mp.co', active: true}
   ]
 });
     """
@@ -202,20 +202,20 @@ console.log(
 
 ## Partial objects
 
-Most of the time ,feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change. In fact a principle of feature testing requires elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billybob@duckduck.go" then we can simply match the pattern:
+Most of the time ,feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change. In fact a principle of feature testing requires elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billyjoe@duckduck.go" then we can simply match the pattern:
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
 <tr><td><pre>
 {
   id: 43,
-  email: 'billybob@duckduck.go',
+  email: 'billyjoe@duckduck.go',
   '...': ''
 }
 </pre></td><td><pre>
 {
   id: 43,
-  email: 'billybob@duckduck.go',
+  email: 'billyjoe@duckduck.go',
   ...
 }
 </pre></td></tr></table>
@@ -369,9 +369,9 @@ As a simple motivation consider matching a compound object such at the joeUser's
 {
   friends: {
     '<-.sortBy|email': [
-      {id: 21, email: 'bob@mp.co', active: true},
-      {id: 14, email: 'dan@mp.co', active: true},
-      {id: 89, email: 'jerry@mp.co', active: false}
+      {id: 89, email: 'gerri@mp.co', active: false},
+      {id: 14, email: 'kim@mp.co', active: true},
+      {id: 21, email: 'pat@mp.co', active: true}
     ]
   },
   '...': ''
@@ -380,9 +380,9 @@ As a simple motivation consider matching a compound object such at the joeUser's
 {
   friends: {
     <-.sortBy|email: [
-      {id: 21, email: 'bob@mp.co', active: true},
-      {id: 14, email: 'dan@mp.co', active: true},
-      {id: 89, email: 'jerry@mp.co', active: false}
+      {id: 89, email: 'gerri@mp.co', active: false},
+      {id: 14, email: 'kim@mp.co', active: true},
+      {id: 21, email: 'pat@mp.co', active: true}
     ]
   },
   ...
@@ -431,10 +431,10 @@ Suppose you wanted to check that joeUser's friends are in a "whitelist" of email
   friends: {
     '<=.get|email': {
       '<=.toLower': [
-        'bob@mp.co',
-        'jerry@mp.co',
-        'dan@mp.co',
-        'paul@mp.co',
+        'pat@mp.co',
+        'gerri@mp.co',
+        'kim@mp.co',
+        'paula@mp.co',
         '^^^': ''
       ]
     }
@@ -446,10 +446,10 @@ Suppose you wanted to check that joeUser's friends are in a "whitelist" of email
   friends: {
     <=.get|email: {
       <=.toLower: [
-        'bob@mp.co',
-        'jerry@mp.co',
-        'dan@mp.co',
-        'paul@mp.co',
+        'pat@mp.co',
+        'gerri@mp.co',
+        'kim@mp.co',
+        'paula@mp.co',
         ^^^
       ]
     }

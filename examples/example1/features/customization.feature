@@ -3,7 +3,7 @@ Feature: Customization Functionality
   Background:
     Given I have a basic user
 
-  Scenario: Use custom isActiveSize function
+  Scenario: Use custom _.isActiveSize function
     Then the user matches the pattern
     """
       {
@@ -13,7 +13,7 @@ Feature: Customization Functionality
     """
 
 
-  Scenario: Allow literal set tokens in test values
+  Scenario: Use custom _.literalSetToken transform to check for "===", "^^^", and "^^^" in array
     Given I change tvshows to
       """
       [

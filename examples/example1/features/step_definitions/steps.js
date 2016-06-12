@@ -37,9 +37,9 @@ module.exports = function () {
         email: "mom@aol.com"
       },
       friends: [
-        {id: 21, email: 'bob@mp.co', active: true},
-        {id: 89, email: 'jerry@mp.co', active: false},
-        {id: 14, email: 'dan@mp.co', active: true},
+        {id: 21, email: 'pat@mp.co', active: true},
+        {id: 89, email: 'gerri@mp.co', active: false},
+        {id: 14, email: 'kim@mp.co', active: true},
       ]
     }
   });
