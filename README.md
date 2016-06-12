@@ -189,7 +189,7 @@ The pattern below may look a little odd at first, but main idea is that there's 
   1. All validation functions from `checkit` with `is` prepended.
   1. Case convention matchers constructed from lodash's `...Case` functions.
   1. Any regular expression -- intepreted as `/<regex>/.test(<testval>)`.
-  1. `isDateString`, `isSize`, `isOmitted`
+  1. `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins]{(https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
   1. Any `isXxxx` function you insert as a lodash mixin through [customization](#customization).
 
 To see the full list run this:
@@ -619,6 +619,7 @@ Here are some miscellaneous lodash additions that may come in handy. The source 
 
 * `_.filterPattern` -- a transform function that takes a pattern as an argument. This is most useful for filtering rows from a database whose column values match certain characteristics.
   * For example `<-.filterPattern|"{age: _.isInRange|0|18, ...}"` will filter leaving only the rows where `age` is in the range `[0, 18]`.  Notice that this is taking advantage of partial pattern matching with the `...`
+* `_.isDateString` -- a matcher for strings that are parseable into dates (e.g. ISO Date strings).
 * `_.isPrinted` -- a matcher that always matches, but prints the source values that it is matching against. This is most useful for seeing the results of transforms.
 * `_.isOmitted` -- an alias for `_.isUndefined`. As shown in an example above this is more semantically meaningful for matching intentionally omitted properties of an object.
 * `_.isSize` -- the matcher corresponding to the standard lodash `_.size`. It checks it's argument against the `_.size` of the source object.
