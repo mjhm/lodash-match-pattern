@@ -18,8 +18,6 @@
   },
   "repository": "https://github.com/originate/lodash-match-pattern",
   "keywords": [
-    "chai",
-    "chai-plugin",
     "checkit",
     "lodash",
     "deep",
