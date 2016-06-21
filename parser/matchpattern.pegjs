@@ -207,7 +207,7 @@ setMatch = subset / superset / equalset
 matcher
   = matcher:(isPrefix upper alphaNum* pipeArg*) {return "__MP_match " + text().slice(2)}
 
-isPrefix = "_.is"
+isPrefix = "_.is" / "_.has"
 upper = [A-Z]
 alpha = [a-zA-Z]
 alphaNum = [_0-9a-zA-Z]
