@@ -207,10 +207,18 @@ var matchPattern = function (sourceData, targetPattern) {
       var msg = 'matchPattern: Error parsing pattern: ' + error.message;
       var errStart = error.location.start.offset;
       var errEnd = error.location.end.offset;
-      msg += '\nline:' + error.location.start.line + ' column:' + error.location.start.column
-      msg += '\n' + chalk.green(targetPattern.slice(0, errStart)) +
+      var startLine = error.location.start.line;
+      var startColumn = error.location.start.column;
+      msg += '\nline:' + startLine + ' column:' + startColumn;
+
+      var chalkPattern = chalk.green(targetPattern.slice(0, errStart)) +
         chalk.red(targetPattern.slice(errStart, errEnd)) +
         chalk.blue(targetPattern.slice(errEnd));
+      var chalkLines = chalkPattern.split(/\n/);
+      var outLines = chalkLines.slice(0,startLine);
+      outLines.push(_.repeat('-', startColumn - 1) + '^' + '---');
+      Array.prototype.push.apply(outLines, chalkLines.slice(startLine));
+      msg += '\n' + outLines.join('\n');
       throw new Error(msg);
     }
   }

@@ -182,7 +182,7 @@ The pattern below may look a little odd at first, but main idea is that there's 
 </table>
 
 ##### Notes
-* Again the two forms are visually identical. However there's one significant difference. For the JS Objects the matching functions (e.g `_.isString`) can be any function in scope. In contrast the corresponding Pattern Notation functions are required to be members of our lodash extension module and are required to begin with "is".
+* Again the two forms are visually identical. However there's one significant difference. For the JS Objects the matching functions (e.g `_.isString`) can be any function in scope. In contrast the corresponding Pattern Notation functions are required to be members of our lodash extension module and are required to begin with "is" or "has".
 
 * The available matching functions are
   1. All `isXxxx` functions from `lodash`.
@@ -190,7 +190,7 @@ The pattern below may look a little odd at first, but main idea is that there's 
   1. Case convention matchers constructed from lodash's `...Case` functions.
   1. Any regular expression -- intepreted as `/<regex>/.test(<testval>)`.
   1. `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins]{(https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
-  1. Any `isXxxx` function you insert as a lodash mixin through [customization](#customization).
+  1. Any `isXxxx` (or `hasXxxx`) function you insert as a lodash mixin through [customization](#customization).
 
 To see the full list run this:
 ```

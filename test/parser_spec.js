@@ -72,6 +72,7 @@ describe('parser', function () {
       [ '{<=.mapme : {a : 1}}',  {'__MP_map0 mapme': {a: 1}} ],
       [ '{<-.applyme : {a : 1}}',  {'__MP_apply0 applyme': {a: 1}} ],
       [ '{a : _.isMatchMe}',  {a: "__MP_match isMatchMe"} ],
+      [ '{a : _.hasMatchMe}',  {a: "__MP_match hasMatchMe"} ],
     ]);
   });
   describe('arg parsing', function () {
