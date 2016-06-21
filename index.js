@@ -1,3 +1,4 @@
+var chalk = require('chalk');
 var lodash = require('lodash-checkit');
 var util = require('util');
 var parser = require('./_parser');
@@ -203,7 +204,14 @@ var matchPattern = function (sourceData, targetPattern) {
       if (debug) console.log('parsed', targetObject);
     }
     catch (error) {
-      throw new Error('matchPattern: Error parsing pattern: ' + error.message);
+      var msg = 'matchPattern: Error parsing pattern: ' + error.message;
+      var errStart = error.location.start.offset;
+      var errEnd = error.location.end.offset;
+      msg += '\nline:' + error.location.start.line + ' column:' + error.location.start.column
+      msg += '\n' + chalk.green(targetPattern.slice(0, errStart)) +
+        chalk.red(targetPattern.slice(errStart, errEnd)) +
+        chalk.blue(targetPattern.slice(errEnd));
+      throw new Error(msg);
     }
   }
   if (debug) console.log('parse/normalize targetObject', targetObject);

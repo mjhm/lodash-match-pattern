@@ -63,13 +63,6 @@ describe('mixins', function () {
     });
   });
 
-  describe('#filterPattern', function () {
-    it('filters based on a pattern', function () {
-      expect(mixins.filterPattern([{a: 1, b: 2}, {a: 2, b: 3}],'{a: 1, ...}'))
-        .to.deep.equal([{a: 1, b: 2}])
-    });
-  });
-
   describe('memos', function (){
     beforeEach(function () {
       this.memo = mixins.__get__('memo');
@@ -118,4 +111,48 @@ describe('mixins', function () {
     });
   });
 
+  describe('filters', function () {
+
+    describe('#filterPattern', function () {
+      it('filters based on a pattern', function () {
+        expect(mixins.filterPattern([{a: 1, b: 2}, {a: 2, b: 3}],'{a: 1, ...}'))
+          .to.deep.equal([{a: 1, b: 2}])
+      });
+    });
+
+
+    describe('#extractUrls', function () {
+      it('extracts from a multi line string', function () {
+        var extracted = mixins.extractUrls([
+          'Whatever http://google.com',
+          'https://whatever.blah.co?param=123',
+        ].join('\n'));
+        expect(extracted[0].host).to.equal('google.com');
+        expect(extracted[1].host).to.equal('whatever.blah.co');
+        expect(extracted[1].query).to.deep.equal({ param: '123' });
+      });
+
+      it('extracts from HTML with encoded chars', function () {
+        var extracted = mixins.extractUrls([
+          '<p> my link',
+          '  <a href="http://blah.com?token&#x3D;2.6">click me</a>',
+          '</p>'
+        ].join('\n'));
+        expect(extracted[0].query).to.deep.equal({token: "2.6"});
+      });
+
+      it('extracts a variety of url patterns', function () {
+        var extracted = mixins.extractUrls([
+          'www.blah.com',
+          'blah.org/something',
+          'http://foo.com/more_(than)_one_(parens)',
+          'http://foo.com/blah_(wikipedia)#cite-1',
+          'http://foo.com/blah_(wikipedia)_blah#cite-1',
+          'http://foo.com/unicode_(✪)_in_parens',
+          'http://foo.com/(something)?after=parens',
+        ].join('\n'));
+        expect(extracted.length).to.equal(7);
+      });
+    });
+  });
 });

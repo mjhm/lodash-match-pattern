@@ -35,7 +35,7 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Features Index
 
-You probably won't need all of these features, but there's plenty of flexibility to to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/basic.feature`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/basic.feature) as cucumber-js tests.
+You probably won't need all of these features, but there's plenty of flexibility to to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests.
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -202,7 +202,7 @@ console.log(
 
 ## Partial objects
 
-Most of the time ,feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change. In fact a principle of feature testing requires elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billyjoe@duckduck.go" then we can simply match the pattern:
+Most of the time feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change. In fact a principle of feature testing requires elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billyjoe@duckduck.go" then we can simply match the pattern:
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
@@ -356,7 +356,7 @@ Some of the matching functions take parameters. These can be specified with "|" 
 
 ## Transforms
 
-Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed. Use transforms sparingly since they tend to make the patterns less readable, and they could be a code smell of excessively complex tests. In many cases separate tests or custom matcher will be clearer.
+Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed. Use transforms sparingly since they tend to make the patterns less readable, and they could be a code smell of excessively complex tests. In many cases separate tests or a custom matcher will be clearer.
 
 #### Apply Transform Example
 
@@ -389,9 +389,9 @@ As a simple motivation consider matching a compound object such at the joeUser's
 }
 </pre></td></tr></table>
 
-Any function in `lodash-checkit` is available for use in transforms, along with any function you add via customization. The functions are applied with the `testValue` as the function's first argument, and additional `|` separated arguments can be specified after the function name.
+Any function in `lodash-checkit` is available for transforms, along with a few [extras](#extras) below and any function you add via customization. The functions are applied with the `testValue` as the function's first argument, and additional `|` separated arguments can be specified after the function name.
 
-Important Note: The transform functions are applied to the test value, NOT the corresponding test pattern. In this example we are testing the `joeUser.friends` list. So this list is sorted by `email` and the resulting array is tested against the pattern specified in the above array pattern.
+Important Note: The transform functions are applied to the test value, NOT the corresponding test pattern. In this example we're testing the `joeUser.friends` list. So this list is sorted by `email` and the resulting array is tested against the pattern specified in the above array pattern.
 
 #### Map Pattern Transform Example
 
@@ -617,6 +617,7 @@ Then the following now has a successful pattern match:
 
 Here are some miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
 
+* `_.extractUrls` -- a transform that takes a string and returns an array of parsed Url objects from the string.
 * `_.filterPattern` -- a transform function that takes a pattern as an argument. This is most useful for filtering rows from a database whose column values match certain characteristics.
   * For example `<-.filterPattern|"{age: _.isInRange|0|18, ...}"` will filter leaving only the rows where `age` is in the range `[0, 18]`.  Notice that this is taking advantage of partial pattern matching with the `...`
 * `_.isDateString` -- a matcher for strings that are parseable into dates (e.g. ISO Date strings).
