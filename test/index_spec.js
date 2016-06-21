@@ -202,6 +202,8 @@ describe('matchPattern', function () {
         [true,    {targ: '{a: /abc/}', src: {a: 'abc'}}],
         [true,    {targ: '/[0-9]+/', src: '123'}],
         [false,   {targ: '/[A-Z]+/', src: '123'}],
+        [true,    {targ: {text: /passwordToken=3\.[0-9a-f]{6}/, a: 1},
+          src: {text: 'http://aurl.com?passwordToken=3.297e54', a: 1}} ],
         [true,    {targ: '{ <-.without|10: [9, 11]}', src: [9, 10, 11] }],
         [false,   {targ: '{ <-.without|"10": [9, 11]}', src: [9, 10, 11] }],
         [true,    {targ: '{ <-.without|"10": ["9", "11"]}', src: ['9', '10', '11'] }],
@@ -243,5 +245,22 @@ describe('#use (custom lodash module)', function () {
   it('fails with non-matching test data', function () {
     var matchResult = matchPattern(this.winkie, '_.isSmilie');
     return expect(matchResult).to.be.a('string');
+  });
+
+  describe('pattern parsing error info', function () {
+    it('visual check of chalk output', function () {
+      var testStr = [
+        '{',
+        '  a 1',
+        '  ...',
+        '}'
+      ].join('\n');
+      try {
+        matchPattern({a: 1}, testStr)
+      } catch (err) {
+        console.log(err.message);
+      }
+
+    });
   });
 });
