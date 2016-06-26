@@ -32,7 +32,10 @@ var runTestList = function (testList) {
     // var desc = tst[0].split('').join(',') + ' parses into \n' + JSON.stringify(tst[1], null, 2);
 
     it(desc, function() {
-      var tracer = new Tracer(tst[0], {showTrace:false});
+      var tracer = new Tracer(tst[0], {
+        showTrace:false,
+        showFullPath:false,
+      });
       try {
         var parsed = parser.parse(tst[0], {tracer: tracer});
       } catch(e) {
@@ -59,6 +62,7 @@ describe('parser', function () {
   describe('sets', function () {
     runTestList([
       [ '{a : 1, ...}', {a: 1, '__MP_subset': ''} ],
+      [ '{a : 1 ...}',  {a: 1, '__MP_subset': ''} ],
       [ '[1, 2, ...]',  [1, 2, '__MP_subset'] ],
       [ '[1, 2, ^^^]',  [1, 2, '__MP_superset'] ],
       [ '[1, 2, ===]',  [1, 2, '__MP_equalset'] ],
@@ -86,9 +90,13 @@ describe('parser', function () {
   });
   describe('regex', function () {
     runTestList([
-      [ '{a : /abc/}',  {a: '__MP_regex abc'} ],
-      [ '/abc/', '__MP_regex abc' ],
-      [ '/[A-Z].*/', '__MP_regex [A-Z].*'],
+      [ '{a : /abc/}',  {a: '__MP_regex() abc'} ],
+      [ '/abc/', '__MP_regex() abc' ],
+      [ '/[A-Z].*/', '__MP_regex() [A-Z].*'],
+      [ String.raw`/[A-Z].*/`, String.raw`__MP_regex() [A-Z].*`],
+      [ String.raw`/a\w.*/`, String.raw`__MP_regex() a\w.*`],
+      [ String.raw`/a\/.*/`, String.raw`__MP_regex() a\/.*`],
+      [ String.raw`/a\/.*/igmyu`, String.raw`__MP_regex(igmyu) a\/.*`],
     ]);
   });
   describe('recursive filterPattern', function () {

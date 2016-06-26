@@ -160,9 +160,15 @@ describe('matchPattern', function () {
     describe('regexp', function () {
       runTestList([
         [true,  {targ: {a: /abc/}, src: {a: 'abc'}}],
-        [false,  {targ: {a: /abc/}, src: {a: 'Abc'}}],
+        [false, {targ: {a: /abc/}, src: {a: 'Abc'}}],
         [true,  {targ: /\:/, src: ':'}],
         [true,  {targ: /\t\"\n/, src: '\t"\n'}],
+        [true,  {targ: String.raw`/a\wc/`, src: 'abc'}],
+        [false, {targ: String.raw`/a\.c/`, src: 'abc'}],
+        [true,  {targ: String.raw`/AbC/i`, src: 'abc'}],
+        [false, {targ: String.raw`/a.c/`, src: 'a\nc'}],
+        [false, {targ: String.raw`/^a$\n^c$/`, src: 'a\nc'}],
+        [true,  {targ: String.raw`/^a$\n^c$/m`, src: 'a\nc'}],
       ]);
     });
 

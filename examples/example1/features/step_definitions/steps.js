@@ -26,6 +26,7 @@ module.exports = function () {
       website: 'http://matchapattern.org',
       firstName: 'Joe',
       lastName: 'Matcher',
+      phone: '(333) 444-5555',
       createDate: '2016-05-22T00:23:23.343Z',
       tvshows: [
         'Match Game',

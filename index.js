@@ -148,7 +148,8 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
   } else if (_.isFunction(targVal)) {
     matchFn = targVal;
   } else if (/^__MP_regex/.test(targVal)) {
-    var re = new RegExp(targVal.replace(/^__MP_regex\s*/, ''))
+    var targMatch = targVal.match(/^__MP_regex\(([^)]*)\)\s(.*)/);
+    var re = new RegExp(targMatch[2], targMatch[1]);
     matchFn = RegExp.prototype.test.bind(re);
   } else if (_.isRegExp(targVal)) {
     matchFn = RegExp.prototype.test.bind(targVal);
