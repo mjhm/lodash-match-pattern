@@ -21,7 +21,7 @@ In your test file insert
 var matchPattern = require('lodash-match-pattern');
 var _ = matchPattern.getLodashModule(); // Use our lodash extensions (recommended)
 
-// Example usage:
+// Real simple example usage:
 
 var testValue = {a: 1, b: 'abc'};
 
@@ -32,9 +32,10 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 // returns "{a: 1} didn't match target {a: '_.isString'}"
 ```
 
-#### Features Index
+#### Here's what this module does for you
 
-You may not need all of these features, but they're worth skimming through. You'll likely find that there's plenty of flexibility to to your specific use cases. All of the included examples are illustrated with live code in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests.
+(You may not need all of these features, but they're worth skimming through. You'll likely find that there's plenty of flexibility for your specific use cases. All of the included examples are illustrated with live code in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests and
+[`examples/example1/mocha_features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/mocha_features/) as mocha tests.)
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -53,14 +54,14 @@ You may not need all of these features, but they're worth skimming through. You'
 
 #### Specification with "Pattern Notation" or JavaScript Objects
 
-As illustrated in the [examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features) the target use case of this module is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js) tests. The "Pattern Notation" is a JSON-like specification for use in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which may be more convenient for "mocha" and other unit testing frameworks.
+As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features) the target use case of this module is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js) tests. The "Pattern Notation" is a JSON-like DSL for use in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
 
 
 ## Deep JSON matching
 
 Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected.
 
-```javascript
+```cucumber
 
   Given I have joeUser
   Then joeUser matches the pattern
@@ -91,72 +92,6 @@ Just for starters, suppose we have a "joeUser" object and want to validate its e
     """
 ```
 
-
-
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-var matchPattern = require('lodash-match-pattern');
-var joeUser = getJoeUser();
-
-describe('basic match', function () {
-  it('matches joeUser', function () {
-    var matchResult = matchPattern(joeUser,
-{
-  id: 43,
-  email: 'joe@matchapattern.org',
-  website: 'http://matchapattern.org',
-  firstName: 'Joe',
-  lastName: 'Matcher',
-  createDate: '2016-05-22T00:23:23.343Z',
-  tvshows: [
-    'Match Game',
-    'Sopranos',
-    'House of Cards'
-  ],
-  mother: {
-    id: 23,
-    email: 'mom@aol.com'
-  },
-  friends: [
-    {id: 21, email: 'pat@mp.co', active: true},
-    {id: 89, email: 'gerri@mp.co', active: false},
-    {id: 14, email: 'kim@mp.co', active: true}
-  ]
-};
-    if (matchResult) throw(new Error(matchResult));
-  });
-});
-</pre></td><td><pre>
-  Given I have joeUser
-  Then joeUser matches the pattern
-    """
-{
-  id: 43,
-  email: 'joe@matchapattern.org',
-  website: 'http://matchapattern.org',
-  firstName: 'Joe',
-  lastName: 'Matcher',
-  createDate: '2016-05-22T00:23:23.343Z',
-  tvshows: [
-    'Match Game',
-    'Sopranos',
-    'House of Cards'
-  ],
-  mother: {
-    id: 23,
-    email: 'mom@aol.com'
-  },
-  friends: [
-    {id: 21, email: 'pat@mp.co', active: true},
-    {id: 89, email: 'gerri@mp.co', active: false},
-    {id: 14, email: 'kim@mp.co', active: true}
-  ]
-});
-    """
-</pre></td></tr>
-</table>
 
 ##### Notes
 * In this case the JS Object and the Pattern Notation are visually identical. The only difference is the first is a JS object and the second is a string.
