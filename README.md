@@ -35,7 +35,7 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 #### Here's what this module does for you
 
 <small>(You may not need all of these features, but they're worth skimming. You'll likely find lots of flexibility for your specific use cases. The included examples are illustrated with live code in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests and
-[`examples/example1/test/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/mocha_features/) as mocha tests.)<small>
+[`examples/example1/test/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/mocha_features/) as mocha tests.)</small>
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -59,7 +59,7 @@ As illustrated in the [cucumber examples](https://github.com/Originate/lodash-ma
 
 ## Deep JSON matching
 
-Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected. *[[Code.](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L6)]
+Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L6)]*
 
 ```cucumber
 
@@ -92,12 +92,12 @@ Just for starters, suppose we have a "joeUser" object and want to validate its e
     """
 ```
 
-Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only useful in small isolated feature tests and occasional unit tests. Just for example, suppose you wanted to match the exact `createDate` of the above user. Then you might need to do some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `lodash-match-pattern` enables a rich and extensible facility for data type checking.
+Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only occasionally useful. Just for example, suppose you wanted to match the exact `createDate` of the above user. Then you'd need to do some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `lodash-match-pattern` enables a rich and extensible facility for data type checking.
 
 
 ## Matching property types
 
-The main point here is is that there's a bucket full of `_.isXxxx` matchers available to check property types, and if those aren't enough you can match by regex as well. All you need to do is slug in the pattern matching function (or regex) and that function will be applied to the candidate value.
+There's a bucket full of `_.isXxxx` matchers available to check property types, and if those aren't enough, you can match by regex as well. All you need to do is slug in the pattern matching function (or regex) and that function will be applied to the candidate value. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L34)]*
 
 ```javascript
 {
@@ -106,6 +106,7 @@ The main point here is is that there's a bucket full of `_.isXxxx` matchers avai
   website: _.isUrl,
   firstName: /[A-Z][a-z]+/,
   lastName: _.isString,
+  phone: /\(\d{3}\)\s*\d{3}[- ]\d{4}/,
   createDate: _.isDateString,
   tvshows: [
     _.isString,
@@ -117,9 +118,6 @@ The main point here is is that there's a bucket full of `_.isXxxx` matchers avai
 }
 ```
 
-##### Notes
-* Again the two forms are visually identical. However there's one significant difference. For the JS Objects the matching functions (e.g `_.isString`) can be any function in scope. In contrast the corresponding Pattern Notation functions are required to be members of our lodash extension module and are required to begin with "is" or "has".
-
 * The available matching functions are
   1. All `isXxxx` functions from `lodash`.
   1. All validation functions from `checkit` with `is` prepended.
@@ -129,36 +127,28 @@ The main point here is is that there's a bucket full of `_.isXxxx` matchers avai
   1. Any `isXxxx` (or `hasXxxx`) function you insert as a lodash mixin through [customization](#customization).
 
 To see the full list run this:
-```
+```javascript
 console.log(
   Object.keys(require('lodash-match-pattern').getLodashModule())
-  .filter(function (fname) { return /^is[A-Z]/.test(fname) })
+  .filter(function (fname) { return /^(is|has)[A-Z]/.test(fname) })
 );
 ```
 
 ## Partial objects
 
-Most of the time feature tests are interested in how objects change, and we don't need be concerned with properties of an object that aren't involved in the change. In fact a principle of feature testing requires elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billyjoe@duckduck.go" then we can simply match the pattern:
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  id: 43,
-  email: 'billyjoe@duckduck.go',
-  '...': ''
-}
-</pre></td><td><pre>
+Most of the time feature tests are interested in how objects change, and we're not concerned with properties of an object that aren't involved in the change. In fact best practices of feature testing suggest elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billyjoe@duckduck.go" then we can simply match the pattern *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L55)]*:
+
+```javascript
 {
   id: 43,
   email: 'billyjoe@duckduck.go',
   ...
 }
-</pre></td></tr></table>
+```
 
-The `'...'` object key indicates that only the specified keys are matched, and all others in `joeUser` are ignored.
+The `...` indicates that only the specified keys are matched, and all others in `joeUser` are ignored.
 
-_Note: from here on all the examples will use partial matching, and all will successfully match "joeUser"._
+_Note: from here on all the examples will use partial matching._
 
 ## Partial, Superset, and Unordered Arrays
 
