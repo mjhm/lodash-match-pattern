@@ -9,9 +9,7 @@ Related Modules:
 [![chai-match-pattern](https://img.shields.io/npm/v/chai-match-pattern.svg?label=chai-match-pattern)](https://www.npmjs.com/package/chai-match-pattern)
 [![lodash-checkit](https://img.shields.io/npm/v/lodash-checkit.svg?label=lodash-checkit)](https://www.npmjs.com/package/lodash-checkit)
 
-This is a general purpose validation tool for JSON objects. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also includes a variety of validation functions from the [`lodash-checkit`](https://github.com/originate/lodash-checkit) module (a [`lodash`](https://lodash.com/docs) extension mashup with [`checkit`](https://github.com/tgriesser/checkit)), and it allows for custom checking and mapping functions.
-
-The primary goal of this and the supporting modules is to enable the highly flexible, expressive, and resilient feature testing of JSON based APIs.
+*Match Pattern* is a Swiss Army Knife for validating JSON objects. Its primary goal is to enable the highly flexible, expressive, and resilient feature testing of JSON based APIs. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also bundles a variety of validation functions from the [`lodash`](https://lodash.com/docs) and [`checkit`](https://github.com/tgriesser/checkit) modules. And it enables custom matching and mapping functions.
 
 #### Basic Usage
 ```
@@ -35,7 +33,7 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Features Index
 
-You probably won't need all of these features, but there's plenty of flexibility to to adapt to the details of your specific use cases. All of the examples below are illustrated in the [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests.
+You may not need all of these features, but they're worth skimming through. You'll likely find that there's plenty of flexibility to to your specific use cases. All of the included examples are illustrated with live code in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests.
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -52,13 +50,48 @@ You probably won't need all of these features, but there's plenty of flexibility
 1. [Customization](#customization)
 1. [Extras](#extras)
 
-#### Specification with JavaScript Objects or "Pattern Notation"
+#### Specification with "Pattern Notation" or JavaScript Objects
 
-There are two similar ways to specify patterns to match. JavaScript objects are more convenient for `mocha` and JavaScript test runners that aren't multiline string friendly. "Pattern Notation" is more readable in `cucumber` tests and other environments that support multiline strings. Almost all patterns can be expressed in either form. In most cases below examples will be shown in both forms.
+As illustrated in the [examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features) the target use case of this module is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js) tests. The "Pattern Notation" is a JSON-like specification for use in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which may be more convenient for "mocha" and other unit testing frameworks.
+
 
 ## Deep JSON matching
 
 Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected.
+
+```json5
+
+  Given I have joeUser
+  Then joeUser matches the pattern
+    """
+    {
+      id: 43,
+      email: 'joe@matchapattern.org',
+      website: 'http://matchapattern.org',
+      firstName: 'Joe',
+      lastName: 'Matcher',
+      phone: '(333) 444-5555',
+      createDate: '2016-05-22T00:23:23.343Z',
+      tvshows: [
+        'Match Game',
+        'Sopranos',
+        'House of Cards'
+      ],
+      mother: {
+        id: 23,
+        email: 'mom@aol.com'
+      },
+      friends: [
+        {id: 21, email: 'pat@mp.co', active: true},
+        {id: 89, email: 'gerri@mp.co', active: false},
+        {id: 14, email: 'kim@mp.co', active: true}
+      ]
+    }
+    """
+```
+
+
+
 <table><tr>
 <th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
 </tr>
