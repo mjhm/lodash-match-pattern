@@ -1,10 +1,10 @@
 # Match Pattern
+[![NPM](https://nodei.co/npm/lodash-match-pattern.png?downloads=true)](https://github.com/originate/lodash-match-pattern)
 
 ![CircleCI](https://circleci.com/gh/Originate/lodash-match-pattern.svg?style=shield&circle-token=:circle-token)
 [![David Dependencies](https://david-dm.org/Originate/lodash-match-pattern.svg)](https://david-dm.org/Originate/lodash-match-pattern)
 [![David devDependencies](https://david-dm.org/Originate/lodash-match-pattern/dev-status.svg)](https://david-dm.org/Originate/lodash-match-pattern#info=devDependencies)
 
-[![NPM](https://nodei.co/npm/lodash-match-pattern.png?downloads=true)](https://github.com/originate/lodash-match-pattern)
 
 Related Modules:
 [![chai-match-pattern](https://img.shields.io/npm/v/chai-match-pattern.svg?label=chai-match-pattern)](https://www.npmjs.com/package/chai-match-pattern)
@@ -34,8 +34,8 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Here's what this module does for you
 
-(You may not need all of these features, but they're worth skimming through. You'll likely find that there's plenty of flexibility for your specific use cases. All of the included examples are illustrated with live code in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests and
-[`examples/example1/mocha_features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/mocha_features/) as mocha tests.)
+<small>(You may not need all of these features, but they're worth skimming. You'll likely find lots of flexibility for your specific use cases. The included examples are illustrated with live code in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests and
+[`examples/example1/test/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/mocha_features/) as mocha tests.)<small>
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -54,12 +54,12 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Specification with "Pattern Notation" or JavaScript Objects
 
-As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features) the target use case of this module is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js) tests. The "Pattern Notation" is a JSON-like DSL for use in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
+As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features) our target use case is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js). The "Pattern Notation" is a JSON-like DSL for use in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which (although a little less readable) may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
 
 
 ## Deep JSON matching
 
-Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected.
+Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected. *[[Code.](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L6)]
 
 ```cucumber
 
@@ -92,46 +92,14 @@ Just for starters, suppose we have a "joeUser" object and want to validate its e
     """
 ```
 
-
-##### Notes
-* In this case the JS Object and the Pattern Notation are visually identical. The only difference is the first is a JS object and the second is a string.
-* For all the following examples we'll leave out the surrounding test boiler plate.
-* For completeness the cucumber step definitions could be defined as:
-
-```javascript
-// steps.js
-var matchPattern = require('lodash-match-pattern');
-module.exports = function () {
-  var self = this;
-
-  self.Given(/^I have joeUser$/, function () {
-    self.user = {
-      id: 43,
-      email: 'joe@matchapattern.org',
-      ...
-    }
-  });
-
-  self.Then(
-    /^joeUser matches the pattern$/,
-    function (targetPattern) {
-      var matchResult = matchPattern(self.user, targetPattern);
-      if (matchResult) throw matchResult;
-    }
-  );
-};
-```
-
 Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only useful in small isolated feature tests and occasional unit tests. Just for example, suppose you wanted to match the exact `createDate` of the above user. Then you might need to do some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `lodash-match-pattern` enables a rich and extensible facility for data type checking.
 
 
 ## Matching property types
 
-The pattern below may look a little odd at first, but main idea is that there's a bucket full of `_.isXxxx` matchers available to check the property types. All you need to do is slug in the pattern matching function and that function will be applied to the corresponding candidate value.
-<table><tr>
-<th>JavaScript Objects and Pattern Notation are identical</th>
-</tr>
-<tr><td><pre>
+The main point here is is that there's a bucket full of `_.isXxxx` matchers available to check property types, and if those aren't enough you can match by regex as well. All you need to do is slug in the pattern matching function (or regex) and that function will be applied to the candidate value.
+
+```javascript
 {
   id: _.isInteger,
   email: _.isEmail,
@@ -147,8 +115,7 @@ The pattern below may look a little odd at first, but main idea is that there's 
   mother: _.isObject,
   friends: _.isArray
 }
-</pre></td></tr>
-</table>
+```
 
 ##### Notes
 * Again the two forms are visually identical. However there's one significant difference. For the JS Objects the matching functions (e.g `_.isString`) can be any function in scope. In contrast the corresponding Pattern Notation functions are required to be members of our lodash extension module and are required to begin with "is" or "has".
