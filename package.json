@@ -1,6 +1,6 @@
 {
   "name": "lodash-match-pattern",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Validates a deep structured JSON pattern",
   "main": "index.js",
   "files": [
