@@ -35,7 +35,7 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 #### Here's what this module does for you
 
 You may not need all of these features, but they're worth skimming. You'll likely find lots of flexibility for your specific use cases. The included examples are illustrated with live code as cucumber-js tests in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) and as mocha tests in
-[`examples/example1/test/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/mocha_features/).
+[`examples/example1/test/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/test/).
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -54,12 +54,12 @@ You may not need all of these features, but they're worth skimming. You'll likel
 
 #### Specification with "Pattern Notation" or JavaScript Objects
 
-As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features), our target use case is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js). The "Pattern Notation" is a JSON-like DSL for use in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which (although a little less readable) may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
+As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features), our target use case is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js). The "Pattern Notation" is a JSON-like DSL designed for readability in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
 
 
 ## Deep JSON matching
 
-Just for starters, suppose we have a "joeUser" object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L6)]*
+Just for starters, suppose we have a `joeUser` object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L6)]*
 
 ```cucumber
 
@@ -123,7 +123,7 @@ There's a bucket full of `_.isXxxx` matchers available to check property types, 
   1. All validation functions from `checkit` with `is` prepended.
   1. Case convention matchers constructed from lodash's `...Case` functions.
   1. Any regular expression -- intepreted as `/<regex>/.test(<testval>)`.
-  1. `isPrinted`, `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins]{(https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
+  1. `isPrinted`, `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
   1. Any `isXxxx` (or `hasXxxx`) function you insert as a lodash mixin through [customization](#customization).
 
 To see the full list run this:
@@ -136,7 +136,7 @@ console.log(
 
 ## Partial objects
 
-Most feature tests are interested in how objects change, so we're not usually concerned with properties that aren't involved in the change. In fact best practices of feature testing suggest elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billyjoe@duckduck.go" then we can simply match the pattern *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L55)]*:
+Most feature tests are interested in how objects change, so we're not usually concerned with properties that aren't involved in the change. In fact best practices of feature testing suggest elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say `billyjoe@duckduck.go` then we can simply match the pattern *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L55)]*:
 
 ```javascript
 {
@@ -231,7 +231,7 @@ Transforms modify the test data in some way before applying a match pattern. Tra
 
 #### Apply Transform Example
 
-As motivation consider matching a compound object such at the `joeUser`'s friends list. We may not be able to guarantee order of items in the list, and probably don't care anyway. So simply matching the friends list with a set order will likely be an unreliable test. To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L6)]*
+As motivation consider matching a compound object such at the `joeUser`'s friends list. We may not be able to guarantee order of items in the list, and probably don't care anyway. So simply matching the friends list with a set order will likely be an unreliable test. To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transforms.feature#L6)]*
 
 ```javascript
 {
@@ -252,7 +252,7 @@ Important Note: The transform functions are applied to the test value, NOT the c
 
 #### Map Pattern Transform Example
 
-Suppose you just wanted to check that all of of joeUser's friends have emails `...@mp.co`. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L21)]*
+Suppose you just wanted to check that all of of joeUser's friends have emails `...@mp.co`. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transforms.feature#L21)]*
 
 ```javascript
 {
@@ -268,7 +268,7 @@ The `<=` says that the pattern is applied to each of the entries of the `joeUser
 
 #### Map Values Transform Example
 
-Suppose you want to check that `joeUser`'s friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L32)]*
+Suppose you want to check that `joeUser`'s friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transforms.feature#L32)]*
 
 ```javascript
 {
@@ -296,7 +296,7 @@ Map transforms (`<=.`) can be applied to objects as well as arrays. For arrays `
 
 Transformations can be mixed and matched. Multiple transforms can also appear as keys in a single object. In that case they check the test value against all their respective pattern values. Notice, as suggested in the previous example, transform compositions are always applied to the test value from the outside to the inside where they result in the final pattern match.
 
-The following artificial example verifies that `joeUser` has `2` active friends, in four different ways. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L51)]*
+The following artificial example verifies that `joeUser` has `2` active friends, in four different ways. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transforms.feature#L51)]*
 
 ```javascript
   friends: {

@@ -1,19 +1,14 @@
 'use strict';
 
 var chai = require('chai');
-var util = require('util');
 var fs = require('fs');
 var PEG = require('pegjs');
 var Tracer = require('pegjs-backtrace');
 var expect = chai.expect;
 
-var only = 'only';
+var only = 'only'; // eslint-disable-line no-unused-vars
 
 var parser = PEG.buildParser(fs.readFileSync('./parser/matchpattern.pegjs', 'utf8'), {trace: true} );
-
-var parserTests =[
-];
-
 
 var runTestList = function (testList) {
   var onlyTests = [];
@@ -29,7 +24,6 @@ var runTestList = function (testList) {
 
   (onlyTests.length ? onlyTests : noSkipTests).forEach(function(tst) {
     var desc = tst[0] + ' parses into \n' + JSON.stringify(tst[1], null, 2);
-    // var desc = tst[0].split('').join(',') + ' parses into \n' + JSON.stringify(tst[1], null, 2);
 
     it(desc, function() {
       var tracer = new Tracer(tst[0], {
@@ -39,9 +33,11 @@ var runTestList = function (testList) {
       try {
         var parsed = parser.parse(tst[0], {tracer: tracer});
       } catch(e) {
-          console.log(e.message);
-          console.log(tracer.getBacktraceString());
-          throw e;
+        // eslint-disable-next-line no-console
+        console.log(e.message);
+        // eslint-disable-next-line no-console
+        console.log(tracer.getBacktraceString());
+        throw e;
       }
       expect(parsed).to.deep.equal(tst[1]);
     });
@@ -75,8 +71,8 @@ describe('parser', function () {
       [ '{<- : {a : 1}}',  {'__MP_apply0': {a: 1}} ],
       [ '{<=.mapme : {a : 1}}',  {'__MP_map0 mapme': {a: 1}} ],
       [ '{<-.applyme : {a : 1}}',  {'__MP_apply0 applyme': {a: 1}} ],
-      [ '{a : _.isMatchMe}',  {a: "__MP_match isMatchMe"} ],
-      [ '{a : _.hasMatchMe}',  {a: "__MP_match hasMatchMe"} ],
+      [ '{a : _.isMatchMe}',  {a: '__MP_match isMatchMe'} ],
+      [ '{a : _.hasMatchMe}',  {a: '__MP_match hasMatchMe'} ],
     ]);
   });
   describe('arg parsing', function () {

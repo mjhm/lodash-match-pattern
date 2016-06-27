@@ -13,8 +13,6 @@ var checkSubsetMatch = helpers.checkSubsetMatch;
 
 var debug = false;
 
-var memoHash = {};
-
 var _ = lodash.mixin(mixins);
 
 var lodashModule = _;  // lodash-checkit by default, but can be overriden by customization
@@ -38,30 +36,33 @@ var curryFunctionSpec = function (fnSpec) {
       fnSplit = (/^\|([^\|]*)(.*)/.exec(fnRest) || ['dummy']).slice(1);
       fnArg = fnSplit.shift();
       if (! isNaN(fnArg)) {
-        fnArg = Number(fnArg)
+        fnArg = Number(fnArg);
       }
     }
     fnRest = fnSplit.shift();
-    if (debug) console.log('fnName', fnName, 'fnArg', fnArg, 'fnRest', fnRest);
-    fn = _.bind(fn, lodashModule, _, fnArg)
+    if (debug) {
+      // eslint-disable-next-line no-console
+      console.log('fnName', fnName, 'fnArg', fnArg, 'fnRest', fnRest);
+    }
+    fn = _.bind(fn, lodashModule, _, fnArg);
   }
   return fn;
 };
 
-var echo = function (val) { return val; }
+var echo = function (val) { return val; };
 
 var matchMembers = function (targVal, srcVal, matcher) {
+  // eslint-disable-next-line no-console
   if (debug) console.log('matchMembers', targVal, srcVal);
-  // if (_.isPlainObject(srcVal) && _.isPlainObject(targVal)) {
   var newSrcObj = fillSrcWithVoids(targVal, srcVal);
   var newTargObj = fillTargWithVoids(targVal, srcVal);
+  // eslint-disable-next-line no-console
   if (debug) console.log('matchMembers newSrcObj', newSrcObj, 'newTargObj', newTargObj);
   return _.isMatchWith(newTargObj, newSrcObj, matcher);
-  // }
-  // return _.isMatchWith(targVal, srcVal, matcher);
 };
 
 var matcher = function (makeMsg, targVal, srcVal, key) {
+  // eslint-disable-next-line no-console
   if (debug) console.log('matcher', targVal, srcVal);
   var isMatch;
   if (_.isArray(targVal)) {
@@ -89,13 +90,12 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
 
   if (_.isPlainObject(targVal)) {
 
-    var newTargObj = {};
     var hasNonMapApplyKeys = false;
     var mapApplyResults = [];
-    var applyKeys = [];
 
     _.forEach(targVal, function (tv, k) {
       var mapApplyMatch = k.match(/^__MP_(map|apply)\d+\s*(.*)/) || [];
+        // eslint-disable-next-line no-console
       if (debug) console.log('mapApplyMatch', k, mapApplyMatch);
       var mapApply = mapApplyMatch[1];
       var mapApplyFname = mapApplyMatch[2];
@@ -119,6 +119,7 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
           mapApplyResults.push(matcher(makeMsg, tv, fn(srcVal)));
         }
       } else if (mapApply === 'apply') {
+        // eslint-disable-next-line no-console
         if (debug) console.log('apply result', fn(srcVal));
         mapApplyResults.push(matcher(makeMsg, tv, fn(srcVal)));
       } else {
@@ -156,11 +157,9 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
   }
 
   // Here's where the leaf node item comparison happens.
-  var currentIsMatch = matchFn ? matchFn(srcVal) : targVal === srcVal
+  var currentIsMatch = matchFn ? matchFn(srcVal) : targVal === srcVal;
 
   if (!currentIsMatch) {
-    var targValStr = util.inspect(targVal).replace(/^__MP_match\s*/, '_.');
-    var srcValStr = util.inspect(srcVal);
     if (key === '__testObj') {
       makeMsg(srcVal, targVal);
     } else if (/^\d+$/.test(key)) {
@@ -174,10 +173,10 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
 
 var makeMsg = function (matchFailMsg, srcVal, targVal, key, template) {
   if (arguments.length  === 1) {
-    return matchFailMsg
+    return matchFailMsg;
   }
   if (!template) {
-    template = "${src} didn't match target ${tgt}"
+    template = "${src} didn't match target ${tgt}";
   }
   if (_.isArray(targVal)) {
     targVal = _.without(targVal, '__MP_superset', '__MP_subset', '__MP_equalset');
@@ -202,6 +201,7 @@ var matchPattern = function (sourceData, targetPattern) {
   if (_.isString(targetPattern)) {
     try {
       targetObject = parser.parse(targetPattern);
+        // eslint-disable-next-line no-console
       if (debug) console.log('parsed', targetObject);
     }
     catch (error) {
@@ -223,6 +223,7 @@ var matchPattern = function (sourceData, targetPattern) {
       throw new Error(msg);
     }
   }
+  // eslint-disable-next-line no-console
   if (debug) console.log('parse/normalize targetObject', targetObject);
   var matchFailMsg = [];
   _.isMatchWith(
@@ -234,8 +235,8 @@ var matchPattern = function (sourceData, targetPattern) {
 
 matchPattern.use = function (newLodashModule) {
   lodashModule = newLodashModule;
-}
+};
 
-matchPattern.getLodashModule = function () { return lodashModule; }
+matchPattern.getLodashModule = function () { return lodashModule; };
 
 module.exports = matchPattern;
