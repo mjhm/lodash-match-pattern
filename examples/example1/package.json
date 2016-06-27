@@ -16,6 +16,6 @@
     "mocha": "^2.5.3"
   },
   "dependencies": {
-    "lodash-match-pattern": "file:../../"
+    "lodash-match-pattern": "^0.1.10"
   }
 }
