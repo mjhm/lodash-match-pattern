@@ -123,7 +123,7 @@ There's a bucket full of `_.isXxxx` matchers available to check property types, 
   1. All validation functions from `checkit` with `is` prepended.
   1. Case convention matchers constructed from lodash's `...Case` functions.
   1. Any regular expression -- intepreted as `/<regex>/.test(<testval>)`.
-  1. `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins]{(https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
+  1. `isPrinted`, `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins]{(https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
   1. Any `isXxxx` (or `hasXxxx`) function you insert as a lodash mixin through [customization](#customization).
 
 To see the full list run this:
@@ -170,7 +170,7 @@ Similarly matching of partial arrays (as well as supersets and set equality) can
 }
 ```
 
-_Note that the above has two partial symbols `...` One for the partial array `...` (`joeUser.tvshows`) and one for the partial object (`joeUser`).
+_Note that the above has two partial symbols "`...`" One for the partial array (`joeUser.tvshows`) and one for the partial object (`joeUser`).
 
 Supersets are similarly specified by `^^^`. The following says that `joeUser.tvshows` is a subset of the list in the pattern below:
 
@@ -180,7 +180,7 @@ Supersets are similarly specified by `^^^`. The following says that `joeUser.tvs
     'House of Cards',
     'Match Game',
     'Sopranos',
-    'Grey's Anatomy',
+    "Grey's Anatomy",
     ^^^
   ]
   ...
@@ -203,7 +203,7 @@ Or to compare equality of arrays as sets by unordered membership, use `===`:
 
 ## Omitted items
 
-Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check (an alias of `_.isUndefined`). Note that it works properly with partial objects. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L94)]*:
+Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check. Note that it works properly with partial objects. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L94)]*:
 
 ```javascript
 {
@@ -227,11 +227,11 @@ Some of the matching functions take parameters. These can be specified with "|" 
 
 ## Transforms
 
-Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed. _Although they are can be very handy you should use transforms sparingly since they tend to make the patterns less readable, and they could be a code smell of excessively complex tests. In many cases separate tests or a custom matcher will be clearer._
+Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed. _(Although they are can be very handy, you should use transforms sparingly since they tend to make the patterns less readable, and they could be a code smell of excessively complex tests. In many cases separate tests or a custom matcher will be clearer.)_
 
 #### Apply Transform Example
 
-As motivation consider matching a compound object such at the joeUser's friends list. We may not be able to guarantee order of items in the list, and probably don't care anyway. So simply matching the friends list with a set order will probably be an unreliable test. To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L6)]*
+As motivation consider matching a compound object such at the `joeUser`'s friends list. We may not be able to guarantee order of items in the list, and probably don't care anyway. So simply matching the friends list with a set order will likely be an unreliable test. To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L6)]*
 
 ```javascript
 {
@@ -246,59 +246,31 @@ As motivation consider matching a compound object such at the joeUser's friends 
 }
 ```
 
-Any function in `lodash-checkit` is available for transforms, along with a few [extras](#extras) below and any function you add via customization. The functions are applied with the `testValue` as the function's first argument, and additional `|` separated arguments can be specified after the function name.
+Any function in `lodash-checkit` is available for transforms, along with a few [extras](#extras) below, and any function you add via customization. The functions are applied with the `testValue` as the function's first argument, and additional `|` separated arguments can be specified after the function name.
 
-Important Note: The transform functions are applied to the test value, NOT the corresponding test pattern. In this example we're testing the `joeUser.friends` list. So this list is sorted by `email` and the resulting array is tested against the pattern specified in the above array pattern.
+Important Note: The transform functions are applied to the test value, NOT the corresponding test pattern. In this example we're testing the `joeUser.friends` list. So this list is sorted by `email` and the resulting array is tested against the above pattern.
 
 #### Map Pattern Transform Example
 
-Suppose you just wanted to check that all of of joeUser's friends have emails `...@mp.co`.
+Suppose you just wanted to check that all of of joeUser's friends have emails `...@mp.co`. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L21)]*
 
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  friends: {
-    '<=': { email: /@mp.co$/, '...': ''}
-  },
-  '...': ''
-}
-</pre></td><td><pre>
+```javascript
 {
   friends: {
     <=: { email: /@mp.co$/, ...}
-  },
+  }
   ...
 }
-</pre></td></tr></table>
+```
 
-The `<=` specifies that the pattern is applied to each of the entries of the `joeUser.friends` array. This is in contrast to the `<-` operator would specify that the pattern is matched against the array as a whole.
+The `<=` says that the pattern is applied to each of the entries of the `joeUser.friends` array. In contrast, the `<-` operator would say that the pattern is matched against the array as a whole.
 
 
 #### Map Values Transform Example
 
-Suppose you wanted to check that joeUser's friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case. The following example expresses these requirements:
+Suppose you want to check that `joeUser`'s friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L32)]*
 
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  friends: {
-    '<=.get|email': {
-      '<=.toLower': [
-        'pat@mp.co',
-        'gerri@mp.co',
-        'kim@mp.co',
-        'paula@mp.co',
-        '^^^': ''
-      ]
-    }
-  },
-  '...': ''
-}
-</pre></td><td><pre>
+```javascript
 {
   friends: {
     <=.get|email: {
@@ -310,43 +282,23 @@ Suppose you wanted to check that joeUser's friends are in a "whitelist" of email
         ^^^
       ]
     }
-  },
+  }
   ...
 }
-</pre></td></tr></table>
+```
 
-Here `<=.get|email` specifies that the `_.get(..., 'email')` is applied to each of the entries of the `joeUser.friends` array and creates a new array.  In turn `<=.toLower` creates a mapped array with all emails in lower case. The result is then compared to the given whitelist.
+Here `<=.get|email` says that `_.get(..., 'email')` is applied to each of the entries of the `joeUser.friends` array and creates a new array which is passed in turn to `<=.toLower` which creates a mapped array with all emails in lower case. The result is then compared to the given whitelist.
 
-Map transforms can be applied to objects as well as arrays. For arrays `<=.lodashFunction` uses `_.map` to apply `_.lodashFunction` to each array element. For objects `_.mapValues` is used instead.
+Map transforms (`<=.`) can be applied to objects as well as arrays. For arrays `<=.lodashFunction` uses `_.map` to apply the `_.<lodashFunction>` to each array element. For objects `_.mapValues` is used instead.
 
 
 #### Composition and Multiple Transforms
 
 Transformations can be mixed and matched. Multiple transforms can also appear as keys in a single object. In that case they check the test value against all their respective pattern values. Notice, as suggested in the previous example, transform compositions are always applied to the test value from the outside to the inside where they result in the final pattern match.
 
-In the following artificial example verifies that `joeUser` has "2" active friends, in 4 different ways.
+The following artificial example verifies that `joeUser` has `2` active friends, in four different ways. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L51)]*
 
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  friends: {
-    '<-.filter|active': {
-      '<-.size': 2,
-      '<-': _.isSize|2,
-      '<-.isSize|2': true
-    },
-    '<=.get|active': {
-      '<=.toNumber': {
-        '<-.sum': 2
-      }
-    }
-  },
-  '...': ''
-}
-</pre></td><td><pre>
-{
+```javascript
   friends: {
     <-.filter|active: {
       <-.size: 2,
@@ -358,15 +310,14 @@ In the following artificial example verifies that `joeUser` has "2" active frien
         <-.sum: 2
       }
     }
-  },
+  }
   ...
 }
-
-</pre></td></tr></table>
+```
 
 ## Memoization of test values
 
-Sometimes we're interested in comparing values from two sources. In particular in this example we are want to check that duplicating a user copies some fields and updates others. So we memoize the fields we're interested in and compare them to the dup.
+Sometimes we're interested in comparing values from two steps. In this example, we want to check that duplicating a user copies some fields and updates others. So we memoize fields we're interested in and compare them to the dup. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/memoization.feature#L6)]*
 ```cucumber
   Scenario: Dupicating a user updates id and createDate but copies email and tvshows
     When the user matches the pattern
@@ -391,15 +342,15 @@ Sometimes we're interested in comparing values from two sources. In particular i
       }
       """
 ```
-Notes:
+Memoization notes:
 
-1. The above demonstrates both the transform `_.setMemo`, and the matcher `_.isSetAsMemo`. As lodash functions the only difference is that `_.setMemo` passes the source value through as its return value so that it can be matched as needed.  In contrast `_.isSetAsMemo` always returns true so it's cleaner when you're just interested saving the source value as a memo.
-2. Obviously memoizing is more valuable for cucumber feature tests, since you can just use native JavaScript variables in mocha unit tests.
+1. The above demonstrates both the transform `_.setMemo`, and the similar matcher `_.isSetAsMemo`. As lodash functions the only difference is that `_.setMemo` passes the source value through so that it can be matched downstream. In contrast `_.isSetAsMemo` is a matcher that always returns true.  Use `_.isSetAsMemo` when you're just interested saving the source value as a memo.
+2. Obviously memoizing is more valuable for cucumber feature tests. You can just use native JavaScript variables in mocha unit tests.
 3. In addition to the above there is also a `_.clearMemos` function that should be executed in the `Before` or `After` routine for each test to ensure a clean slate of memos.
 
 ## Customization
 
-In many cases, application of transforms will create unintuitive and hard to understand pattern specifications. Fortunately creating custom matchers and custom transforms is easily accomplished via lodash mixins. For our examples we've added two lodash mixins in our example code:
+In many cases, application of transforms will create unintuitive and hard to understand pattern specifications. Fortunately creating custom matchers and custom transforms is easy via lodash mixins. Here we've added two custom lodash mixins:
 ```
 var matchPattern = require('lodash-match-pattern');
 var _ = matchPattern.getLodashModule();
@@ -419,7 +370,7 @@ _.mixin({
   }
 });
 ```
-Then we have yet another (but simpler) method for counting joeUser's active friends.
+This gives us yet another (but simpler) method for counting joeUser's active friends. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/customization.feature#L6)]*
 ```
 {
   friends: _.isActiveSize|2,
@@ -439,23 +390,7 @@ The custom `literalSetToken` transform can be used to enable literal pattern mat
 ```
 Then the following now has a successful pattern match:
 
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  tvshows: {
-    '<=.literalSetToken': [
-      'LITERAL===',
-      'Mannix',
-      'Game of Thrones',
-      'LITERAL...',
-      'LITERAL^^^'
-    ]
-  },
-  '...': ''
-}
-</pre></td><td><pre>
+```javascript
 {
   tvshows: {
     <=.literalSetToken: [
@@ -468,16 +403,16 @@ Then the following now has a successful pattern match:
   },
   ...
 }
-</pre></td></tr></table>
+```
 
 ## Extras
 
 Here are some miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
 
+* `_.isPrinted` -- a matcher that always matches, but prints the source values that it is matching against. This is super useful for seeing the results of transforms.
 * `_.extractUrls` -- a transform that takes a string and returns an array of parsed Url objects from the string.
 * `_.filterPattern` -- a transform function that takes a pattern as an argument. This is most useful for filtering rows from a database whose column values match certain characteristics.
-  * For example `<-.filterPattern|"{age: _.isInRange|0|18, ...}"` will filter leaving only the rows where `age` is in the range `[0, 18]`.  Notice that this is taking advantage of partial pattern matching with the `...`
+  * For example `<-.filterPattern|"{age: _.isInRange|0|18 ...}"` will filter leaving only the rows where `age` is in the range `[0, 18]`.  Notice that this is taking advantage of partial pattern matching with the `...`
 * `_.isDateString` -- a matcher for strings that are parseable into dates (e.g. ISO Date strings).
-* `_.isPrinted` -- a matcher that always matches, but prints the source values that it is matching against. This is most useful for seeing the results of transforms.
 * `_.isOmitted` -- an alias for `_.isUndefined`. As shown in an example above this is more semantically meaningful for matching intentionally omitted properties of an object.
 * `_.isSize` -- the matcher corresponding to the standard lodash `_.size`. It checks it's argument against the `_.size` of the source object.
