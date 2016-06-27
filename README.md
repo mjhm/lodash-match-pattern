@@ -34,8 +34,8 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Here's what this module does for you
 
-<small>(You may not need all of these features, but they're worth skimming. You'll likely find lots of flexibility for your specific use cases. The included examples are illustrated with live code in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) as cucumber-js tests and
-[`examples/example1/test/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/mocha_features/) as mocha tests.)</small>
+You may not need all of these features, but they're worth skimming. You'll likely find lots of flexibility for your specific use cases. The included examples are illustrated with live code as cucumber-js tests in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) and as mocha tests in
+[`examples/example1/test/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/mocha_features/).
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -54,7 +54,7 @@ var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
 
 #### Specification with "Pattern Notation" or JavaScript Objects
 
-As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features) our target use case is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js). The "Pattern Notation" is a JSON-like DSL for use in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which (although a little less readable) may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
+As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features), our target use case is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js). The "Pattern Notation" is a JSON-like DSL for use in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which (although a little less readable) may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
 
 
 ## Deep JSON matching
@@ -136,19 +136,19 @@ console.log(
 
 ## Partial objects
 
-Most of the time feature tests are interested in how objects change, and we're not concerned with properties of an object that aren't involved in the change. In fact best practices of feature testing suggest elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billyjoe@duckduck.go" then we can simply match the pattern *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L55)]*:
+Most feature tests are interested in how objects change, so we're not usually concerned with properties that aren't involved in the change. In fact best practices of feature testing suggest elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say "billyjoe@duckduck.go" then we can simply match the pattern *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L55)]*:
 
 ```javascript
 {
   id: 43,
-  email: 'billyjoe@duckduck.go',
+  email: 'billyjoe@duckduck.go'
   ...
 }
 ```
 
 The `...` indicates that only the specified keys are matched, and all others in `joeUser` are ignored.
 
-_Note: from here on all the examples will use partial matching._
+_Note: All the following examples will use partial matching._
 
 ## Partial, Superset, and Unordered Arrays
 
@@ -157,47 +157,24 @@ Similarly matching of partial arrays (as well as supersets and set equality) can
 1. The array entries must be numbers or strings, no nested objects or arrays.
 2. The partial (and supersets) arrays are matched as sets -- no order assumed.
 
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  tvshows: [
-    'House of Cards',
-    'Sopranos',
-    '...'
-  ],
-  '...': ''
-}
-</pre></td><td><pre>
+*[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L66)]*:
+
+```javascript
 {
   tvshows: [
     'House of Cards',
     'Sopranos',
     ...
-  ],
+  ]
   ...
 }
-</pre></td></tr></table>
+```
 
-Note that the above specifies both a partial array (for `joeUser.tvshows`) and a partial object (for `joeUser`).
+_Note that the above has two partial symbols `...` One for the partial array `...` (`joeUser.tvshows`) and one for the partial object (`joeUser`).
 
-Supersets are similarly specified by '^^^'. This following says that `joeUser.tvshows` is a subset of the list in the pattern below:
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  tvshows: [
-    'House of Cards',
-    'Match Game',
-    'Sopranos',
-    'Grey's Anatomy',
-    '^^^'
-  ],
-  '...': ''
-}
-</pre></td><td><pre>
+Supersets are similarly specified by `^^^`. The following says that `joeUser.tvshows` is a subset of the list in the pattern below:
+
+```javascript
 {
   tvshows: [
     'House of Cards',
@@ -205,104 +182,58 @@ Supersets are similarly specified by '^^^'. This following says that `joeUser.tv
     'Sopranos',
     'Grey's Anatomy',
     ^^^
-  ],
+  ]
   ...
 }
-</pre></td></tr></table>
+```
 
-Or to compare equality of arrays as sets by unordered membership, use "===":
+Or to compare equality of arrays as sets by unordered membership, use `===`:
 
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  tvshows: [
-    'House of Cards',
-    'Match Game',
-    'Sopranos',
-    '==='
-  ],
-  '...': ''
-}
-</pre></td><td><pre>
+```
 {
   tvshows: [
     'House of Cards',
     'Match Game',
     'Sopranos',
     ===
-  ],
+  ]
   ...
 }
-</pre></td></tr></table>
-
-Note that the JS Object specification adds the set matching symbols as extra array elements. If you actually need to literally match `"..."`, `"^^^"`, or `"==="` in an array see the [customization](#customization) example below.
+```
 
 ## Omitted items
 
-Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check (an alias of `_.isUndefined`). Note that it works properly with partial objects.
+Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check (an alias of `_.isUndefined`). Note that it works properly with partial objects. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L94)]*:
 
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
+```javascript
 {
   id: 43,
-  password: _.isOmitted,
-  '...': ''
-}
-</pre></td><td><pre>
-{
-  id: 43,
-  password: _.isOmitted,
+  password: _.isOmitted
   ...
 }
-</pre></td></tr></table>
+```
 
 ## Parametrized matchers
 
-Some of the matching functions take parameters. These can be specified with "|" separators at the end of the matching function.
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  id: _.isBetween|42.9|43.1,
-  tvshows: '_.isContainerFor|'House of Cards'',
-  '...': ''
-}
-</pre></td><td><pre>
+Some of the matching functions take parameters. These can be specified with "|" separators at the end of the matching function. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L104)]*:
+
+```javascript
 {
   id: _.isBetween|42.9|43.1,
   tvshows: _.isContainerFor|'House of Cards',
   ...
 }
-</pre></td></tr></table>
+```
 
 ## Transforms
 
-Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed. Use transforms sparingly since they tend to make the patterns less readable, and they could be a code smell of excessively complex tests. In many cases separate tests or a custom matcher will be clearer.
+Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed. _Although they are can be very handy you should use transforms sparingly since they tend to make the patterns less readable, and they could be a code smell of excessively complex tests. In many cases separate tests or a custom matcher will be clearer._
 
 #### Apply Transform Example
 
-As a simple motivation consider matching a compound object such at the joeUser's friends list. We may not be able to guarantee order of items returned in the list, and probably don't care anyway. So explicitly matching the friends in a specific order will probably be an unreliable test. (The above "===" array set specifier only applies to arrays of primitives.) To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested.
+As motivation consider matching a compound object such at the joeUser's friends list. We may not be able to guarantee order of items in the list, and probably don't care anyway. So simply matching the friends list with a set order will probably be an unreliable test. To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transform.feature#L6)]*
 
-<table><tr>
-<th>JavaScript Objects (mocha)</th><th>Pattern Notation (cucumber)</th>
-</tr>
-<tr><td><pre>
-{
-  friends: {
-    '<-.sortBy|email': [
-      {id: 89, email: 'gerri@mp.co', active: false},
-      {id: 14, email: 'kim@mp.co', active: true},
-      {id: 21, email: 'pat@mp.co', active: true}
-    ]
-  },
-  '...': ''
-}
-</pre></td><td><pre>
+```javascript
 {
   friends: {
     <-.sortBy|email: [
@@ -310,10 +241,10 @@ As a simple motivation consider matching a compound object such at the joeUser's
       {id: 14, email: 'kim@mp.co', active: true},
       {id: 21, email: 'pat@mp.co', active: true}
     ]
-  },
+  }
   ...
 }
-</pre></td></tr></table>
+```
 
 Any function in `lodash-checkit` is available for transforms, along with a few [extras](#extras) below and any function you add via customization. The functions are applied with the `testValue` as the function's first argument, and additional `|` separated arguments can be specified after the function name.
 
