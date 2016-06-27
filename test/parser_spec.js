@@ -1,19 +1,14 @@
 'use strict';
 
 var chai = require('chai');
-var util = require('util');
 var fs = require('fs');
 var PEG = require('pegjs');
 var Tracer = require('pegjs-backtrace');
 var expect = chai.expect;
 
-var only = 'only';
+var only = 'only'; // eslint-disable-line no-unused-vars
 
 var parser = PEG.buildParser(fs.readFileSync('./parser/matchpattern.pegjs', 'utf8'), {trace: true} );
-
-var parserTests =[
-];
-
 
 var runTestList = function (testList) {
   var onlyTests = [];
@@ -29,16 +24,20 @@ var runTestList = function (testList) {
 
   (onlyTests.length ? onlyTests : noSkipTests).forEach(function(tst) {
     var desc = tst[0] + ' parses into \n' + JSON.stringify(tst[1], null, 2);
-    // var desc = tst[0].split('').join(',') + ' parses into \n' + JSON.stringify(tst[1], null, 2);
 
     it(desc, function() {
-      var tracer = new Tracer(tst[0], {showTrace:false});
+      var tracer = new Tracer(tst[0], {
+        showTrace:false,
+        showFullPath:false,
+      });
       try {
         var parsed = parser.parse(tst[0], {tracer: tracer});
       } catch(e) {
-          console.log(e.message);
-          console.log(tracer.getBacktraceString());
-          throw e;
+        // eslint-disable-next-line no-console
+        console.log(e.message);
+        // eslint-disable-next-line no-console
+        console.log(tracer.getBacktraceString());
+        throw e;
       }
       expect(parsed).to.deep.equal(tst[1]);
     });
@@ -59,6 +58,7 @@ describe('parser', function () {
   describe('sets', function () {
     runTestList([
       [ '{a : 1, ...}', {a: 1, '__MP_subset': ''} ],
+      [ '{a : 1 ...}',  {a: 1, '__MP_subset': ''} ],
       [ '[1, 2, ...]',  [1, 2, '__MP_subset'] ],
       [ '[1, 2, ^^^]',  [1, 2, '__MP_superset'] ],
       [ '[1, 2, ===]',  [1, 2, '__MP_equalset'] ],
@@ -71,8 +71,8 @@ describe('parser', function () {
       [ '{<- : {a : 1}}',  {'__MP_apply0': {a: 1}} ],
       [ '{<=.mapme : {a : 1}}',  {'__MP_map0 mapme': {a: 1}} ],
       [ '{<-.applyme : {a : 1}}',  {'__MP_apply0 applyme': {a: 1}} ],
-      [ '{a : _.isMatchMe}',  {a: "__MP_match isMatchMe"} ],
-      [ '{a : _.hasMatchMe}',  {a: "__MP_match hasMatchMe"} ],
+      [ '{a : _.isMatchMe}',  {a: '__MP_match isMatchMe'} ],
+      [ '{a : _.hasMatchMe}',  {a: '__MP_match hasMatchMe'} ],
     ]);
   });
   describe('arg parsing', function () {
@@ -86,9 +86,13 @@ describe('parser', function () {
   });
   describe('regex', function () {
     runTestList([
-      [ '{a : /abc/}',  {a: '__MP_regex abc'} ],
-      [ '/abc/', '__MP_regex abc' ],
-      [ '/[A-Z].*/', '__MP_regex [A-Z].*'],
+      [ '{a : /abc/}',  {a: '__MP_regex() abc'} ],
+      [ '/abc/', '__MP_regex() abc' ],
+      [ '/[A-Z].*/', '__MP_regex() [A-Z].*'],
+      [ String.raw`/[A-Z].*/`, String.raw`__MP_regex() [A-Z].*`],
+      [ String.raw`/a\w.*/`, String.raw`__MP_regex() a\w.*`],
+      [ String.raw`/a\/.*/`, String.raw`__MP_regex() a\/.*`],
+      [ String.raw`/a\/.*/igmyu`, String.raw`__MP_regex(igmyu) a\/.*`],
     ]);
   });
   describe('recursive filterPattern', function () {

@@ -12,6 +12,7 @@ Feature: Basic Features for lodash-match-pattern
       website: 'http://matchapattern.org',
       firstName: 'Joe',
       lastName: 'Matcher',
+      phone: '(333) 444-5555',
       createDate: '2016-05-22T00:23:23.343Z',
       tvshows: [
         'Match Game',
@@ -37,8 +38,9 @@ Feature: Basic Features for lodash-match-pattern
       id: _.isInteger,
       email: _.isEmail,
       website: _.isUrl,
-      firstName: /[A-Z][a-z]+/,
-      lastName: _.isString,
+      firstName: /[A-Z]\w+/,
+      lastName: /[a-z]/i,
+      phone: /\(\d{3}\)\s*\d{3}[- ]\d{4}/,
       createDate: _.isDateString,
       tvshows: [
         _.isString,
@@ -56,7 +58,7 @@ Feature: Basic Features for lodash-match-pattern
     """
     {
       id: _.isInteger,
-      email: 'billyjoe@duckduck.go',
+      email: 'billyjoe@duckduck.go'
       ...
     }
     """
@@ -67,9 +69,9 @@ Feature: Basic Features for lodash-match-pattern
     {
       tvshows: [
         'House of Cards',
-        'Sopranos',
+        'Sopranos'
         ...
-      ],
+      ]
       ...
     }
     """
@@ -82,9 +84,9 @@ Feature: Basic Features for lodash-match-pattern
         'House of Cards',
         'Match Game',
         'Sopranos',
-        "Grey's Anatomy",
+        "Grey's Anatomy"
         ^^^
-      ],
+      ]
       ...
     }
     """
@@ -94,7 +96,7 @@ Feature: Basic Features for lodash-match-pattern
     """
     {
       id: 43,
-      password: _.isOmitted,
+      password: _.isOmitted
       ...
     }
     """

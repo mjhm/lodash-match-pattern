@@ -6,7 +6,7 @@ var expect = chai.expect;
 var normalize = require('../lib/normalize');
 
 var dummyFn = function () {};
-var dummyRegExp = /abc/
+var dummyRegExp = /abc/;
 
 var normalizeTests = [
   [ {'<-': 1}, {'__MP_apply0': 1} ],

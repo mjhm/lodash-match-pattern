@@ -25,12 +25,12 @@
  * [5] https://www.tbray.org/ongoing/When/201x/2014/03/05/RFC7159-JSON
  */
 
-/* ----- 2. JSON Grammar ----- */
+/* ----- 2. JSON-like Grammar ----- */
 {
   var mapApplyCount = 0;
 }
 
-JSON_text
+PatternNotation_text
   = ws value:value ws { return value; }
 
 begin_array     = ws "[" ws
@@ -124,7 +124,9 @@ zero          = "0"
 
 string "quoted string" = dqstring / sqstring
 
-regex "regex" = rqstring { return "__MP_regex " + text().slice(1, -1) }
+regex "regex" = regstr:rqstring reflags:reflag* {
+  return "__MP_regex(" + reflags.join("") + ") " + regstr
+}
 
 dqstring "double quoted string"
   = dquotation_mark chars:dqchar* dquotation_mark { return chars.join(""); }
@@ -148,10 +150,12 @@ sqchar
     { return sequence; }
 
 rqchar
-  = rqunescaped
-  / escape
+  = escape "/" { return text() }
+  / rqunescaped
+  /*
     sequence:(no_quote_char)
     { return sequence; }
+  */
 
 no_quote_char =
       "\\"
@@ -171,7 +175,8 @@ squotation_mark = "'"
 rquotation_mark = "/"
 dqunescaped      = [^\0-\x1F\x22\x5C]
 squnescaped      = [^\0-\x1F\x27\x5C]
-rqunescaped      = [^\0-\x1F\x2F\x5C]
+rqunescaped      = [^\0-\x1F\x2F]
+reflag           = [gmiuy]
 
 
 /* ----- Core ABNF Rules ----- */
@@ -199,9 +204,9 @@ soloMap = mapPrefix { return '__MP_map' + mapApplyCount++ }
 mapPrefix = "<="
 dot = "."
 
-subset = "..." { return "__MP_subset" }
-superset = "^^^" { return "__MP_superset" }
-equalset = "===" { return "__MP_equalset" }
+subset = ws "..." ws { return "__MP_subset" }
+superset = ws "^^^" ws { return "__MP_superset" }
+equalset = ws "===" ws { return "__MP_equalset" }
 setMatch = subset / superset / equalset
 
 matcher

@@ -7,13 +7,13 @@ var _ = require('lodash-checkit');
 var rewire = require('rewire');
 var expect = chai.expect;
 var matchPattern = rewire('../');
-var only = 'only';
+var only = 'only'; // eslint-disable-line no-unused-vars
 
 var checkMessages = false;
 
 Function.prototype.commentToString = function () {
   return this.toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1];
-}
+};
 
 var runTestList = function (testList) {
   var onlyTests = [];
@@ -34,7 +34,7 @@ var runTestList = function (testList) {
     } else if (tst[0]) {
       expectedResult = 'succeeds';
     }
-    var desc = expectedResult + (" for " + (util.inspect(tst[1], {depth: 3})));
+    var desc = expectedResult + (' for ' + (util.inspect(tst[1], {depth: 3})));
 
     it(desc, function() {
       if (tst[0] === 'throw') {
@@ -42,17 +42,18 @@ var runTestList = function (testList) {
           try {
             matchPattern(tst[1].src, tst[1].targ);
           } catch (error) {
-            console.log('Exception Message:', error.message)
+            console.log('Exception Message:', error.message); // eslint-disable-line no-console
             return;
           }
         }
-        expect(matchPattern.bind(null,tst[1].src, tst[1].targ)).to.throw()
+        expect(matchPattern.bind(null,tst[1].src, tst[1].targ)).to.throw();
         return;
       }
       var matchResult = matchPattern(tst[1].src, tst[1].targ);
       if (tst[0]) {
-        return expect(matchResult).to.be.null
+        return expect(matchResult).to.be.null;
       } else {
+        // eslint-disable-next-line no-console
         if (checkMessages) console.log('error message', matchResult);
         return expect(matchResult).to.be.a('string');
       }
@@ -133,10 +134,10 @@ describe('matchPattern', function () {
         [false, {targ: {a: {'<-.keys': {'<-.size': 2}}}, src: {a: {b: 2, c: 3, d: 4}}}],
         [true,  {targ: {'<-.size': '_.isInRange|1|3', '<-': '_.isContainerFor|apple'},
           src: ['apple', 'pair']}],
-        [true,  {targ: { "<=" : _.isNumber}, src: [1, 2]}],
-        [false,  {targ: { "<=" : _.isNumber}, src: [1, '2']}],
-        [true,  {targ: { "<=.toString" : ['1', '2']}, src: [1, '2']}],
-        [true,  {targ: { "<=.toString" : {a: '1', b: '2'}}, src: {a: 1, b: '2'}}],
+        [true,  {targ: { '<=' : _.isNumber}, src: [1, 2]}],
+        [false,  {targ: { '<=' : _.isNumber}, src: [1, '2']}],
+        [true,  {targ: { '<=.toString' : ['1', '2']}, src: [1, '2']}],
+        [true,  {targ: { '<=.toString' : {a: '1', b: '2'}}, src: {a: 1, b: '2'}}],
       ]);
     });
 
@@ -160,9 +161,15 @@ describe('matchPattern', function () {
     describe('regexp', function () {
       runTestList([
         [true,  {targ: {a: /abc/}, src: {a: 'abc'}}],
-        [false,  {targ: {a: /abc/}, src: {a: 'Abc'}}],
+        [false, {targ: {a: /abc/}, src: {a: 'Abc'}}],
         [true,  {targ: /\:/, src: ':'}],
         [true,  {targ: /\t\"\n/, src: '\t"\n'}],
+        [true,  {targ: String.raw`/a\wc/`, src: 'abc'}],
+        [false, {targ: String.raw`/a\.c/`, src: 'abc'}],
+        [true,  {targ: String.raw`/AbC/i`, src: 'abc'}],
+        [false, {targ: String.raw`/a.c/`, src: 'a\nc'}],
+        [false, {targ: String.raw`/^a$\n^c$/`, src: 'a\nc'}],
+        [true,  {targ: String.raw`/^a$\n^c$/m`, src: 'a\nc'}],
       ]);
     });
 
@@ -183,7 +190,7 @@ describe('matchPattern', function () {
       afunction.a = 2;
       var newfunction = new afunction();
       newfunction.a = 2;
-      var objectLikeArray = {}
+      var objectLikeArray = {};
       objectLikeArray[0] = 2;
       runTestList([
         [true,  {targ: {a: 2}, src: afunction}],
@@ -216,13 +223,13 @@ describe('matchPattern', function () {
           }
         */}.commentToString(), src: ['abc', 'def', 'efg']} ],
       ]);
-    })
+    });
   });
 });
 
 describe('#use (custom lodash module)', function () {
   beforeEach(function () {
-    var lodashExt = _.runInContext()
+    var lodashExt = _.runInContext();
     lodashExt.mixin({
       isSmilie: function (s) {
         return s === ':)';
@@ -239,7 +246,7 @@ describe('#use (custom lodash module)', function () {
 
   it('succeeds with matching test data', function () {
     var matchResult = matchPattern(this.smilie, '_.isSmilie');
-    return expect(matchResult).to.be.null
+    return expect(matchResult).to.be.null;
   });
 
   it('fails with non-matching test data', function () {
@@ -256,8 +263,9 @@ describe('#use (custom lodash module)', function () {
         '}'
       ].join('\n');
       try {
-        matchPattern({a: 1}, testStr)
+        matchPattern({a: 1}, testStr);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.log(err.message);
       }
 

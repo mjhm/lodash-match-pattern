@@ -1,6 +1,6 @@
 {
   "name": "lodash-match-pattern",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Validates a deep structured JSON pattern",
   "main": "index.js",
   "files": [
@@ -11,7 +11,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha",
     "build_parser": "./node_modules/.bin/pegjs ./parser/matchpattern.pegjs _parser.js",
-    "prepublish": "npm run build_parser"
+    "prepublish": "npm run build_parser",
+    "lint": "node_modules/.bin/eslint index.js lib test"
   },
   "directories": {
     "test": "test"
@@ -34,8 +35,12 @@
     "url": "https://github.com/originate/lodash-match-pattern/issues"
   },
   "homepage": "https://github.com/originate/lodash-match-pattern#readme",
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "devDependencies": {
     "chai": "^3.4.1",
+    "eslint": "^2.13.1",
     "mocha": "^2.3.4",
     "pegjs": "^0.9.0",
     "pegjs-backtrace": "^0.1.1",
