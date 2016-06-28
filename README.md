@@ -42,7 +42,7 @@ var fancyValue = {
   ]
 };
 
-// fancy match with partial match
+// Fancy partial match
 var partialMatchResult = matchPattern(fancyValue, `{
   name: _.isString,
   email: _.isEmail,
@@ -50,7 +50,7 @@ var partialMatchResult = matchPattern(fancyValue, `{
   ...
 }`);
 
-// extra fancy match with filterPattern transform.
+// extra fancy match with filterPattern transform
 // This checks that "Gale" has two friends between the ages of 20 and 30
 // and that one of them is named "Breeze".
 var extraFancyResult = matchPattern(fancyValue, `{
