@@ -16,22 +16,22 @@ Related Modules:
 ```
 npm install lodash-match-pattern --save-dev
 ```
-Copy the first two lines of this to your test file. You can play with this example on [Tonic](https://tonicdev.com/npm/lodash-match-pattern).
+Copy the first two lines from this example to your test file.
 ```javascript
 var matchPattern = require('lodash-match-pattern');
 var _ = matchPattern.getLodashModule(); // Use our lodash extensions (recommended)
 
-// Trivial example
-var testValue = {a: 1, b: 'abc'};
+// TRIVIAL EXAMPLE
+var trivialTestData = {a: 1, b: 'abc'};
 
-var successResult = matchPattern(testValue, {a: 1, b: _.isString});
+var successResult = matchPattern(trivialTestData, {a: 1, b: _.isString});
 // returns null for a successful match.
 
-var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
-// returns "{a: 1} didn't match target {a: '_.isString'}"
+var failResult = matchPattern(trivialTestData, {a: _.isString, b: 'abc'});
+// returns "{a: 1} didn't match target {a: isString}"
 
-// Fancy test value
-var fancyValue = {
+// REAL EXAMPLE
+var realTestData = {
   name: 'Gale',
   email: 'gale.force@winds.com',
   age: 23,
@@ -42,18 +42,19 @@ var fancyValue = {
   ]
 };
 
-// Fancy partial match
-var partialMatchResult = matchPattern(fancyValue, `{
+//  partial match using Pattern Notation and matcher functions
+var partialMatchResult = matchPattern(realTestData, `{
   name: _.isString,
   email: _.isEmail,
   age: _.isBetween|20|30
   ...
 }`);
 
-// extra fancy match with filterPattern transform
+// EXTRA FANCY EXAMPLE
+// with regex matcher and 'filterPattern' transform
 // This checks that "Gale" has two friends between the ages of 20 and 30
 // and that one of them is named "Breeze".
-var extraFancyResult = matchPattern(fancyValue, `{
+var extraFancyResult = matchPattern(realTestData, `{
   name: /^[A-Z]\w+$/,
   email: _.isEmail,
   age: _.isBetween|20|30,

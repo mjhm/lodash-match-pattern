@@ -1,14 +1,16 @@
 var matchPattern = require('lodash-match-pattern');
-var _ = matchPattern.getLodashModule(); // Use our lodash extensions (recommended)
+var lodash = matchPattern.getLodashModule(); // Use our lodash extensions (recommended)
+var isString = lodash.isString;
+// ^^^ setting isString explicitly to overcome a REPL issue with using '_'
 
 // Trivial example
 var testValue = {a: 1, b: 'abc'};
 
-var successResult = matchPattern(testValue, {a: 1, b: _.isString});
+var successResult = matchPattern(testValue, {a: 1, b: isString});
 // returns null for a successful match.
 
-var failResult = matchPattern(testValue, {a: _.isString, b: 'abc'});
-// returns "{a: 1} didn't match target {a: '_.isString'}"
+var failResult = matchPattern(testValue, {a: isString, b: 'abc'});
+// returns "{a: 1} didn't match target {a: \'function isString(value) {...}\'}"
 
 // Fancy test value
 var fancyValue = {
