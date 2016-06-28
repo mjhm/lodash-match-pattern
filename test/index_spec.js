@@ -216,12 +216,15 @@ describe('matchPattern', function () {
         [true,    {targ: '{ <-.without|"10": ["9", "11"]}', src: ['9', '10', '11'] }],
         [true,    {targ: '{ <-.without|"1 0": ["9", "11"]}', src: ['9', '1 0', '11'] }],
         ['throw', {targ: '{a: _.size}', src: {a: 6}}],
-        [true,    {targ: function () {/*
-          {
+        [true,    {targ: `{
             <-.size: 3,
             <-.without|abc|def : ['efg']
-          }
-        */}.commentToString(), src: ['abc', 'def', 'efg']} ],
+          }`, src: ['abc', 'def', 'efg']} ],
+        [true,    {targ: `{
+            age: _.isBetween|20|30
+            ...
+          }`, src: {age: 25, name: 'bob'}} ]
+
       ]);
     });
   });

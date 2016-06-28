@@ -1,6 +1,6 @@
 {
   "name": "lodash-match-pattern",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Validates a deep structured JSON pattern",
   "main": "index.js",
   "files": [
@@ -38,6 +38,7 @@
   "engines": {
     "node": ">=4.0.0"
   },
+  "tonicExampleFilename": "./examples/tonic_example.js",
   "devDependencies": {
     "chai": "^3.4.1",
     "eslint": "^2.13.1",
