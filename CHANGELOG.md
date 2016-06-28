@@ -1,3 +1,8 @@
+#### 0.1.11
+* fix filterPattern bug
+* tonic example
+* README updates
+
 #### 0.1.10
 * Fixed regex bugs
 * Simplified and improved README.md
