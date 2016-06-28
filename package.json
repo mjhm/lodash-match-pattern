@@ -38,6 +38,7 @@
   "engines": {
     "node": ">=4.0.0"
   },
+  "tonicExampleFilename": "./examples/tonic_example.js",
   "devDependencies": {
     "chai": "^3.4.1",
     "eslint": "^2.13.1",
