@@ -17,6 +17,8 @@ var _ = lodash.mixin(mixins);
 
 var lodashModule = _;  // lodash-checkit by default, but can be overriden by customization
 
+// This curries the '|' separated arguments of a matcher or filter function
+// e.g. _.isBetween|10|15 --> function (s) {return _.isBetween(s, 10, 15)}
 var curryFunctionSpec = function (fnSpec) {
   var fnSplit = ( /^([^\|]+)(.*)/.exec(fnSpec) || ['dummy']).slice(1);
   var fnName = fnSplit.shift();
