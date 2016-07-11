@@ -1,3 +1,7 @@
+#### 0.1.12
+* add dependency-lint
+* add coverage
+
 #### 0.1.11
 * fix filterPattern bug
 * tonic example
