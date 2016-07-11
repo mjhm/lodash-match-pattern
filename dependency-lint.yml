@@ -8,6 +8,7 @@ executedModules:
       - publish
       - test
       - version
+      - coverage
   shellScripts:
     dev: []
     ignore: []
