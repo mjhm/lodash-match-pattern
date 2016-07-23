@@ -29,6 +29,7 @@ requiredModules:
     ignore:
       - 'node_modules/**/*'
       - 'examples/**/*'
+      - 'tonic_example.js'
     root: '**/*.js'
   stripLoaders: false
   transpilers: []
