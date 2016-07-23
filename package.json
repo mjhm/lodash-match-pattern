@@ -6,7 +6,8 @@
   "files": [
     "index.js",
     "lib",
-    "_parser.js"
+    "_parser.js",
+    "tonic_example.js"
   ],
   "scripts": {
     "test": "./node_modules/.bin/mocha './test/**/*.js'",
@@ -40,7 +41,7 @@
   "engines": {
     "node": ">=4.0.0"
   },
-  "tonicExampleFilename": "./examples/tonic_example.js",
+  "tonicExampleFilename": "tonic_example.js",
   "devDependencies": {
     "chai": "^3.4.1",
     "dependency-lint": "^4.0.2",
