@@ -49,15 +49,19 @@ describe('mixins', function () {
       this.consoleStub = sandbox.stub(console, 'log');
     });
     it('returns true', function () {
-      return expect(mixins.isPrinted('abc')).to.be.true;
+      return expect(mixins.isPrinted("'abc'")).to.be.true;
     });
     it('prints argument without a label', function () {
       mixins.isPrinted('abc');
-      expect(this.consoleStub).to.be.calledWith('', 'abc');
+      expect(this.consoleStub).to.be.calledWith('', "'abc'");
     });
     it('prints argument with a label', function () {
       mixins.isPrinted('abc', 'alabel');
-      expect(this.consoleStub).to.be.calledWith('alabel', 'abc');
+      expect(this.consoleStub).to.be.calledWith('alabel', "'abc'");
+    });
+    it('prints a deep object', function () {
+      mixins.isPrinted({a: {b: {c: {d: {e: 1}}}}});
+      expect(this.consoleStub).to.be.calledWith('', '{ a: { b: { c: { d: { e: 1 } } } } }');
     });
   });
 

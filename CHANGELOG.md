@@ -1,3 +1,7 @@
+#### 0.2.0
+* update dependencies (minor breaking change from 'checkit')
+* _.isPrinted object depth increased from 2 to 10
+
 #### 0.1.12
 * add dependency-lint
 * add coverage
