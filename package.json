@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "build_parser": "./node_modules/.bin/pegjs ./parser/matchpattern.pegjs _parser.js",
+    "build_parser": "./node_modules/.bin/pegjs -o _parser.js ./parser/matchpattern.pegjs",
     "prepublish": "npm run build_parser"
   },
   "directories": {
@@ -38,15 +38,14 @@
   "homepage": "https://github.com/originate/lodash-match-pattern#readme",
   "devDependencies": {
     "chai": "^3.4.1",
-    "json5": "^0.5.0",
-    "mocha": "^2.3.4",
-    "pegjs": "^0.9.0",
+    "mocha": "^3.0.2",
+    "pegjs": "^0.10.0",
     "pegjs-backtrace": "^0.1.1",
     "rewire": "^2.5.1",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "lodash-checkit": "^0.1.2"
+    "lodash-checkit": "^1.0.0"
   }
 }
