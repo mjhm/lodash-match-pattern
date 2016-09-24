@@ -186,13 +186,13 @@ label = string / apply / map / soloApply / soloMap / identifier
 
 identifier = alpha alphaNum* { return  text() }
 
-apply = (applyPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*)
+apply = applyPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*
 	{return "__MP_apply" + mapApplyCount++ + " " + alphaNum.concat(pipeArg).join("")}
 
 soloApply = applyPrefix { return '__MP_apply' + mapApplyCount++  }
 applyPrefix = "<-"
 
-map = (mapPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*)
+map = mapPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*
 	{return "__MP_map" + mapApplyCount++ + " " + alphaNum.concat(pipeArg).join("")}
 
 soloMap = mapPrefix { return '__MP_map' + mapApplyCount++ }

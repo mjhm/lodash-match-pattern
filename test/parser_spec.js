@@ -3,13 +3,13 @@
 var chai = require('chai');
 var util = require('util');
 var fs = require('fs');
-var PEG = require('pegjs');
+var peg = require('pegjs');
 var Tracer = require('pegjs-backtrace');
 var expect = chai.expect;
 
 var only = 'only';
 
-var parser = PEG.buildParser(fs.readFileSync('./parser/matchpattern.pegjs', 'utf8'), {trace: true} );
+var parser = peg.generate(fs.readFileSync('./parser/matchpattern.pegjs', 'utf8'), {trace: true} );
 
 var parserTests =[
 ];
