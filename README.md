@@ -156,7 +156,7 @@ There's a bucket full of `_.isXxxx` matchers available to check property types, 
 
 * The available matching functions are
   1. All `isXxxx` functions from `lodash`.
-  1. All validation functions from `checkit` with `is` prepended.
+  1. All validation functions from `checkit` with `is` prepended. (Identically named `lodash` functions take precedence.)
   1. Case convention matchers constructed from lodash's `...Case` functions.
   1. Any regular expression -- intepreted as `/<regex>/.test(<testval>)`.
   1. `isPrinted`, `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).

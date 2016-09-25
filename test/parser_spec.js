@@ -2,13 +2,13 @@
 
 var chai = require('chai');
 var fs = require('fs');
-var PEG = require('pegjs');
+var peg = require('pegjs');
 var Tracer = require('pegjs-backtrace');
 var expect = chai.expect;
 
 var only = 'only'; // eslint-disable-line no-unused-vars
 
-var parser = PEG.buildParser(fs.readFileSync('./parser/matchpattern.pegjs', 'utf8'), {trace: true} );
+var parser = peg.generate(fs.readFileSync('./parser/matchpattern.pegjs', 'utf8'), {trace: true} );
 
 var runTestList = function (testList) {
   var onlyTests = [];
@@ -104,4 +104,13 @@ describe('parser', function () {
       [ '{<-.filterPattern|"{b: _.isInRange|0|18, ...}": 1}',  {'__MP_apply0 filterPattern|"{b: _.isInRange|0|18, ...}"': 1} ],
     ]);
   });
+  describe('comments', function () {
+    runTestList([
+      [ '{"a": 1}# abc##', {a: 1} ],
+      [ '', '' ],
+      [ '{a: 1,\n#b: 2\n}', {a: 1} ],
+      [ '{a: "#1"}', {a: '#1'} ],
+    ]);
+  });
+
 });

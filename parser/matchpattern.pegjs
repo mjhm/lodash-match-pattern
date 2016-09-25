@@ -31,7 +31,7 @@
 }
 
 PatternNotation_text
-  = ws value:value ws { return value; }
+  = (ws value:value ws { return value; }) / ws {return '';}
 
 begin_array     = ws "[" ws
 begin_object    = ws "{" ws
@@ -40,7 +40,9 @@ end_object      = ws "}" ws
 name_separator  = ws ":" ws
 value_separator = ws "," ws
 
-ws "whitespace" = [ \t\n\r]*
+comment = "#" [^\n\r]*
+
+ws "whitespace" = (comment / [ \t\n\r])*
 
 /* ----- 3. Values ----- */
 
@@ -191,13 +193,13 @@ label = string / apply / map / soloApply / soloMap / identifier
 
 identifier = alpha alphaNum* { return  text() }
 
-apply = (applyPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*)
+apply = applyPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*
 	{return "__MP_apply" + mapApplyCount++ + " " + alphaNum.concat(pipeArg).join("")}
 
 soloApply = applyPrefix { return '__MP_apply' + mapApplyCount++  }
 applyPrefix = "<-"
 
-map = (mapPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*)
+map = mapPrefix dot alphaNum:alphaNum+ pipeArg:pipeArg*
 	{return "__MP_map" + mapApplyCount++ + " " + alphaNum.concat(pipeArg).join("")}
 
 soloMap = mapPrefix { return '__MP_map' + mapApplyCount++ }
