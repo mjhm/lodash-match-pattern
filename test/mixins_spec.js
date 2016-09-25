@@ -157,4 +157,17 @@ describe('mixins', function () {
       });
     });
   });
+
+  describe('parameter extensions for lodash', function () {
+    var users = [
+      { 'user': 'barney', 'age': 36, 'active': false },
+      { 'user': 'fred',   'age': 40, 'active': false }
+    ];
+    describe('#every', function () {
+      it('allows for third argument to match', function () {
+        expect(mixins.every(users, 'active', false)).to.equal(true);
+        expect(mixins.every(users, 'age', 40)).to.equal(false);
+      });
+    });
+  });
 });

@@ -452,3 +452,4 @@ Here are some miscellaneous lodash additions that may come in handy. The source 
 * `_.isDateString` -- a matcher for strings that are parseable into dates (e.g. ISO Date strings).
 * `_.isOmitted` -- an alias for `_.isUndefined`. As shown in an example above this is more semantically meaningful for matching intentionally omitted properties of an object.
 * `_.isSize` -- the matcher corresponding to the standard lodash `_.size`. It checks it's argument against the `_.size` of the source object.
+* `_.every`, `_.filter`, `_.find`, `_.findLast`, `_.partition`, `_.reject`, and `_.some` all allow for an extra argument to match against a predicate value. This allows for transform syntax such as `<-.find|apple|fuji` which finds the first `apple: fuji` item in a collection.
