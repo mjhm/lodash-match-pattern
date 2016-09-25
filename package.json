@@ -46,6 +46,6 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "lodash-checkit": "^1.0.0"
+    "lodash-checkit": "^2.0.0"
   }
 }
