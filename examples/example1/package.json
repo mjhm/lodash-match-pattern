@@ -19,6 +19,6 @@
     "lodash-match-pattern": "^0.1.10"
   },
   "dependencies": {
-    "lodash-match-pattern": "^1.0.0"
+    "lodash-match-pattern": "^1.1.0"
   }
 }
