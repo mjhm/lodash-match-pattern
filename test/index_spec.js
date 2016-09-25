@@ -91,6 +91,8 @@ describe('matchPattern', function () {
         [false, {targ: [1, 2, 3], src: [1, 4, 3]}],
         [true,  {targ: '_.isUrl', src: 'https://my.testurl.com'}],
         [false, {targ: '_.isUrl', src: 'hbbp://my.testurl.com'}],
+        [true,  {targ: '_.isInteger', src: 1}],
+        [false, {targ: '_.isInteger', src: '1'}],
       ]);
     });
 
@@ -137,7 +139,24 @@ describe('matchPattern', function () {
         [true,  {targ: { '<=' : _.isNumber}, src: [1, 2]}],
         [false,  {targ: { '<=' : _.isNumber}, src: [1, '2']}],
         [true,  {targ: { '<=.toString' : ['1', '2']}, src: [1, '2']}],
-        [true,  {targ: { '<=.toString' : {a: '1', b: '2'}}, src: {a: 1, b: '2'}}],
+        [true,  {targ: { '<=.toString' : {a: '1', b: '2'}}, src: {a: 1, b: '2'}}]
+      ]);
+    });
+
+    // ['every', 'filter', 'find', 'findLast', 'partition', 'reject', 'some']
+    describe('apply lodash extension args', function () {
+      runTestList([
+        [true,  {targ: { '<-.every|a|1' : true},  src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.every|b|2' : false}, src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.filter|b|2' : [{a: 1, b: 2}]}, src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.find|a|1' : {a: 1, b: 2}}, src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.find|b|3' : {a: 1, b: 3}}, src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.findLast|a|1' : {a: 1, b: 3}}, src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.partition|b|3' : [[{a: 1, b: 3}], [{a: 1, b: 2}]]},
+          src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.reject|b|2' : [{a: 1, b: 3}]}, src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.some|b|3' : true},  src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
+        [true,  {targ: { '<-.some|b|4' : false},  src: [{a: 1, b: 2}, {a: 1, b: 3}]}],
       ]);
     });
 

@@ -35,7 +35,8 @@ Feature: Basic Features for lodash-match-pattern
     Then the user matches the pattern
     """
     {
-      id: _.isInteger,
+      # Note that embedded comments are also allowed on whole line
+      id: _.isInteger,  # ... or end of line
       email: _.isEmail,
       website: _.isUrl,
       firstName: /[A-Z]\w+/,

@@ -1,6 +1,6 @@
 {
   "name": "example1",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Illustration of API testing using lodash-match-pattern",
   "main": "index.js",
   "scripts": {
@@ -12,10 +12,13 @@
     "chai": "^3.5.0",
     "chai-match-pattern": "^0.2.0",
     "cucumber": "^1.0.0",
-    "lodash-checkit": "^0.1.1",
-    "mocha": "^2.5.3"
+    "lodash-checkit": "^2.0.0",
+    "mocha": "^3.0.2"
   },
   "dependencies": {
     "lodash-match-pattern": "^0.1.10"
+  },
+  "dependencies": {
+    "lodash-match-pattern": "^1.1.0"
   }
 }

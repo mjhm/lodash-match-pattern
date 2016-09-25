@@ -156,7 +156,7 @@ There's a bucket full of `_.isXxxx` matchers available to check property types, 
 
 * The available matching functions are
   1. All `isXxxx` functions from `lodash`.
-  1. All validation functions from `checkit` with `is` prepended.
+  1. All validation functions from `checkit` with `is` prepended. (Identically named `lodash` functions take precedence.)
   1. Case convention matchers constructed from lodash's `...Case` functions.
   1. Any regular expression -- intepreted as `/<regex>/.test(<testval>)`.
   1. `isPrinted`, `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
@@ -452,3 +452,4 @@ Here are some miscellaneous lodash additions that may come in handy. The source 
 * `_.isDateString` -- a matcher for strings that are parseable into dates (e.g. ISO Date strings).
 * `_.isOmitted` -- an alias for `_.isUndefined`. As shown in an example above this is more semantically meaningful for matching intentionally omitted properties of an object.
 * `_.isSize` -- the matcher corresponding to the standard lodash `_.size`. It checks it's argument against the `_.size` of the source object.
+* `_.every`, `_.filter`, `_.find`, `_.findLast`, `_.partition`, `_.reject`, and `_.some` all allow for an extra argument to match against a predicate value. This allows for transform syntax such as `<-.find|apple|fuji` which finds the first `apple: fuji` item in a collection.
