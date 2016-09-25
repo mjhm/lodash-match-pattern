@@ -99,4 +99,13 @@ describe('parser', function () {
       [ '{<-.filterPattern|"{b: _.isInRange|0|18, ...}": 1}',  {'__MP_apply0 filterPattern|"{b: _.isInRange|0|18, ...}"': 1} ],
     ]);
   });
+  describe('comments', function () {
+    runTestList([
+      [ '{"a": 1}# abc##', {a: 1} ],
+      [ '', '' ],
+      [ '{a: 1,\n#b: 2\n}', {a: 1} ],
+      [ '{a: "#1"}', {a: '#1'} ],
+    ]);
+  });
+
 });
