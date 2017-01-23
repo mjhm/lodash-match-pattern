@@ -130,7 +130,7 @@ describe('matchPattern', function () {
         ['throw',  {targ: { a: 1, '<-': 2}, src: 5}],
         [true,  {targ: {a: {'<-.sortBy': [1, 2, 3]}}, src: {a: [2, 3, 1]}}],
         [true,  {targ: {'<-.sortBy|a': [{a: 1, b: 2}, {a: 2, b: 3}, {a: 3, b: 1}]},
-                  src: [{a: 2, b: 3}, {a: 1, b: 2}, {a: 3, b: 1}]}],
+          src: [{a: 2, b: 3}, {a: 1, b: 2}, {a: 3, b: 1}]}],
         [false, {targ: {a: {'<-.sortBy': [3, 2, 1]}}, src: {a: [2, 3, 1]}}],
         [true,  {targ: {a: {'<-.keys': {'<-.size': 3}}}, src: {a: {b: 2, c: 3, d: 4}}}],
         [false, {targ: {a: {'<-.keys': {'<-.size': 2}}}, src: {a: {b: 2, c: 3, d: 4}}}],
