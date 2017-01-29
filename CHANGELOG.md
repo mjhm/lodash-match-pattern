@@ -1,3 +1,11 @@
+#### 1.1.0
+* Added third parameter to lodash collection methods 'every', 'filter', 'find', 'findLast', 'partition', 'reject', 'some' to simplify specifications of filtering on a shortcut predicate.
+
+#### 1.0.0
+* update dependencies
+  * breaking change from `lodash-checkit` -- bug fixed so that `lodash` functions take precedence over derived `isXXX` functions from `checkit`
+* added commenting via `#` in patterns
+
 #### 0.2.0
 * update dependencies (minor breaking change from 'checkit')
 * _.isPrinted object depth increased from 2 to 10

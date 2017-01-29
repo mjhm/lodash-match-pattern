@@ -10,7 +10,7 @@ Related Modules:
 [![chai-match-pattern](https://img.shields.io/npm/v/chai-match-pattern.svg?label=chai-match-pattern)](https://www.npmjs.com/package/chai-match-pattern)
 [![lodash-checkit](https://img.shields.io/npm/v/lodash-checkit.svg?label=lodash-checkit)](https://www.npmjs.com/package/lodash-checkit)
 
-**Match Pattern** is a Swiss Army Knife for validating JSON objects. Its primary goal is to enable the highly flexible, expressive, and resilient feature testing of JSON based APIs. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also bundles a variety of validation functions from the [`lodash`](https://lodash.com/docs) and [`checkit`](https://github.com/tgriesser/checkit) modules, and it supports custom matching and mapping functions.
+**Match Pattern** is a Swiss Army Knife for validating JSON objects. Its primary goal is to enable the highly flexible, expressive, and resilient feature testing of JSON based APIs. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also bundles a variety of [validation functions](MATCHERS_AND_FILTERS.md#complete-list-of-lodash-match-pattern-matching-functions-and-added-filters) from the [`lodash`](https://lodash.com/docs) and [`checkit`](https://github.com/tgriesser/checkit) modules, and it supports customized matching, filtering, and mapping functions.
 
 #### Basic Usage
 ```
@@ -133,7 +133,7 @@ Unfortunately, deep matching of exact JSON patterns creates over-specified and b
 
 ## Matching property types
 
-There's a bucket full of `_.isXxxx` matchers available to check property types, and if those aren't enough, you can match by regex as well. All you need to do is slug in the pattern matching function (or regex) and that function will be applied to the candidate value. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L34)]*
+There's a bucket full of [`_.isXxxx` matchers](MATCHERS_AND_FILTERS.md#complete-list-of-lodash-match-pattern-matching-functions-and-added-filters) available to check property types, and if those aren't enough, you can match by regex as well. All you need to do is slug in the pattern matching function (or regex) and that function will be applied to the candidate value. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L34)]*
 
 ```javascript
 {
@@ -162,7 +162,7 @@ There's a bucket full of `_.isXxxx` matchers available to check property types, 
   1. `isPrinted`, `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
   1. Any `isXxxx` (or `hasXxxx`) function you insert as a lodash mixin through [customization](#customization).
 
-To see the full list run this:
+To see the full list see [this](MATCHERS_AND_FILTERS.md) or run this:
 ```javascript
 console.log(
   Object.keys(require('lodash-match-pattern').getLodashModule())

@@ -18,6 +18,7 @@ ignoreErrors:
   missing: []
   shouldBeDependency:
     - pegjs
+    - rewire
   shouldBeDevDependency: []
   unused: []
 
