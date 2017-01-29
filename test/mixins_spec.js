@@ -44,6 +44,16 @@ describe('mixins', function () {
     });
   });
 
+  describe('#isDefined', function () {
+    it('succeeds for null value', function () {
+      return expect(mixins.isDefined(null)).to.be.true;
+    });
+    it('fails for undefined value', function () {
+      var a = {};
+      return expect(mixins.isDefined(a.b)).to.be.false;
+    });
+  });
+
   describe('#isPrinted', function () {
     beforeEach(function () {
       this.consoleStub = sandbox.stub(console, 'log');
