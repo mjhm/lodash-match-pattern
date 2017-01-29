@@ -1,3 +1,6 @@
+#### 1.2.0
+* Added `_.isDefined` and included complete list of matchers and custom filters.
+
 #### 1.1.0
 * Added third parameter to lodash collection methods 'every', 'filter', 'find', 'findLast', 'partition', 'reject', 'some' to simplify specifications of filtering on a shortcut predicate.
 
