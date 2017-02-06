@@ -10,7 +10,9 @@ Related Modules:
 [![chai-match-pattern](https://img.shields.io/npm/v/chai-match-pattern.svg?label=chai-match-pattern)](https://www.npmjs.com/package/chai-match-pattern)
 [![lodash-checkit](https://img.shields.io/npm/v/lodash-checkit.svg?label=lodash-checkit)](https://www.npmjs.com/package/lodash-checkit)
 
-**Match Pattern** is a Swiss Army Knife for validating JSON objects. Its primary goal is to enable the highly flexible, expressive, and resilient feature testing of JSON based APIs. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also bundles a variety of [validation functions](MATCHERS_AND_FILTERS.md#complete-list-of-lodash-match-pattern-matching-functions-and-added-filters) from the [`lodash`](https://lodash.com/docs) and [`checkit`](https://github.com/tgriesser/checkit) modules, and it supports customized matching, filtering, and mapping functions.
+**Match Pattern** is a Swiss Army Knife for validating JSON objects. Its primary goal is to enable the highly flexible, expressive, and resilient feature testing of JSON based APIs. It includes facilities for deep matching, partial matching, unordered lists, and several advanced features for complex patterns.  It also bundles a variety of validation functions from the [`lodash`](https://lodash.com/docs) and [`checkit`](https://github.com/tgriesser/checkit) modules, and it supports customized matching, filtering, and mapping functions.
+
+[Included Validation Functions](MATCHERS_AND_FILTERS.md#complete-list-of-lodash-match-pattern-matching-functions-and-added-filters)
 
 #### Basic Usage
 ```
@@ -392,6 +394,11 @@ var matchPattern = require('lodash-match-pattern');
 var _ = matchPattern.getLodashModule();
 
 _.mixin({
+
+  isBcyrptHash: function (elem) {
+    return /^\$2[aby]?\$[\d]+\$[./A-Za-z0-9]{53}$/.test(elem);
+  },
+
   literalSetToken: function (elem) {
     if (elem === '...') return 'LITERAL...';
     if (elem === '^^^') return 'LITERAL^^^';

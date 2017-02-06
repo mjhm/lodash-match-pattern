@@ -11,7 +11,7 @@
 
 #### 0.2.0
 * update dependencies (minor breaking change from 'checkit')
-* _.isPrinted object depth increased from 2 to 10
+* `_.isPrinted` object depth increased from 2 to 10
 * mv tonic_example.js
 
 #### 0.1.12
