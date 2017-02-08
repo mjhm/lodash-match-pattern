@@ -7,6 +7,7 @@
 
 
 Related Modules:
+[![cukelib](https://img.shields.io/npm/v/cukelib.svg?label=cukelib)](https://www.npmjs.com/package/cukelib)
 [![chai-match-pattern](https://img.shields.io/npm/v/chai-match-pattern.svg?label=chai-match-pattern)](https://www.npmjs.com/package/chai-match-pattern)
 [![lodash-checkit](https://img.shields.io/npm/v/lodash-checkit.svg?label=lodash-checkit)](https://www.npmjs.com/package/lodash-checkit)
 
@@ -70,10 +71,14 @@ var extraFancyResult = matchPattern(realTestData, `{
 }`);
 ```
 
+- Detailed usage for testing API's can be can be found in this [`cukelib` example](https://github.com/Originate/cukelib/tree/master/examples/login_server).
+- Complete cucumber example usage [`examples/example1/features/`](examples/example1/features/)
+- Complete mocha example usage [`examples/example1/test/`](examples/example1/test/).
+
 #### Here's what this module does for you
 
-You may not need all of these features, but they're worth skimming. You'll likely find lots of flexibility for your specific use cases. The included examples are illustrated with live code as cucumber-js tests in [`examples/example1/features/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/) and as mocha tests in
-[`examples/example1/test/`](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/test/).
+You may not need all of these features, but they're worth skimming. You'll likely find lots of flexibility for your specific use cases.
+
 
 1. [Deep JSON matching](#deep-json-matching)
 1. [Matching property types](#matching-property-types)
@@ -388,7 +393,7 @@ Memoization notes:
 
 ## Customization
 
-In many cases, application of transforms will create unintuitive and hard to understand pattern specifications. Fortunately creating custom matchers and custom transforms is easy via lodash mixins. Here we've added two custom lodash mixins:
+In many cases, application of transforms will create unintuitive and hard to understand pattern specifications. Fortunately creating custom matchers and custom transforms is easy via lodash mixins. Here we've added three custom lodash mixins:
 ```
 var matchPattern = require('lodash-match-pattern');
 var _ = matchPattern.getLodashModule();
