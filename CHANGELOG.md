@@ -1,3 +1,6 @@
+#### 1.2.0
+* Added `_.isDefined` and included complete list of matchers and custom filters.
+
 #### 1.1.0
 * Added third parameter to lodash collection methods 'every', 'filter', 'find', 'findLast', 'partition', 'reject', 'some' to simplify specifications of filtering on a shortcut predicate.
 
@@ -8,7 +11,7 @@
 
 #### 0.2.0
 * update dependencies (minor breaking change from 'checkit')
-* _.isPrinted object depth increased from 2 to 10
+* `_.isPrinted` object depth increased from 2 to 10
 * mv tonic_example.js
 
 #### 0.1.12

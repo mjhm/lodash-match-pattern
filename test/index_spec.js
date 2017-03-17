@@ -97,19 +97,34 @@ describe('matchPattern', function () {
     });
 
     describe('subset, superset, equalset', function () {
-      runTestList([
-        [true,  {targ:{a: {b: 2, '...': ''}}, src: {a: {b: 2, c: 3, d: 4}}}],
-        [false, {targ:{a: {b: 2, '...': ''}}, src: {a: {b: 1, c: 3, d: 4}}}],
-        [true,  {targ: [1, 2, '...'], src: [3, 2, 1]}],
-        [false, {targ: [1, 2, 4, '...'], src: [3, 2, 1]}],
-        [true,  {targ: [1, 2, 3, '^^^'], src: [2, 1]}],
-        [false, {targ: [1, 2, '^^^'], src: [3, 2, 1]}],
-        [false, {targ: [1, 2, 3, '==='], src: [2, 1]}],
-        [false, {targ: [1, 2, '==='], src: [3, 2, 1]}],
-        [true,  {targ: [3, 1, 2, '==='], src: [3, 2, 1]}],
-      ]);
-    });
+      describe('simple arrays', function () {
+        runTestList([
+          [true,  {targ:{a: {b: 2, '...': ''}}, src: {a: {b: 2, c: 3, d: 4}}}],
+          [false, {targ:{a: {b: 2, '...': ''}}, src: {a: {b: 1, c: 3, d: 4}}}],
+          [true,  {targ: [1, 2, '...'], src: [3, 2, 1]}],
+          [false, {targ: [1, 2, 4, '...'], src: [3, 2, 1]}],
+          [true,  {targ: [1, 2, 3, '^^^'], src: [2, 1]}],
+          [false, {targ: [1, 2, '^^^'], src: [3, 2, 1]}],
+          [false, {targ: [1, 2, 3, '==='], src: [2, 1]}],
+          [false, {targ: [1, 2, '==='], src: [3, 2, 1]}],
+          [true,  {targ: [3, 1, 2, '==='], src: [3, 2, 1]}],
+        ]);
+      });
 
+/* eslint-disable indent */
+      describe('compound object arrays', function () {
+        runTestList([
+          [true,  {targ: [{},'...'], src: [{}, 1]}],
+          [true,  {targ: [{a: 1}, {b: 2}, '...'], src: [{c: 3}, {b: 2}, {a: 1}]}],
+          [true,  {targ: [{a: {e: 5, d: 4}}, {b: 2}, '...'],
+                    src: [{a: {d: 4, e: 5}}, {b: 2}, {c: 3}]}],
+          [true,  {targ: [{c: 3}, {a: 1}, {b: 2}, '^^^'], src: [{b: 2}, {a: 1}]}],
+          [true,  {targ: [{a: {e: 5, d: 4}}, {c: 3}, {b: 2}, '==='],
+                    src: [{a: {d: 4, e: 5}}, {b: 2}, {c: 3}]}],
+        ]);
+      });
+/* eslint-enable indent */
+    });
 
     describe('parametrized matchers', function () {
       runTestList([
