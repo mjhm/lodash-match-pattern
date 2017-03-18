@@ -115,12 +115,14 @@ describe('matchPattern', function () {
       describe('compound object arrays', function () {
         runTestList([
           [true,  {targ: [{},'...'], src: [{}, 1]}],
+          [true,  {targ: [[1, 2, 3], 4, '...'], src: [4, [1, 2, 3]]}],
           [true,  {targ: [{a: 1}, {b: 2}, '...'], src: [{c: 3}, {b: 2}, {a: 1}]}],
           [true,  {targ: [{a: {e: 5, d: 4}}, {b: 2}, '...'],
                     src: [{a: {d: 4, e: 5}}, {b: 2}, {c: 3}]}],
           [true,  {targ: [{c: 3}, {a: 1}, {b: 2}, '^^^'], src: [{b: 2}, {a: 1}]}],
           [true,  {targ: [{a: {e: 5, d: 4}}, {c: 3}, {b: 2}, '==='],
                     src: [{a: {d: 4, e: 5}}, {b: 2}, {c: 3}]}],
+          ['throw',  {targ: [[1, 2, 3], '_.isUrl', '...'], src: [4, [1, 2, 3]]}],
         ]);
       });
 /* eslint-enable indent */

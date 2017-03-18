@@ -193,12 +193,12 @@ The `...` indicates that only the specified keys are matched, and all others in 
 
 _Note: All the following examples will use partial matching._
 
-## Partial, Superset, and Unordered Arrays
+## Subset, Superset, and Unordered Arrays
 
 Similarly matching of partial arrays (as well as supersets and set equality) can be easily specified, but with a couple caveats:
 
-1. The array entries must be numbers or strings, no nested objects or arrays.
-2. The partial (and supersets) arrays are matched as sets -- no order assumed.
+1. Matching functions aren't allowed in set matches, only explicit values.
+2. Arrays are matched as sets -- no order assumed.
 
 *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L66)]*:
 

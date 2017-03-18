@@ -1,3 +1,6 @@
+#### 1.3.1
+* Fixed https://github.com/Originate/lodash-match-pattern/issues/34 so that array set matches can work with objects other than numbers and strings.
+
 #### 1.2.0
 * Added `_.isDefined` and included complete list of matchers and custom filters.
 
