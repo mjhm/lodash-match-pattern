@@ -1,3 +1,7 @@
+
+#### 2.0.1
+* Upgraded all dependencies. Breaking changes are unlikely.
+
 #### 1.3.1
 * Fixed https://github.com/Originate/lodash-match-pattern/issues/34 so that array set matches can work with objects other than numbers and strings.
 
