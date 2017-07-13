@@ -23,6 +23,7 @@ module.exports = {
             "error",
             "always"
         ],
-        "comma-dangle": "off"
+        "comma-dangle": "off",
+        "no-useless-escape": 0
     }
 };

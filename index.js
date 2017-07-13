@@ -97,7 +97,7 @@ var matcher = function (makeMsg, targVal, srcVal, key) {
 
     _.forEach(targVal, function (tv, k) {
       var mapApplyMatch = k.match(/^__MP_(map|apply)\d+\s*(.*)/) || [];
-        // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
       if (debug) console.log('mapApplyMatch', k, mapApplyMatch);
       var mapApply = mapApplyMatch[1];
       var mapApplyFname = mapApplyMatch[2];
@@ -203,7 +203,7 @@ var matchPattern = function (sourceData, targetPattern) {
   if (_.isString(targetPattern)) {
     try {
       targetObject = parser.parse(targetPattern);
-        // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
       if (debug) console.log('parsed', targetObject);
     }
     catch (error) {
