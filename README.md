@@ -4,7 +4,7 @@
 [![NPM](https://nodei.co/npm/lodash-match-pattern.png?downloads=true)](https://www.npmjs.com/package/lodash-match-pattern)
 
 [![David Dependencies](https://david-dm.org/Originate/lodash-match-pattern.svg)](https://david-dm.org/Originate/lodash-match-pattern)
-[![David devDependencies](https://david-dm.org/Originate/lodash-match-pattern/dev-status.svg)](https://david-dm.org/Originate/lodash-match-pattern#info=devDependencies)
+
 
 
 Related Modules:
