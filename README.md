@@ -1,3 +1,5 @@
+
+<!-- omit in toc -->
 # Match Pattern
 [![NPM](https://nodei.co/npm/lodash-match-pattern.png?downloads=true)](https://www.npmjs.com/package/lodash-match-pattern)
 
@@ -15,7 +17,7 @@ Related Modules:
 
 [Included Validation Functions](MATCHERS_AND_FILTERS.md#complete-list-of-lodash-match-pattern-matching-functions-and-added-filters)
 
-#### Basic Usage
+#### 0.0.1. Basic Usage
 ```
 npm install lodash-match-pattern --save-dev
 ```
@@ -75,32 +77,32 @@ var extraFancyResult = matchPattern(realTestData, `{
 - Complete cucumber example usage [`examples/example1/features/`](examples/example1/features/)
 - Complete mocha example usage [`examples/example1/test/`](examples/example1/test/).
 
-#### Here's what this module does for you
+#### 0.0.2. Here's what this module does for you
 
 You may not need all of these features, but they're worth skimming. You'll likely find lots of flexibility for your specific use cases.
 
 
-1. [Deep JSON matching](#deep-json-matching)
-1. [Matching property types](#matching-property-types)
-1. [Partial objects](#partial-objects)
-1. [Partial, superset, and unordered arrays](#partial-superset-and-unordered-arrays)
-1. [Omitted items](#omitted-items)
-1. [Parametrized matchers](#parametrized-matchers)
-1. [Transforms](#transforms)
-  1. [Apply transform example](#apply-transform-example)
-  1. [Map pattern transform example](#map-pattern-transform-example)
-  1. [Map values transform example](#map-values-transform-example)
-  1. [Composition and multiple transforms](#composition-and-multiple-transforms)
-1. [Memoization of test values](#memoization-of-test-values)
-1. [Customization](#customization)
-1. [Extras](#extras)
+- [1. Deep JSON matching](#1-deep-json-matching)
+- [2. Matching property types](#2-matching-property-types)
+- [3. Partial objects](#3-partial-objects)
+- [4. Subset, Superset, and Unordered Arrays](#4-subset-superset-and-unordered-arrays)
+- [5. Omitted items](#5-omitted-items)
+- [6. Parametrized matchers](#6-parametrized-matchers)
+- [7. Transforms](#7-transforms)
+  - [7.1. Apply Transform Example](#71-apply-transform-example)
+  - [7.2. Map Pattern Transform Example](#72-map-pattern-transform-example)
+  - [7.3. Map Values Transform Example](#73-map-values-transform-example)
+  - [7.4. Composition and Multiple Transforms](#74-composition-and-multiple-transforms)
+- [8. Memoization of test values](#8-memoization-of-test-values)
+- [9. Customization](#9-customization)
+- [10. Extras](#10-extras)
 
-#### Specification with "Pattern Notation" or JavaScript Objects
+#### 0.0.3. Specification with "Pattern Notation" or JavaScript Objects
 
 As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features), our target use case is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js). The "Pattern Notation" is a JSON-like DSL designed for readability in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
 
 
-## Deep JSON matching
+## 1. Deep JSON matching
 
 Just for starters, suppose we have a `joeUser` object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L6)]*
 
@@ -138,7 +140,7 @@ Just for starters, suppose we have a `joeUser` object and want to validate its e
 Unfortunately, deep matching of exact JSON patterns creates over-specified and brittle feature tests. In practice such deep matches are only occasionally useful. Just for example, suppose you wanted to match the exact `createDate` of the above user. Then you'd need to do some complex mocking of the database to spoof a testable exact value. But the good news is that we don't really care about the exact date, and we can trust that the database generated it correctly. All we really care about is that the date looks like a date. To solve this and other over-specification problems `lodash-match-pattern` enables a rich and extensible facility for data type checking.
 
 
-## Matching property types
+## 2. Matching property types
 
 There's a bucket full of [`_.isXxxx` matchers](MATCHERS_AND_FILTERS.md#complete-list-of-lodash-match-pattern-matching-functions-and-added-filters) available to check property types, and if those aren't enough, you can match by regex as well. All you need to do is slug in the pattern matching function (or regex) and that function will be applied to the candidate value. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L34)]*
 
@@ -177,7 +179,7 @@ console.log(
 );
 ```
 
-## Partial objects
+## 3. Partial objects
 
 Most feature tests are interested in how objects change, so we're not usually concerned with properties that aren't involved in the change. In fact best practices of feature testing suggest elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say `billyjoe@duckduck.go` then we can simply match the pattern *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L55)]*:
 
@@ -193,7 +195,7 @@ The `...` indicates that only the specified keys are matched, and all others in 
 
 _Note: All the following examples will use partial matching._
 
-## Subset, Superset, and Unordered Arrays
+## 4. Subset, Superset, and Unordered Arrays
 
 Similarly matching of partial arrays (as well as supersets and set equality) can be easily specified, but with a couple caveats:
 
@@ -244,7 +246,7 @@ Or to compare equality of arrays as sets by unordered membership, use `===`:
 }
 ```
 
-## Omitted items
+## 5. Omitted items
 
 Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check. Note that it works properly with partial objects. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L94)]*:
 
@@ -256,7 +258,7 @@ Sometimes an important API requirement specifies fields that should not be prese
 }
 ```
 
-## Parametrized matchers
+## 6. Parametrized matchers
 
 Some of the matching functions take parameters. These can be specified with "|" separators at the end of the matching function. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/basic.feature#L104)]*:
 
@@ -268,11 +270,11 @@ Some of the matching functions take parameters. These can be specified with "|" 
 }
 ```
 
-## Transforms
+## 7. Transforms
 
 Transforms modify the test data in some way before applying a match pattern. Transforms can be applied at any level of the match object and they may be composed. _(Although they are can be very handy, you should use transforms sparingly since they tend to make the patterns less readable, and they could be a code smell of excessively complex tests. In many cases separate tests or a custom matcher will be clearer.)_
 
-#### Apply Transform Example
+### 7.1. Apply Transform Example
 
 As motivation consider matching a compound object such at the `joeUser`'s friends list. We may not be able to guarantee order of items in the list, and probably don't care anyway. So simply matching the friends list with a set order will likely be an unreliable test. To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transforms.feature#L6)]*
 
@@ -293,7 +295,7 @@ Any function in `lodash-checkit` is available for transforms, along with a few [
 
 Important Note: The transform functions are applied to the test value, NOT the corresponding test pattern. In this example we're testing the `joeUser.friends` list. So this list is sorted by `email` and the resulting array is tested against the above pattern.
 
-#### Map Pattern Transform Example
+### 7.2. Map Pattern Transform Example
 
 Suppose you just wanted to check that all of of joeUser's friends have emails `...@mp.co`. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transforms.feature#L21)]*
 
@@ -309,7 +311,7 @@ Suppose you just wanted to check that all of of joeUser's friends have emails `.
 The `<=` says that the pattern is applied to each of the entries of the `joeUser.friends` array. In contrast, the `<-` operator would say that the pattern is matched against the array as a whole.
 
 
-#### Map Values Transform Example
+### 7.3. Map Values Transform Example
 
 Suppose you want to check that `joeUser`'s friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/transforms.feature#L32)]*
 
@@ -335,7 +337,7 @@ Here `<=.get|email` says that `_.get(..., 'email')` is applied to each of the en
 Map transforms (`<=.`) can be applied to objects as well as arrays. For arrays `<=.lodashFunction` uses `_.map` to apply the `_.<lodashFunction>` to each array element. For objects `_.mapValues` is used instead.
 
 
-#### Composition and Multiple Transforms
+### 7.4. Composition and Multiple Transforms
 
 Transformations can be mixed and matched. Multiple transforms can also appear as keys in a single object. In that case they check the test value against all their respective pattern values. Notice, as suggested in the previous example, transform compositions are always applied to the test value from the outside to the inside where they result in the final pattern match.
 
@@ -358,7 +360,7 @@ The following artificial example verifies that `joeUser` has `2` active friends,
 }
 ```
 
-## Memoization of test values
+## 8. Memoization of test values
 
 Sometimes we're interested in comparing values from two steps. In this example, we want to check that duplicating a user copies some fields and updates others. So we memoize fields we're interested in and compare them to the dup. *[[code](https://github.com/Originate/lodash-match-pattern/blob/jm20160625/examples/example1/features/memoization.feature#L6)]*
 ```cucumber
@@ -391,7 +393,7 @@ Memoization notes:
 2. Obviously memoizing is more valuable for cucumber feature tests. You can just use native JavaScript variables in mocha unit tests.
 3. In addition to the above there is also a `_.clearMemos` function that should be executed in the `Before` or `After` routine for each test to ensure a clean slate of memos.
 
-## Customization
+## 9. Customization
 
 In many cases, application of transforms will create unintuitive and hard to understand pattern specifications. Fortunately creating custom matchers and custom transforms is easy via lodash mixins. Here we've added three custom lodash mixins:
 ```
@@ -453,7 +455,7 @@ Then the following now has a successful pattern match:
 }
 ```
 
-## Extras
+## 10. Extras
 
 Here are some miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
 

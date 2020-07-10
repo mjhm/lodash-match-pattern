@@ -4,6 +4,7 @@ var chai = require('chai');
 var sinon = require('sinon');
 chai.use(require('sinon-chai'));
 var expect = chai.expect;
+var util = require('util');
 
 var rewire = require('rewire');
 var mixins = rewire('../lib/mixins');
@@ -71,7 +72,7 @@ describe('mixins', function () {
     });
     it('prints a deep object', function () {
       mixins.isPrinted({a: {b: {c: {d: {e: 1}}}}});
-      expect(this.consoleStub).to.be.calledWith('', '{ a: { b: { c: { d: { e: 1 } } } } }');
+      expect(this.consoleStub).to.be.calledWith('', util.inspect({ a: { b: { c: { d: { e: 1 } } } } }, {depth: 10}));
     });
   });
 
