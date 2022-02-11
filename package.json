@@ -41,7 +41,7 @@
   },
   "tonicExampleFilename": "tonic_example.js",
   "devDependencies": {
-    "ajv": "5.2.2",
+    "ajv": "6.12.3",
     "chai": "^4.2.0",
     "eslint": "^6.2.2",
     "mocha": "^8.1.2",
