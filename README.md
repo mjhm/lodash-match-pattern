@@ -68,7 +68,7 @@ var extraFancyResult = matchPattern(realTestData, `{
 }`);
 ```
 
-- Detailed usage for testing API's can be can be found in this [`cukelib` example](https://github.com/Originate/cukelib/tree/master/examples/login_server).
+- Detailed usage for testing API's can be can be found in this [`cukelib` example](https://github.com/mjhm/cukelib/tree/master/examples/login_server).
 - Complete cucumber example usage [`examples/example1/features/`](examples/example1/features/)
 - Complete mocha example usage [`examples/example1/test/`](examples/example1/test/).
 
@@ -94,12 +94,12 @@ You may not need all of these features, but they're worth skimming. You'll likel
 
 #### 0.0.3. Specification with "Pattern Notation" or JavaScript Objects
 
-As illustrated in the [cucumber examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features), our target use case is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js). The "Pattern Notation" is a JSON-like DSL designed for readability in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features_mocha)
+As illustrated in the [cucumber examples](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features), our target use case is pattern matching in [CucumberJS](https://github.com/cucumber/cucumber-js). The "Pattern Notation" is a JSON-like DSL designed for readability in Cucumber tests. However almost all of the functionality is also available using actual JSON objects which may be more convenient for "mocha" and other unit testing frameworks. For a comparision see the [mocha examples](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features_mocha)
 
 
 ## 1. Deep JSON matching
 
-Just for starters, suppose we have a `joeUser` object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L6)]*
+Just for starters, suppose we have a `joeUser` object and want to validate its exact contents.  Then `matchPattern` will do a deep match of the object and succeed as expected. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L6)]*
 
 ```cucumber
 
@@ -137,7 +137,7 @@ Unfortunately, deep matching of exact JSON patterns creates over-specified and b
 
 ## 2. Matching property types
 
-There's a bucket full of [`_.isXxxx` matchers](MATCHERS_AND_FILTERS.md#complete-list-of-lodash-match-pattern-matching-functions-and-added-filters) available to check property types, and if those aren't enough, you can match by regex as well. All you need to do is slug in the pattern matching function (or regex) and that function will be applied to the candidate value. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L34)]*
+There's a bucket full of [`_.isXxxx` matchers](MATCHERS_AND_FILTERS.md#complete-list-of-lodash-match-pattern-matching-functions-and-added-filters) available to check property types, and if those aren't enough, you can match by regex as well. All you need to do is slug in the pattern matching function (or regex) and that function will be applied to the candidate value. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L34)]*
 
 ```javascript
 {
@@ -163,7 +163,7 @@ There's a bucket full of [`_.isXxxx` matchers](MATCHERS_AND_FILTERS.md#complete-
   1. All validation functions from `checkit` with `is` prepended. (Identically named `lodash` functions take precedence.)
   1. Case convention matchers constructed from lodash's `...Case` functions.
   1. Any regular expression -- intepreted as `/<regex>/.test(<testval>)`.
-  1. `isPrinted`, `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
+  1. `isPrinted`, `isDateString`, `isSize`, `isOmitted` which have been added via [lodash mixins](https://github.com/mjhm/lodash-match-pattern/blob/master/lib/mixins.js).
   1. Any `isXxxx` (or `hasXxxx`) function you insert as a lodash mixin through [customization](#customization).
 
 To see the full list see [this](MATCHERS_AND_FILTERS.md) or run this:
@@ -176,7 +176,7 @@ console.log(
 
 ## 3. Partial objects
 
-Most feature tests are interested in how objects change, so we're not usually concerned with properties that aren't involved in the change. In fact best practices of feature testing suggest elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say `billyjoe@duckduck.go` then we can simply match the pattern *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L55)]*:
+Most feature tests are interested in how objects change, so we're not usually concerned with properties that aren't involved in the change. In fact best practices of feature testing suggest elimination of such incidental details.  Matching only partial objects can create a huge simplification which focuses on the subject of the test. For example if we only wanted to test changing our user's email to say `billyjoe@duckduck.go` then we can simply match the pattern *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L55)]*:
 
 ```javascript
 {
@@ -197,7 +197,7 @@ Similarly matching of partial arrays (as well as supersets and set equality) can
 1. Matching functions aren't allowed in set matches, only explicit values.
 2. Arrays are matched as sets -- no order assumed.
 
-*[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L66)]*:
+*[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L66)]*:
 
 ```javascript
 {
@@ -243,7 +243,7 @@ Or to compare equality of arrays as sets by unordered membership, use `===`:
 
 ## 5. Omitted items
 
-Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check. Note that it works properly with partial objects. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L94)]*:
+Sometimes an important API requirement specifies fields that should not be present, such as a `password`. This can be validated with an explicit `_.isOmitted` check. Note that it works properly with partial objects. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L94)]*:
 
 ```javascript
 {
@@ -255,7 +255,7 @@ Sometimes an important API requirement specifies fields that should not be prese
 
 ## 6. Parametrized matchers
 
-Some of the matching functions take parameters. These can be specified with "|" separators at the end of the matching function. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L104)]*:
+Some of the matching functions take parameters. These can be specified with "|" separators at the end of the matching function. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/basic.feature#L104)]*:
 
 ```javascript
 {
@@ -271,7 +271,7 @@ Transforms modify the test data in some way before applying a match pattern. Tra
 
 ### 7.1. Apply Transform Example
 
-As motivation consider matching a compound object such at the `joeUser`'s friends list. We may not be able to guarantee order of items in the list, and probably don't care anyway. So simply matching the friends list with a set order will likely be an unreliable test. To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/transforms.feature#L6)]*
+As motivation consider matching a compound object such at the `joeUser`'s friends list. We may not be able to guarantee order of items in the list, and probably don't care anyway. So simply matching the friends list with a set order will likely be an unreliable test. To fix this a `<-.sortBy` transform can be applied to force the test data into a specific order that can be reliably tested. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/transforms.feature#L6)]*
 
 ```javascript
 {
@@ -292,7 +292,7 @@ Important Note: The transform functions are applied to the test value, NOT the c
 
 ### 7.2. Map Pattern Transform Example
 
-Suppose you just wanted to check that all of of joeUser's friends have emails `...@mp.co`. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/transforms.feature#L21)]*
+Suppose you just wanted to check that all of of joeUser's friends have emails `...@mp.co`. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/transforms.feature#L21)]*
 
 ```javascript
 {
@@ -308,7 +308,7 @@ The `<=` says that the pattern is applied to each of the entries of the `joeUser
 
 ### 7.3. Map Values Transform Example
 
-Suppose you want to check that `joeUser`'s friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/transforms.feature#L32)]*
+Suppose you want to check that `joeUser`'s friends are in a "whitelist" of emails. Then you need to extract the emails, and since the whitelist check is case insensitive you need to compare them all in lower case. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/transforms.feature#L32)]*
 
 ```javascript
 {
@@ -336,7 +336,7 @@ Map transforms (`<=.`) can be applied to objects as well as arrays. For arrays `
 
 Transformations can be mixed and matched. Multiple transforms can also appear as keys in a single object. In that case they check the test value against all their respective pattern values. Notice, as suggested in the previous example, transform compositions are always applied to the test value from the outside to the inside where they result in the final pattern match.
 
-The following artificial example verifies that `joeUser` has `2` active friends, in four different ways. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/transforms.feature#L51)]*
+The following artificial example verifies that `joeUser` has `2` active friends, in four different ways. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/transforms.feature#L51)]*
 
 ```javascript
   friends: {
@@ -357,7 +357,7 @@ The following artificial example verifies that `joeUser` has `2` active friends,
 
 ## 8. Memoization of test values
 
-Sometimes we're interested in comparing values from two steps. In this example, we want to check that duplicating a user copies some fields and updates others. So we memoize fields we're interested in and compare them to the dup. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/memoization.feature#L6)]*
+Sometimes we're interested in comparing values from two steps. In this example, we want to check that duplicating a user copies some fields and updates others. So we memoize fields we're interested in and compare them to the dup. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/memoization.feature#L6)]*
 ```cucumber
   Scenario: Dupicating a user updates id and createDate but copies email and tvshows
     When the user matches the pattern
@@ -415,7 +415,7 @@ _.mixin({
   }
 });
 ```
-This gives us yet another (but simpler) method for counting joeUser's active friends. *[[code](https://github.com/Originate/lodash-match-pattern/blob/master/examples/example1/features/customization.feature#L6)]*
+This gives us yet another (but simpler) method for counting joeUser's active friends. *[[code](https://github.com/mjhm/lodash-match-pattern/blob/master/examples/example1/features/customization.feature#L6)]*
 ```
 {
   friends: _.isActiveSize|2,
@@ -452,7 +452,7 @@ Then the following now has a successful pattern match:
 
 ## 10. Extras
 
-Here are some miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/Originate/lodash-match-pattern/blob/master/lib/mixins.js).
+Here are some miscellaneous lodash additions that may come in handy. The source code of each of these is just a few lines in [lib/mixins.js](https://github.com/mjhm/lodash-match-pattern/blob/master/lib/mixins.js).
 
 * `_.isPrinted` -- a matcher that always matches, but prints the source values that it is matching against. This is super useful for seeing the results of transforms.
 * `_.extractUrls` -- a transform that takes a string and returns an array of parsed Url objects from the string.
