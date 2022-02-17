@@ -3,12 +3,8 @@
 # Match Pattern
 [![NPM](https://nodei.co/npm/lodash-match-pattern.png?downloads=true)](https://www.npmjs.com/package/lodash-match-pattern)
 
-[![David Dependencies](https://david-dm.org/Originate/lodash-match-pattern.svg)](https://david-dm.org/Originate/lodash-match-pattern)
-
-
 
 Related Modules:
-[![cukelib](https://img.shields.io/npm/v/cukelib.svg?label=cukelib)](https://www.npmjs.com/package/cukelib)
 [![chai-match-pattern](https://img.shields.io/npm/v/chai-match-pattern.svg?label=chai-match-pattern)](https://www.npmjs.com/package/chai-match-pattern)
 [![lodash-checkit](https://img.shields.io/npm/v/lodash-checkit.svg?label=lodash-checkit)](https://www.npmjs.com/package/lodash-checkit)
 

@@ -1,4 +1,6 @@
 
+#### 2.3.1
+* Upgraded dependencies and removed obsolete dev modules. Breaking changes are unlikely.
 #### 2.1.0
 * Upgraded dependencies and removed obsolete dev modules. Breaking changes are unlikely.
 
