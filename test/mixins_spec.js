@@ -9,7 +9,7 @@ var util = require('util');
 var rewire = require('rewire');
 var mixins = rewire('../lib/mixins');
 
-var sandbox = sinon.sandbox.create();
+var sandbox = sinon.createSandbox();
 
 describe('mixins', function () {
 

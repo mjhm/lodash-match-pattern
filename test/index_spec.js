@@ -111,7 +111,7 @@ describe('matchPattern', function () {
         ]);
       });
 
-/* eslint-disable indent */
+      /* eslint-disable indent */
       describe('compound object arrays', function () {
         runTestList([
           [true,  {targ: [{},'...'], src: [{}, 1]}],
@@ -125,7 +125,7 @@ describe('matchPattern', function () {
           ['throw',  {targ: [[1, 2, 3], '_.isUrl', '...'], src: [4, [1, 2, 3]]}],
         ]);
       });
-/* eslint-enable indent */
+      /* eslint-enable indent */
     });
 
     describe('parametrized matchers', function () {

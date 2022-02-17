@@ -18,7 +18,7 @@
   "directories": {
     "test": "test"
   },
-  "repository": "https://github.com/originate/lodash-match-pattern",
+  "repository": "https://github.com/mjhm/lodash-match-pattern",
   "keywords": [
     "checkit",
     "lodash",
@@ -33,27 +33,27 @@
   "author": "John McLaughlin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/originate/lodash-match-pattern/issues"
+    "url": "https://github.com/mjhm/lodash-match-pattern/issues"
   },
-  "homepage": "https://github.com/originate/lodash-match-pattern#readme",
+  "homepage": "https://github.com/mjhm/lodash-match-pattern#readme",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=10.0.0"
   },
   "tonicExampleFilename": "tonic_example.js",
   "devDependencies": {
-    "ajv": "5.2.2",
-    "chai": "^4.2.0",
-    "eslint": "^6.2.2",
-    "mocha": "^8.1.2",
+    "ajv": "8.10.0",
+    "chai": "^4.3.6",
+    "eslint": "^8.9.0",
+    "mocha": "^9.2.0",
     "pegjs": "^0.10.0",
-    "pegjs-backtrace": "^0.1.2",
-    "rewire": "^4.0.1",
-    "sinon": "^7.4.1",
-    "sinon-chai": "^3.3.0"
+    "pegjs-backtrace": "^0.2.1",
+    "rewire": "^6.0.0",
+    "sinon": "^13.0.1",
+    "sinon-chai": "^3.7.0"
   },
   "dependencies": {
     "chalk": "^4.1.0",
     "he": "^1.2.0",
-    "lodash-checkit": "^2.3.3"
+    "lodash-checkit": "^2.4.1"
   }
 }
